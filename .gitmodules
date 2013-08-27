@@ -1,0 +1,6 @@
+[submodule "lib/qWorkflow"]
+	path = lib/qWorkflow
+	url = https://github.com/qlassiqa/qWorkflow.git
+[submodule "docs"]
+	path = docs
+	url = git@github.com:idpaterson/alfred-wunderlist-workflow.git
