@@ -220,8 +220,6 @@ function disclosure_triangle(elt) {
 As Wunderlist 2 does not yet provide AppleScript support, the features are limited
 to those that are keyboard-accessible. Regardless, it saves a lot of keystrokes!
 <!-- headerDoc=discussion;uid=//apple_ref/doc/header/wunderlist.applescript;name=end --><!-- end discussion -->
-<dl><dt><b>Updated:</b></dt><dd>Thursday, August 29, 2013</dd>
-</dl>
 <hr class="afterClassOrHeaderInfo"><br><a name='HeaderDoc_groups'><h2 class="h2tight" >Groups</h2></a>
 
 <h3>Utilities</h3>
@@ -236,6 +234,9 @@ to those that are keyboard-accessible. Regardless, it saves a lot of keystrokes!
 <dd><p>Returns the most appropriate translation of the specified string
 according to the workflow's bundle.
 </dd>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/qWorkflow" target="_top" machineGenerated="true" -->qWorkflow<!-- /a --></tt></dt>
+<dd><p>Loads and returns qWorkflow, ensuring that it is only loaded once
+and then reused as necessary.</dd>
 <dt><tt><!-- a logicalPath="//apple_ref/applescript/func/wll10n" target="_top" machineGenerated="true" -->wll10n<!-- /a --></tt></dt>
 <dd><p>Returns the most appropriate translation of the specified string
 according to the localization of the Wunderlist application.
@@ -265,20 +266,6 @@ according to the localization of the Wunderlist application.
 <dd><p>A Script Filter input that shows the user's lists in Alfred, allowing
 a task to be added to a specific list.
 </dd>
-</dl>
-</div>
-<p>&nbsp;</p>
-<h3>Configuration</h3>
-<div class='group_desc_indent'>
-</div>
-<h4>Group members:</h4>
-<div class='group_indent'>
-<dl>
-<dt><tt><!-- a logicalPath="//apple_ref/applescript/data/iconTheme" target="_top" machineGenerated="true" -->iconTheme<!-- /a --></tt></dt>
-<dd><p>Changes the appearance of list icons in Alfred
-</dd>
-<dt><tt><!-- a logicalPath="//apple_ref/applescript/data/listCacheInSeconds" target="_top" machineGenerated="true" -->listCacheInSeconds<!-- /a --></tt></dt>
-<dd><p>Specifies how often to reload information about task lists</dd>
 </dl>
 </div>
 <p>&nbsp;</p>
@@ -317,6 +304,20 @@ before the script was started.</dd>
 <dt><tt><!-- a logicalPath="//apple_ref/applescript/func/setWindowViewNormal" target="_top" machineGenerated="true" -->setWindowViewNormal<!-- /a --></tt></dt>
 <dd><p>Switches to the "Normal" view in Wunderlist where both the list and 
 tasks are visible.</dd>
+</dl>
+</div>
+<p>&nbsp;</p>
+<h3>Configuration</h3>
+<div class='group_desc_indent'>
+</div>
+<h4>Group members:</h4>
+<div class='group_indent'>
+<dl>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/data/iconTheme" target="_top" machineGenerated="true" -->iconTheme<!-- /a --></tt></dt>
+<dd><p>Changes the appearance of list icons in Alfred
+</dd>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/data/listCacheInSeconds" target="_top" machineGenerated="true" -->listCacheInSeconds<!-- /a --></tt></dt>
+<dd><p>Specifies how often to reload information about task lists</dd>
 </dl>
 </div>
 <hr class="afterGroupHeading"><a name="HeaderDoc_functions"></a>
@@ -366,6 +367,9 @@ before the script was started.</dd>
 <dd><p>Returns the most appropriate translation of the specified string
 according to the workflow's bundle.
 </dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/func/qWorkflow" target="_top">qWorkflow</a></tt></dt>
+<dd><p>Loads and returns qWorkflow, ensuring that it is only loaded once
+and then reused as necessary.</dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/func/setWindowViewNormal" target="_top">setWindowViewNormal</a></tt></dt>
 <dd><p>Switches to the "Normal" view in Wunderlist where both the list and 
 tasks are visible.</dd>
@@ -699,6 +703,14 @@ according to the workflow's bundle.
 this workflow for available values</dd>
 </dl>
 </div>
+<hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/qWorkflow;   name=qWorkflow -->
+<a name="//apple_ref/applescript/func/qWorkflow"></a>
+<h3><a name="qWorkflow">qWorkflow</a></h3>
+<hr class="afterName"><p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/qWorkflow;name=start --><!-- begin abstract --><p>Loads and returns qWorkflow, ensuring that it is only loaded once
+and then reused as necessary.<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/qWorkflow;name=end --></p>
+<div class='declaration_indent'>
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/qWorkflow;name=start --><span class="keyword">on</span> <!-- a logicalPath="//apple_ref/applescript/instm/qWorkflow //apple_ref/applescript/clm/qWorkflow //apple_ref/applescript/intfcm/qWorkflow //apple_ref/applescript/intfm/qWorkflow //apple_ref/applescript/func/qWorkflow //apple_ref/applescript/ftmplt/qWorkflow //apple_ref/applescript/defn/qWorkflow //apple_ref/applescript/macro/qWorkflow //apple_ref/doc/anysymbol/qWorkflow" machineGenerated="true" --><span class="function">qWorkflow</span><!-- /a -->()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/qWorkflow;name=end --></pre>
+</div>
 <hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/setWindowViewNormal;   name=setWindowViewNormal -->
 <a name="//apple_ref/applescript/func/setWindowViewNormal"></a>
 <h3><a name="setWindowViewNormal">setWindowViewNormal</a></h3>
@@ -795,7 +807,7 @@ setting controls how often the cached list data is refreshed.
 </p>
 <!-- headerDoc=discussion;uid=//apple_ref/applescript/data/listCacheInSeconds;name=end --><!-- end discussion -->
 <p class="gapBeforeFooter">&nbsp;</p><hr class="afterFooter"><div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Thursday, August 29, 2013
+<p class="hd_timestamp">Last Updated: Tuesday, September 10, 2013
 </p></div>
 </td></tr></table>
 </body></html>
