@@ -5,7 +5,6 @@
 	            As Wunderlist 2 does not yet provide AppleScript support, the features are limited
 	            to those that are keyboard-accessible. Regardless, it saves a lot of keystrokes!
 	@author     Ian Paterson
-	@updated    2013-08-29
 	@version    0.1
 *)
 
@@ -41,8 +40,11 @@ property listCacheInSeconds : 30
 # Keep track of the current app
 property originalApp : path to frontmost application as text
 
-# Keep track of the current app
+# The path to this workflow within Alfred's preferences bundle
 property workflowFolder : missing value
+
+# The qWorkflow script loaded into memory as necessary
+property qWorkflowScript : missing value
 
 (*! 
 	@abstract Causes Wunderlist to become the active application.
@@ -418,6 +420,18 @@ on getWorkflowFolder()
 	return workflowFolder
 end getWorkflowFolder
 
+(*!
+	@abstract Loads and returns qWorkflow, ensuring that it is only loaded once
+	and then reused as necessary.
+*)
+on qWorkflow()
+	if qWorkflowScript is missing value then
+		set qWorkflowScript to load script POSIX file ((do shell script "pwd") & "/q_workflow.scpt")
+	end if 
+
+	return qWorkflowScript
+end qWorkflow
+
 
 (*! 
 	@functiongroup Alfred Actions
@@ -453,10 +467,8 @@ end getWorkflowFolder
 *)
 on addTask(task)
 	if task is not "" then
-		set wlib to load script POSIX file (getWorkflowFolder() & "/q_workflow.scpt")
-
 		# The format used to add a task to a specific list, e.g. 5::2% milk
-		set components to wlib's q_split(task, "::")
+		set components to qWorkflow()'s q_split(task, "::")
 
 		# If a list index is specified, add the task to it
 		if count of components is 2 then
@@ -466,7 +478,7 @@ on addTask(task)
 			return
 		end if
 
-		set components to wlib's q_split(task, ":")
+		set components to qWorkflow()'s q_split(task, ":")
 
 		# If a list name is specified, add the task to that list
 		if count of components is 2 then
@@ -660,8 +672,7 @@ end addList
 *)
 on showListOptions(task)
 	# Load qWorkflow to format the output
-	set wlib to load script POSIX file (getWorkflowFolder() & "/q_workflow.scpt")
-	set wf to wlib's new_workflow()
+	set wf to qWorkflow()'s new_workflow()
 
 	set allLists to getListInfoInWorkflow(wf)
 
