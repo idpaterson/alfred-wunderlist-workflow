@@ -269,6 +269,20 @@ a task to be added to a specific list.
 </dl>
 </div>
 <p>&nbsp;</p>
+<h3>Configuration</h3>
+<div class='group_desc_indent'>
+</div>
+<h4>Group members:</h4>
+<div class='group_indent'>
+<dl>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/data/iconTheme" target="_top" machineGenerated="true" -->iconTheme<!-- /a --></tt></dt>
+<dd><p>Changes the appearance of list icons in Alfred
+</dd>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/data/listCacheInSeconds" target="_top" machineGenerated="true" -->listCacheInSeconds<!-- /a --></tt></dt>
+<dd><p>Specifies how often to reload information about task lists</dd>
+</dl>
+</div>
+<p>&nbsp;</p>
 <h3>Interaction with Wunderlist</h3>
 <div class='group_desc_indent'>
 </div>
@@ -301,23 +315,12 @@ before the script was started.</dd>
 <dt><tt><!-- a logicalPath="//apple_ref/applescript/func/getTaskInfoForFocusedList" target="_top" machineGenerated="true" -->getTaskInfoForFocusedList<!-- /a --></tt></dt>
 <dd><p>Loads info about the tasks in the currently visible task list
 </dd>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/launchWunderlistIfNecessary" target="_top" machineGenerated="true" -->launchWunderlistIfNecessary<!-- /a --></tt></dt>
+<dd><p>Launches the Wunderlist application if it is not already
+running and waits for it to load.</dd>
 <dt><tt><!-- a logicalPath="//apple_ref/applescript/func/setWindowViewNormal" target="_top" machineGenerated="true" -->setWindowViewNormal<!-- /a --></tt></dt>
 <dd><p>Switches to the "Normal" view in Wunderlist where both the list and 
 tasks are visible.</dd>
-</dl>
-</div>
-<p>&nbsp;</p>
-<h3>Configuration</h3>
-<div class='group_desc_indent'>
-</div>
-<h4>Group members:</h4>
-<div class='group_indent'>
-<dl>
-<dt><tt><!-- a logicalPath="//apple_ref/applescript/data/iconTheme" target="_top" machineGenerated="true" -->iconTheme<!-- /a --></tt></dt>
-<dd><p>Changes the appearance of list icons in Alfred
-</dd>
-<dt><tt><!-- a logicalPath="//apple_ref/applescript/data/listCacheInSeconds" target="_top" machineGenerated="true" -->listCacheInSeconds<!-- /a --></tt></dt>
-<dd><p>Specifies how often to reload information about task lists</dd>
 </dl>
 </div>
 <hr class="afterGroupHeading"><a name="HeaderDoc_functions"></a>
@@ -367,6 +370,9 @@ before the script was started.</dd>
 <dd><p>Returns the most appropriate translation of the specified string
 according to the workflow's bundle.
 </dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/func/launchWunderlistIfNecessary" target="_top">launchWunderlistIfNecessary</a></tt></dt>
+<dd><p>Launches the Wunderlist application if it is not already
+running and waits for it to load.</dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/func/qWorkflow" target="_top">qWorkflow</a></tt></dt>
 <dd><p>Loads and returns qWorkflow, ensuring that it is only loaded once
 and then reused as necessary.</dd>
@@ -703,6 +709,14 @@ according to the workflow's bundle.
 this workflow for available values</dd>
 </dl>
 </div>
+<hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/launchWunderlistIfNecessary;   name=launchWunderlistIfNecessary -->
+<a name="//apple_ref/applescript/func/launchWunderlistIfNecessary"></a>
+<h3><a name="launchWunderlistIfNecessary">launchWunderlistIfNecessary</a></h3>
+<hr class="afterName"><p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/launchWunderlistIfNecessary;name=start --><!-- begin abstract --><p>Launches the Wunderlist application if it is not already
+running and waits for it to load.<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/launchWunderlistIfNecessary;name=end --></p>
+<div class='declaration_indent'>
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/launchWunderlistIfNecessary;name=start --><span class="keyword">on</span> <!-- a logicalPath="//apple_ref/applescript/instm/launchWunderlistIfNecessary //apple_ref/applescript/clm/launchWunderlistIfNecessary //apple_ref/applescript/intfcm/launchWunderlistIfNecessary //apple_ref/applescript/intfm/launchWunderlistIfNecessary //apple_ref/applescript/func/launchWunderlistIfNecessary //apple_ref/applescript/ftmplt/launchWunderlistIfNecessary //apple_ref/applescript/defn/launchWunderlistIfNecessary //apple_ref/applescript/macro/launchWunderlistIfNecessary //apple_ref/doc/anysymbol/launchWunderlistIfNecessary" machineGenerated="true" --><span class="function">launchWunderlistIfNecessary</span><!-- /a -->()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/launchWunderlistIfNecessary;name=end --></pre>
+</div>
 <hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/qWorkflow;   name=qWorkflow -->
 <a name="//apple_ref/applescript/func/qWorkflow"></a>
 <h3><a name="qWorkflow">qWorkflow</a></h3>
@@ -807,7 +821,7 @@ setting controls how often the cached list data is refreshed.
 </p>
 <!-- headerDoc=discussion;uid=//apple_ref/applescript/data/listCacheInSeconds;name=end --><!-- end discussion -->
 <p class="gapBeforeFooter">&nbsp;</p><hr class="afterFooter"><div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Tuesday, September 10, 2013
+<p class="hd_timestamp">Last Updated: Thursday, September 12, 2013
 </p></div>
 </td></tr></table>
 </body></html>
