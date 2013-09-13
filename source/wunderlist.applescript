@@ -88,8 +88,13 @@ on assignWunderlistToAllDesktops()
 end assignWunderlistToAllDesktops
 
 (*!
-	@abstract  Launches the Wunderlist application if it is not already
+	@abstract   Launches the Wunderlist application if it is not already
 	running and waits for it to load.
+	@discussion If Wunderlist is running but is not located on the current
+	desktop, it would not be possible to query the list info from the app's
+	UI. When this occurs, @link assignWunderlistToAllDesktops() @/link will
+	be used to bring Wunderlist to the current desktop and ensure that it
+	is always available.
 *)
 on launchWunderlistIfNecessary()
 
@@ -280,7 +285,7 @@ end setWindowViewNormal
 	appears to change in an undefined way, so unfortunately at this time the task
 	count is unreliable.
 
-	@return Returns a list of records in the <code>ListInfo</code> format described below
+	@return A list of records in the <code>ListInfo</code> format described below
 	@attributeList <code>ListInfo</code> record
 		<code>listName</code>  The display name of the list
 		<code>taskCount</code> The number of uncompleted tasks in the list
@@ -328,7 +333,7 @@ end getListInfo
 	<code>settings.plist</code> are used to track the lists state.
 	@see getListInfo
 	@param wf The qWorkflow workflow object for this script
-	@return list of <code>ListValue</code> records
+	@return A list of <code>ListValue</code> records
 *)
 on getListInfoInWorkflow(wf)
 
@@ -354,7 +359,7 @@ end getListInfoInWorkflow
 	or <code>missing value</code> if the list does not exist
 
 	@param theListName Text exactly matching the name of a list
-	@return the integer index or <code>missing value</code> if no list with
+	@return The integer index or <code>missing value</code> if no list with
 	the specified name exists
 *)
 on getIndexOfListNamed(theListName)
@@ -377,7 +382,7 @@ end getIndexOfListNamed
 	@discussion Loads some basic information about all of the items in the visible 
 	list in Wunderlist. Unfortunately, due to limitations in the GUI access used to 
 	load task info, this will only include tasks that are visible in the window.
-	@return Returns a list of records in the <code>TaskInfo</code> format described below
+	@return A list of records in the <code>TaskInfo</code> format described below
 	@attributeList <code>TaskInfo</code> record
 		<code>taskName</code>  The display name of the task
 		<code>dueDate</code> The due date of the task or <code>missing value</code> if not set
@@ -458,7 +463,7 @@ end getTaskInfoForFocusedList
 
 	@param key the string to localize, see <code>Localizable.strings</code> within 
 	this workflow for available values
-	@return the localized string for the given key, or <code>missing value</code>
+	@return The localized string for the given key, or <code>missing value</code>
 	if a value was not found for the key
 *)
 on l10n(key)
@@ -474,6 +479,8 @@ end l10n
 	according to the localization of the Wunderlist application.
 	@param key the string to localize, see <code>Localizable.strings</code> within
 	the Wunderlist application bundle for available values and translations
+	@return The localized string for the given key, or the key itself if no
+	localization was found.
 *)
 on wll10n(key)
 	return appl10n(key, "Wunderlist", "Localizable")
@@ -488,6 +495,8 @@ end l10n
 	@param tableName the name of the strings file from which to load the translation
 	without the extension. For example, use <code>"Localizable"</code> to reference
 	<em>Example.app/Contents/Resources/en.lproj/Localizable.strings</em>
+	@return The localized string for the given key, or the key itself if no
+	localization was found.
 *)
 on appl10n(key, appName, tableName)
 	tell application appName
@@ -497,6 +506,7 @@ end l10n
 
 (*!
 	@abstract Returns the path to the workflow folder within Alfred preferences.
+	@return The path to the workflow folder within Alfred preferences.
 *)
 on getWorkflowFolder()
 	if workflowFolder is missing value then
@@ -509,6 +519,7 @@ end getWorkflowFolder
 (*!
 	@abstract Loads and returns qWorkflow, ensuring that it is only loaded once
 	and then reused as necessary.
+	@return The <code>script</code> object containing the qWorkflow library.
 *)
 on qWorkflow()
 	if qWorkflowScript is missing value then
@@ -555,7 +566,7 @@ end sendNotification
 	results or the <em>Assigned to Me</em> screen, the task will be added in the
 	Inbox.
 
-	After calling this method, the previous application is reactivated. However, if 
+	After calling this handler, the previous application is reactivated. However, if 
 	<code>task</code> is not specified, Wunderlist will remain active with the 
 	keyboard focus on the task input for the specified list.
 	@attributeblock List Identifiers
@@ -641,7 +652,7 @@ end addTask
 	If the specified list does not allow task input, such as <em>Assigned to Me</em>
 	or <em>Week</em>, the task will be added in the Inbox.
 
-	After calling this method, the previous application is reactivated. However, if 
+	After calling this handler, the previous application is reactivated. However, if 
 	<code>task</code> is not specified, Wunderlist will remain active with the 
 	keyboard focus on the task input for the specified list.
 
@@ -685,7 +696,7 @@ end addTask
 	@abstract   Adds a task to the Inbox list in Wunderlist
 	@discussion Provides a shortcut for entering tasks directly in the Inbox.
 
-	After calling this method, the previous application is reactivated. However, if 
+	After calling this handler, the previous application is reactivated. However, if 
 	<code>task</code> is not specified, Wunderlist will remain active with the 
 	keyboard focus on the task input for the Inbox.
 
@@ -729,7 +740,7 @@ end addTaskToInbox
 
 (*!
 	@abstract   Adds a new list to Wunderlist
-	@discussion After calling this method, Wunderlist remains activated with the keyboard focus 
+	@discussion After calling this handler, Wunderlist remains activated with the keyboard focus 
 	on the task input for the new list.
 
 	@param listName The name of the new list
