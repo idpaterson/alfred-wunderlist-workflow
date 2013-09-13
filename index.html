@@ -228,37 +228,8 @@ to those that are keyboard-accessible. Regardless, it saves a lot of keystrokes!
 <h4>Group members:</h4>
 <div class='group_indent'>
 <dl>
-<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/appl10n" target="_top" machineGenerated="true" -->appl10n<!-- /a --></tt></dt>
-<dd><p>Returns the most appropriate translation of the specified string
-according to the localization of the specified application.
-</dd>
-<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/getWorkflowFolder" target="_top" machineGenerated="true" -->getWorkflowFolder<!-- /a --></tt></dt>
-<dd><p>Returns the path to the workflow folder within Alfred preferences.</dd>
-<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/l10n" target="_top" machineGenerated="true" -->l10n<!-- /a --></tt></dt>
-<dd><p>Returns the most appropriate translation of the specified string
-according to the workflow's bundle.
-</dd>
-<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/qWorkflow" target="_top" machineGenerated="true" -->qWorkflow<!-- /a --></tt></dt>
-<dd><p>Loads and returns qWorkflow, ensuring that it is only loaded once
-and then reused as necessary.</dd>
-<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/wll10n" target="_top" machineGenerated="true" -->wll10n<!-- /a --></tt></dt>
-<dd><p>Returns the most appropriate translation of the specified string
-according to the localization of the Wunderlist application.
-</dd>
-</dl>
-</div>
-<p>&nbsp;</p>
-<h3>Alfred Actions</h3>
-<div class='group_desc_indent'>
-</div>
-<h4>Group members:</h4>
-<div class='group_indent'>
-<dl>
 <dt><tt><!-- a logicalPath="//apple_ref/applescript/func/addList" target="_top" machineGenerated="true" -->addList<!-- /a --></tt></dt>
 <dd><p>Adds a new list to Wunderlist
-</dd>
-<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/addTask" target="_top" machineGenerated="true" -->addTask<!-- /a --></tt></dt>
-<dd><p>Adds a task to Wunderlist
 </dd>
 <dt><tt><!-- a logicalPath="//apple_ref/applescript/func/addTaskToInbox" target="_top" machineGenerated="true" -->addTaskToInbox<!-- /a --></tt></dt>
 <dd><p>Adds a task to the Inbox list in Wunderlist
@@ -266,10 +237,46 @@ according to the localization of the Wunderlist application.
 <dt><tt><!-- a logicalPath="//apple_ref/applescript/func/addTaskToList" target="_top" machineGenerated="true" -->addTaskToList<!-- /a --></tt></dt>
 <dd><p>Adds a task to the specified list in Wunderlist
 </dd>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/appl10n" target="_top" machineGenerated="true" -->appl10n<!-- /a --></tt></dt>
+<dd><p>Returns the most appropriate translation of the specified string
+according to the localization of the specified application.
+</dd>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/getWorkflowFolder" target="_top" machineGenerated="true" -->getWorkflowFolder<!-- /a --></tt></dt>
+<dd><p>Returns the path to the workflow folder within Alfred preferences.
+</dd>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/l10n" target="_top" machineGenerated="true" -->l10n<!-- /a --></tt></dt>
+<dd><p>Returns the most appropriate translation of the specified string
+according to the workflow's bundle.
+</dd>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/qWorkflow" target="_top" machineGenerated="true" -->qWorkflow<!-- /a --></tt></dt>
+<dd><p>Loads and returns qWorkflow, ensuring that it is only loaded once
+and then reused as necessary.
+</dd>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/sendNotification" target="_top" machineGenerated="true" -->sendNotification<!-- /a --></tt></dt>
+<dd><p>Displays a notification in Notification Center.
+</dd>
 <dt><tt><!-- a logicalPath="//apple_ref/applescript/func/showListOptions" target="_top" machineGenerated="true" -->showListOptions<!-- /a --></tt></dt>
 <dd><p>A Script Filter input that shows the user's lists in Alfred, allowing
 a task to be added to a specific list.
 </dd>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/wll10n" target="_top" machineGenerated="true" -->wll10n<!-- /a --></tt></dt>
+<dd><p>Returns the most appropriate translation of the specified string
+according to the localization of the Wunderlist application.
+</dd>
+</dl>
+</div>
+<p>&nbsp;</p>
+<h3>Configuration</h3>
+<div class='group_desc_indent'>
+</div>
+<h4>Group members:</h4>
+<div class='group_indent'>
+<dl>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/data/iconTheme" target="_top" machineGenerated="true" -->iconTheme<!-- /a --></tt></dt>
+<dd><p>Changes the appearance of list icons in Alfred
+</dd>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/data/listCacheInSeconds" target="_top" machineGenerated="true" -->listCacheInSeconds<!-- /a --></tt></dt>
+<dd><p>Specifies how often to reload information about task lists</dd>
 </dl>
 </div>
 <p>&nbsp;</p>
@@ -313,20 +320,6 @@ desktops, which is necessary for the list info to load reliably.</dd>
 tasks are visible.</dd>
 </dl>
 </div>
-<p>&nbsp;</p>
-<h3>Configuration</h3>
-<div class='group_desc_indent'>
-</div>
-<h4>Group members:</h4>
-<div class='group_indent'>
-<dl>
-<dt><tt><!-- a logicalPath="//apple_ref/applescript/data/iconTheme" target="_top" machineGenerated="true" -->iconTheme<!-- /a --></tt></dt>
-<dd><p>Changes the appearance of list icons in Alfred
-</dd>
-<dt><tt><!-- a logicalPath="//apple_ref/applescript/data/listCacheInSeconds" target="_top" machineGenerated="true" -->listCacheInSeconds<!-- /a --></tt></dt>
-<dd><p>Specifies how often to reload information about task lists</dd>
-</dl>
-</div>
 <hr class="afterGroupHeading"><a name="HeaderDoc_functions"></a>
 <h2 class="h2tight">Functions</h2>
 <dl>
@@ -337,9 +330,6 @@ before the script was started.</dd>
 <dd><p>Causes Wunderlist to become the active application.</dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/func/addList" target="_top">addList</a></tt></dt>
 <dd><p>Adds a new list to Wunderlist
-</dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/addTask" target="_top">addTask</a></tt></dt>
-<dd><p>Adds a task to Wunderlist
 </dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/func/addTaskToInbox" target="_top">addTaskToInbox</a></tt></dt>
 <dd><p>Adds a task to the Inbox list in Wunderlist
@@ -376,14 +366,19 @@ desktops, which is necessary for the list info to load reliably.</dd>
 <dd><p>Loads info about the tasks in the currently visible task list
 </dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/func/getWorkflowFolder" target="_top">getWorkflowFolder</a></tt></dt>
-<dd><p>Returns the path to the workflow folder within Alfred preferences.</dd>
+<dd><p>Returns the path to the workflow folder within Alfred preferences.
+</dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/func/l10n" target="_top">l10n</a></tt></dt>
 <dd><p>Returns the most appropriate translation of the specified string
 according to the workflow's bundle.
 </dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/func/qWorkflow" target="_top">qWorkflow</a></tt></dt>
 <dd><p>Loads and returns qWorkflow, ensuring that it is only loaded once
-and then reused as necessary.</dd>
+and then reused as necessary.
+</dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/func/sendNotification" target="_top">sendNotification</a></tt></dt>
+<dd><p>Displays a notification in Notification Center.
+</dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/func/setWindowViewNormal" target="_top">setWindowViewNormal</a></tt></dt>
 <dd><p>Switches to the "Normal" view in Wunderlist where both the list and 
 tasks are visible.</dd>
@@ -429,56 +424,10 @@ before the script was started.<!-- end abstract --><!-- headerDoc=abstract;uid=/
 </dl>
 </div>
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/addList;name=start --><p>After calling this method, Wunderlist remains activated with the keyboard focus 
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/addList;name=start --><p>After calling this handler, Wunderlist remains activated with the keyboard focus 
 on the task input for the new list.
 </p>
 <!-- headerDoc=discussion;uid=//apple_ref/applescript/func/addList;name=end --><!-- end discussion -->
-<hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/addTask;   name=addTask -->
-<a name="//apple_ref/applescript/func/addTask"></a>
-<h3><a name="addTask">addTask</a></h3>
-<hr class="afterName"><p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/addTask;name=start --><!-- begin abstract --><p>Adds a task to Wunderlist
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/addTask;name=end --></p>
-<div class='declaration_indent'>
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/addTask;name=start --><span class="keyword">on</span> <!-- a logicalPath="//apple_ref/applescript/instm/addTask //apple_ref/applescript/clm/addTask //apple_ref/applescript/intfcm/addTask //apple_ref/applescript/intfm/addTask //apple_ref/applescript/func/addTask //apple_ref/applescript/ftmplt/addTask //apple_ref/applescript/defn/addTask //apple_ref/applescript/macro/addTask //apple_ref/doc/anysymbol/addTask" machineGenerated="true" --><span class="function">addTask</span><!-- /a -->(
-    <span class="param">task</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/addTask;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class='param_indent'>
-<dl>
-<dt><!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/addTask/task;   name=addTask::task -->
-<a name="//apple_ref/doc/functionparam/addTask/task"></a>
-<code>task</code></dt><dd><p>The text of the task, optionally prefixed with a numeric or textual
-list identifier.</dd>
-</dl>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/addTask;name=start --><p>To support Script Filter inputs and keyboard entry, the task may
-be prefixed by a list identifier to insert it into a specific list using
-<!-- a logicalPath="//apple_ref/applescript/func/addTaskToList" -->addTaskToList<!-- /a -->. The prefix ensures that the task is added to a
-specific list. Without it, for example if <code>task</code> is simply
-<code>2% milk</code> the task will be added to whichever list is currently
-visible. 
-</p>
-<p>If Wunderlist is on a screen that does not allow task input, such as search
-results or the <em>Assigned to Me</em> screen, the task will be added in the
-Inbox.
-</p>
-<p>After calling this method, the previous application is reactivated. However, if 
-<code>task</code> is not specified, Wunderlist will remain active with the 
-keyboard focus on the task input for the specified list.
-<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/addTask;name=end --><!-- end discussion -->
-<p><b>List Identifiers</b></p>
-
-<p><p>To identify a list by name, <code>task</code> should contain the list name
-and the text of the task separated by a colon. 
-	</p>
-<pre><code>    Grocery List:2% milk</code></pre>
-
-<p>To identify a list by index, <code>task</code> should contain the list index
-and the text of the task separated by two colons. This is primarily for 
-internal use.
-	</p>
-<pre><code>    4::2% milk</code></pre></p>
 <hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/addTaskToInbox;   name=addTaskToInbox -->
 <a name="//apple_ref/applescript/func/addTaskToInbox"></a>
 <h3><a name="addTaskToInbox">addTaskToInbox</a></h3>
@@ -499,7 +448,7 @@ internal use.
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
 <!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/addTaskToInbox;name=start --><p>Provides a shortcut for entering tasks directly in the Inbox.
 </p>
-<p>After calling this method, the previous application is reactivated. However, if 
+<p>After calling this handler, the previous application is reactivated. However, if 
 <code>task</code> is not specified, Wunderlist will remain active with the 
 keyboard focus on the task input for the Inbox.
 </p>
@@ -533,7 +482,7 @@ then inserts the task.
 <p>If the specified list does not allow task input, such as <em>Assigned to Me</em>
 or <em>Week</em>, the task will be added in the Inbox.
 </p>
-<p>After calling this method, the previous application is reactivated. However, if 
+<p>After calling this handler, the previous application is reactivated. However, if 
 <code>task</code> is not specified, Wunderlist will remain active with the 
 keyboard focus on the task input for the specified list.
 </p>
@@ -567,7 +516,9 @@ without the extension. For example, use <code>"Localizable"</code> to reference
 <em>Example.app/Contents/Resources/en.lproj/Localizable.strings</em></dd>
 </dl>
 </div>
-<hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/assignWunderlistToAllDesktops;   name=assignWunderlistToAllDesktops -->
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>The localized string for the given key, or the key itself if no
+localization was found.
+<!-- end return value --></p><hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/assignWunderlistToAllDesktops;   name=assignWunderlistToAllDesktops -->
 <a name="//apple_ref/applescript/func/assignWunderlistToAllDesktops"></a>
 <h3><a name="assignWunderlistToAllDesktops">assignWunderlistToAllDesktops</a></h3>
 <hr class="afterName"><p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/assignWunderlistToAllDesktops;name=start --><!-- begin abstract --><p>Uses the Dock.app menu to make Wunderlist visible on all
@@ -653,7 +604,7 @@ because the first time switches the UI to the Inbox list.
 <code>theListName</code></dt><dd><p>Text exactly matching the name of a list</dd>
 </dl>
 </div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>the integer index or <code>missing value</code> if no list with
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>The integer index or <code>missing value</code> if no list with
 the specified name exists
 <!-- end return value --></p><h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
 <!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/getIndexOfListNamed;name=start --><p>Returns a one-based index of the list with the specified name,
@@ -668,7 +619,7 @@ or <code>missing value</code> if the list does not exist
 <div class='declaration_indent'>
 <pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getListInfo;name=start --><span class="keyword">on</span> <!-- a logicalPath="//apple_ref/applescript/instm/getListInfo //apple_ref/applescript/clm/getListInfo //apple_ref/applescript/intfcm/getListInfo //apple_ref/applescript/intfm/getListInfo //apple_ref/applescript/func/getListInfo //apple_ref/applescript/ftmplt/getListInfo //apple_ref/applescript/defn/getListInfo //apple_ref/applescript/macro/getListInfo //apple_ref/doc/anysymbol/getListInfo" machineGenerated="true" --><span class="function">getListInfo</span><!-- /a -->()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getListInfo;name=end --></pre>
 </div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>Returns a list of records in the <code>ListInfo</code> format described below
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>A list of records in the <code>ListInfo</code> format described below
 
 <!-- end return value --></p><h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
 <!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/getListInfo;name=start --><p>Wunderlist exposes a small amount of information about the tasks that
@@ -701,7 +652,7 @@ count is unreliable.
 <code>wf</code></dt><dd><p>The qWorkflow workflow object for this script</dd>
 </dl>
 </div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>list of <code>ListValue</code> records
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>A list of <code>ListValue</code> records
 <!-- end return value --></p><h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
 <!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/getListInfoInWorkflow;name=start --><p>The list info is cached as specified by <!-- a logicalPath="//apple_ref/applescript/data/listCacheInSeconds" -->listCacheInSeconds<!-- /a -->
 to optimize repetitive access of the list, as with an Alfred Script Filter.
@@ -719,7 +670,7 @@ to optimize repetitive access of the list, as with an Alfred Script Filter.
 <div class='declaration_indent'>
 <pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getTaskInfoForFocusedList;name=start --><span class="keyword">on</span> <!-- a logicalPath="//apple_ref/applescript/instm/getTaskInfoForFocusedList //apple_ref/applescript/clm/getTaskInfoForFocusedList //apple_ref/applescript/intfcm/getTaskInfoForFocusedList //apple_ref/applescript/intfm/getTaskInfoForFocusedList //apple_ref/applescript/func/getTaskInfoForFocusedList //apple_ref/applescript/ftmplt/getTaskInfoForFocusedList //apple_ref/applescript/defn/getTaskInfoForFocusedList //apple_ref/applescript/macro/getTaskInfoForFocusedList //apple_ref/doc/anysymbol/getTaskInfoForFocusedList" machineGenerated="true" --><span class="function">getTaskInfoForFocusedList</span><!-- /a -->()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getTaskInfoForFocusedList;name=end --></pre>
 </div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>Returns a list of records in the <code>TaskInfo</code> format described below
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>A list of records in the <code>TaskInfo</code> format described below
 
 <!-- end return value --></p><h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
 <!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/getTaskInfoForFocusedList;name=start --><p>Loads some basic information about all of the items in the visible 
@@ -731,11 +682,13 @@ load task info, this will only include tasks that are visible in the window.
 <hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/getWorkflowFolder;   name=getWorkflowFolder -->
 <a name="//apple_ref/applescript/func/getWorkflowFolder"></a>
 <h3><a name="getWorkflowFolder">getWorkflowFolder</a></h3>
-<hr class="afterName"><p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getWorkflowFolder;name=start --><!-- begin abstract --><p>Returns the path to the workflow folder within Alfred preferences.<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getWorkflowFolder;name=end --></p>
+<hr class="afterName"><p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getWorkflowFolder;name=start --><!-- begin abstract --><p>Returns the path to the workflow folder within Alfred preferences.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getWorkflowFolder;name=end --></p>
 <div class='declaration_indent'>
 <pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getWorkflowFolder;name=start --><span class="keyword">on</span> <!-- a logicalPath="//apple_ref/applescript/instm/getWorkflowFolder //apple_ref/applescript/clm/getWorkflowFolder //apple_ref/applescript/intfcm/getWorkflowFolder //apple_ref/applescript/intfm/getWorkflowFolder //apple_ref/applescript/func/getWorkflowFolder //apple_ref/applescript/ftmplt/getWorkflowFolder //apple_ref/applescript/defn/getWorkflowFolder //apple_ref/applescript/macro/getWorkflowFolder //apple_ref/doc/anysymbol/getWorkflowFolder" machineGenerated="true" --><span class="function">getWorkflowFolder</span><!-- /a -->()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getWorkflowFolder;name=end --></pre>
 </div>
-<hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/l10n;   name=l10n -->
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>The path to the workflow folder within Alfred preferences.
+<!-- end return value --></p><hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/l10n;   name=l10n -->
 <a name="//apple_ref/applescript/func/l10n"></a>
 <h3><a name="l10n">l10n</a></h3>
 <hr class="afterName"><p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/l10n;name=start --><!-- begin abstract --><p>Returns the most appropriate translation of the specified string
@@ -754,14 +707,51 @@ according to the workflow's bundle.
 this workflow for available values</dd>
 </dl>
 </div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>The localized string for the given key, or <code>missing value</code>
+if a value was not found for the key
+<!-- end return value --></p><h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/l10n;name=start --><p>This workflow uses a simple hierarchical structure for localization
+to keep the keys organized and consistent. This means that the keys are not 
+suitable for display as with simple <code>"Foo" = "Foo";</code> translation by
+word or phrase. As a result, if the key is not localized, the handler will
+return <code>missing value</code>.
+</p>
+<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/l10n;name=end --><!-- end discussion -->
 <hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/qWorkflow;   name=qWorkflow -->
 <a name="//apple_ref/applescript/func/qWorkflow"></a>
 <h3><a name="qWorkflow">qWorkflow</a></h3>
 <hr class="afterName"><p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/qWorkflow;name=start --><!-- begin abstract --><p>Loads and returns qWorkflow, ensuring that it is only loaded once
-and then reused as necessary.<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/qWorkflow;name=end --></p>
+and then reused as necessary.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/qWorkflow;name=end --></p>
 <div class='declaration_indent'>
 <pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/qWorkflow;name=start --><span class="keyword">on</span> <!-- a logicalPath="//apple_ref/applescript/instm/qWorkflow //apple_ref/applescript/clm/qWorkflow //apple_ref/applescript/intfcm/qWorkflow //apple_ref/applescript/intfm/qWorkflow //apple_ref/applescript/func/qWorkflow //apple_ref/applescript/ftmplt/qWorkflow //apple_ref/applescript/defn/qWorkflow //apple_ref/applescript/macro/qWorkflow //apple_ref/doc/anysymbol/qWorkflow" machineGenerated="true" --><span class="function">qWorkflow</span><!-- /a -->()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/qWorkflow;name=end --></pre>
 </div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>The <code>script</code> object containing the qWorkflow library.
+<!-- end return value --></p><hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/sendNotification;   name=sendNotification -->
+<a name="//apple_ref/applescript/func/sendNotification"></a>
+<h3><a name="sendNotification">sendNotification</a></h3>
+<hr class="afterName"><p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/sendNotification;name=start --><!-- begin abstract --><p>Displays a notification in Notification Center.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/sendNotification;name=end --></p>
+<div class='declaration_indent'>
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/sendNotification;name=start --><span class="keyword">on</span> <!-- a logicalPath="//apple_ref/applescript/instm/sendNotification //apple_ref/applescript/clm/sendNotification //apple_ref/applescript/intfcm/sendNotification //apple_ref/applescript/intfm/sendNotification //apple_ref/applescript/func/sendNotification //apple_ref/applescript/ftmplt/sendNotification //apple_ref/applescript/defn/sendNotification //apple_ref/applescript/macro/sendNotification //apple_ref/doc/anysymbol/sendNotification" machineGenerated="true" --><span class="function">sendNotification</span><!-- /a -->(
+    <span class="param">key</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/sendNotification;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class='param_indent'>
+<dl>
+<dt><!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/sendNotification/key;   name=sendNotification::key -->
+<a name="//apple_ref/doc/functionparam/sendNotification/key"></a>
+<code>key</code></dt><dd><p>a <code>Messages/</code> localization key as specified in 
+<code>Localizable.strings</code></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/sendNotification;name=start --><p>Loads Title, Message, and Details text from the workflow's
+localization and uses the strings to display a Notification Center
+notification to the user. Any combination of those subkeys may be 
+specified in the localization.
+</p>
+<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/sendNotification;name=end --><!-- end discussion -->
 <hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/setWindowViewNormal;   name=setWindowViewNormal -->
 <a name="//apple_ref/applescript/func/setWindowViewNormal"></a>
 <h3><a name="setWindowViewNormal">setWindowViewNormal</a></h3>
@@ -819,7 +809,9 @@ according to the localization of the Wunderlist application.
 the Wunderlist application bundle for available values and translations</dd>
 </dl>
 </div>
-<hr class="betweenSections">
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5><p><!-- begin return value --><p>The localized string for the given key, or the key itself if no
+localization was found.
+<!-- end return value --></p><hr class="betweenSections">
 <a name="HeaderDoc_vars"></a>
 <h2 class="h2tight">Globals</h2>
 <dl>
