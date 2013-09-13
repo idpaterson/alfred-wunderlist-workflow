@@ -120,7 +120,7 @@ on launchWunderlistIfNecessary()
 
 		# Tell the user what just happened. Unfortunately they're going to have to
 		# start their Alfred query again.
-		tell qWorkflow() to q_send_notification("Wunderlist on all desktops", "The workflow has made Wunderlist visible on all desktops to improve reliability.", "")
+		sendNotification("Messages/Wunderlist is now on all desktops")
 	end try
 
 end launchWunderlistIfNecessary
@@ -450,11 +450,23 @@ end getTaskInfoForFocusedList
 (*!
 	@abstract Returns the most appropriate translation of the specified string
 	according to the workflow's bundle.
+	@discussion This workflow uses a simple hierarchical structure for localization
+	to keep the keys organized and consistent. This means that the keys are not 
+	suitable for display as with simple <code>"Foo" = "Foo";</code> translation by
+	word or phrase. As a result, if the key is not localized, the handler will
+	return <code>missing value</code>.
+
 	@param key the string to localize, see <code>Localizable.strings</code> within 
 	this workflow for available values
+	@return the localized string for the given key, or <code>missing value</code>
+	if a value was not found for the key
 *)
 on l10n(key)
-	return get localized string of key in bundle getWorkflowFolder()
+	set localized to localized string of key in bundle getWorkflowFolder()
+	
+	if localized = key then set localized to missing value
+
+	return localized
 end l10n
 
 (*!
@@ -506,6 +518,25 @@ on qWorkflow()
 	return qWorkflowScript
 end qWorkflow
 
+(*!
+	@abstract   Displays a notification in Notification Center.
+	@discussion Loads Title, Message, and Details text from the workflow's
+	localization and uses the strings to display a Notification Center
+	notification to the user. Any combination of those subkeys may be 
+	specified in the localization.
+
+	@param key a <code>Messages/</code> localization key as specified in 
+	<code>Localizable.strings</code>
+*)
+on sendNotification(key)
+
+	set theMessage to l10n(key & "/Title")
+	set theDetails to l10n(key & "/Message")
+	set theExtra to l10n(key & "/Details")
+
+	tell qWorkflow() to q_send_notification(theMessage, theDetails, theExtra)
+
+end sendNotification
 
 (*! 
 	@functiongroup Alfred Actions
