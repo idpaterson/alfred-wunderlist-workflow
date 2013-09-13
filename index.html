@@ -228,6 +228,10 @@ to those that are keyboard-accessible. Regardless, it saves a lot of keystrokes!
 <h4>Group members:</h4>
 <div class='group_indent'>
 <dl>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/appl10n" target="_top" machineGenerated="true" -->appl10n<!-- /a --></tt></dt>
+<dd><p>Returns the most appropriate translation of the specified string
+according to the localization of the specified application.
+</dd>
 <dt><tt><!-- a logicalPath="//apple_ref/applescript/func/getWorkflowFolder" target="_top" machineGenerated="true" -->getWorkflowFolder<!-- /a --></tt></dt>
 <dd><p>Returns the path to the workflow folder within Alfred preferences.</dd>
 <dt><tt><!-- a logicalPath="//apple_ref/applescript/func/l10n" target="_top" machineGenerated="true" -->l10n<!-- /a --></tt></dt>
@@ -269,20 +273,6 @@ a task to be added to a specific list.
 </dl>
 </div>
 <p>&nbsp;</p>
-<h3>Configuration</h3>
-<div class='group_desc_indent'>
-</div>
-<h4>Group members:</h4>
-<div class='group_indent'>
-<dl>
-<dt><tt><!-- a logicalPath="//apple_ref/applescript/data/iconTheme" target="_top" machineGenerated="true" -->iconTheme<!-- /a --></tt></dt>
-<dd><p>Changes the appearance of list icons in Alfred
-</dd>
-<dt><tt><!-- a logicalPath="//apple_ref/applescript/data/listCacheInSeconds" target="_top" machineGenerated="true" -->listCacheInSeconds<!-- /a --></tt></dt>
-<dd><p>Specifies how often to reload information about task lists</dd>
-</dl>
-</div>
-<p>&nbsp;</p>
 <h3>Interaction with Wunderlist</h3>
 <div class='group_desc_indent'>
 </div>
@@ -294,6 +284,9 @@ a task to be added to a specific list.
 before the script was started.</dd>
 <dt><tt><!-- a logicalPath="//apple_ref/applescript/func/activateWunderlist" target="_top" machineGenerated="true" -->activateWunderlist<!-- /a --></tt></dt>
 <dd><p>Causes Wunderlist to become the active application.</dd>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/assignWunderlistToAllDesktops" target="_top" machineGenerated="true" -->assignWunderlistToAllDesktops<!-- /a --></tt></dt>
+<dd><p>Uses the Dock.app menu to make Wunderlist visible on all
+desktops, which is necessary for the list info to load reliably.</dd>
 <dt><tt><!-- a logicalPath="//apple_ref/applescript/func/focusInbox" target="_top" machineGenerated="true" -->focusInbox<!-- /a --></tt></dt>
 <dd><p>Moves focus within the app to the Inbox list.
 </dd>
@@ -315,12 +308,23 @@ before the script was started.</dd>
 <dt><tt><!-- a logicalPath="//apple_ref/applescript/func/getTaskInfoForFocusedList" target="_top" machineGenerated="true" -->getTaskInfoForFocusedList<!-- /a --></tt></dt>
 <dd><p>Loads info about the tasks in the currently visible task list
 </dd>
-<dt><tt><!-- a logicalPath="//apple_ref/applescript/func/launchWunderlistIfNecessary" target="_top" machineGenerated="true" -->launchWunderlistIfNecessary<!-- /a --></tt></dt>
-<dd><p>Launches the Wunderlist application if it is not already
-running and waits for it to load.</dd>
 <dt><tt><!-- a logicalPath="//apple_ref/applescript/func/setWindowViewNormal" target="_top" machineGenerated="true" -->setWindowViewNormal<!-- /a --></tt></dt>
 <dd><p>Switches to the "Normal" view in Wunderlist where both the list and 
 tasks are visible.</dd>
+</dl>
+</div>
+<p>&nbsp;</p>
+<h3>Configuration</h3>
+<div class='group_desc_indent'>
+</div>
+<h4>Group members:</h4>
+<div class='group_indent'>
+<dl>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/data/iconTheme" target="_top" machineGenerated="true" -->iconTheme<!-- /a --></tt></dt>
+<dd><p>Changes the appearance of list icons in Alfred
+</dd>
+<dt><tt><!-- a logicalPath="//apple_ref/applescript/data/listCacheInSeconds" target="_top" machineGenerated="true" -->listCacheInSeconds<!-- /a --></tt></dt>
+<dd><p>Specifies how often to reload information about task lists</dd>
 </dl>
 </div>
 <hr class="afterGroupHeading"><a name="HeaderDoc_functions"></a>
@@ -343,6 +347,13 @@ before the script was started.</dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/func/addTaskToList" target="_top">addTaskToList</a></tt></dt>
 <dd><p>Adds a task to the specified list in Wunderlist
 </dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/func/appl10n" target="_top">appl10n</a></tt></dt>
+<dd><p>Returns the most appropriate translation of the specified string
+according to the localization of the specified application.
+</dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/func/assignWunderlistToAllDesktops" target="_top">assignWunderlistToAllDesktops</a></tt></dt>
+<dd><p>Uses the Dock.app menu to make Wunderlist visible on all
+desktops, which is necessary for the list info to load reliably.</dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/func/focusInbox" target="_top">focusInbox</a></tt></dt>
 <dd><p>Moves focus within the app to the Inbox list.
 </dd>
@@ -370,9 +381,6 @@ before the script was started.</dd>
 <dd><p>Returns the most appropriate translation of the specified string
 according to the workflow's bundle.
 </dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/launchWunderlistIfNecessary" target="_top">launchWunderlistIfNecessary</a></tt></dt>
-<dd><p>Launches the Wunderlist application if it is not already
-running and waits for it to load.</dd>
 <dt><tt><a href="index.html#//apple_ref/applescript/func/qWorkflow" target="_top">qWorkflow</a></tt></dt>
 <dd><p>Loads and returns qWorkflow, ensuring that it is only loaded once
 and then reused as necessary.</dd>
@@ -530,6 +538,43 @@ or <em>Week</em>, the task will be added in the Inbox.
 keyboard focus on the task input for the specified list.
 </p>
 <!-- headerDoc=discussion;uid=//apple_ref/applescript/func/addTaskToList;name=end --><!-- end discussion -->
+<hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/appl10n;   name=appl10n -->
+<a name="//apple_ref/applescript/func/appl10n"></a>
+<h3><a name="appl10n">appl10n</a></h3>
+<hr class="afterName"><p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/appl10n;name=start --><!-- begin abstract --><p>Returns the most appropriate translation of the specified string
+according to the localization of the specified application.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/appl10n;name=end --></p>
+<div class='declaration_indent'>
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/appl10n;name=start --><span class="keyword">on</span> <!-- a logicalPath="//apple_ref/applescript/instm/appl10n //apple_ref/applescript/clm/appl10n //apple_ref/applescript/intfcm/appl10n //apple_ref/applescript/intfm/appl10n //apple_ref/applescript/func/appl10n //apple_ref/applescript/ftmplt/appl10n //apple_ref/applescript/defn/appl10n //apple_ref/applescript/macro/appl10n //apple_ref/doc/anysymbol/appl10n" machineGenerated="true" --><span class="function">appl10n</span><!-- /a -->(
+    <span class="param">key</span>,
+    <span class="param">appName</span>,
+    <span class="param">tableName</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/appl10n;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class='param_indent'>
+<dl>
+<dt><!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/appl10n/key;   name=appl10n::key -->
+<a name="//apple_ref/doc/functionparam/appl10n/key"></a>
+<code>key</code></dt><dd><p>the string to localize, see <code>Localizable.strings</code> within
+the application bundle for available values and translations</dd>
+<dt><!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/appl10n/appName;   name=appl10n::appName -->
+<a name="//apple_ref/doc/functionparam/appl10n/appName"></a>
+<code>appName</code></dt><dd><p>the name of the application from which to collect a localization</dd>
+<dt><!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/appl10n/tableName;   name=appl10n::tableName -->
+<a name="//apple_ref/doc/functionparam/appl10n/tableName"></a>
+<code>tableName</code></dt><dd><p>the name of the strings file from which to load the translation
+without the extension. For example, use <code>"Localizable"</code> to reference
+<em>Example.app/Contents/Resources/en.lproj/Localizable.strings</em></dd>
+</dl>
+</div>
+<hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/assignWunderlistToAllDesktops;   name=assignWunderlistToAllDesktops -->
+<a name="//apple_ref/applescript/func/assignWunderlistToAllDesktops"></a>
+<h3><a name="assignWunderlistToAllDesktops">assignWunderlistToAllDesktops</a></h3>
+<hr class="afterName"><p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/assignWunderlistToAllDesktops;name=start --><!-- begin abstract --><p>Uses the Dock.app menu to make Wunderlist visible on all
+desktops, which is necessary for the list info to load reliably.<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/assignWunderlistToAllDesktops;name=end --></p>
+<div class='declaration_indent'>
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/assignWunderlistToAllDesktops;name=start --><span class="keyword">on</span> <!-- a logicalPath="//apple_ref/applescript/instm/assignWunderlistToAllDesktops //apple_ref/applescript/clm/assignWunderlistToAllDesktops //apple_ref/applescript/intfcm/assignWunderlistToAllDesktops //apple_ref/applescript/intfm/assignWunderlistToAllDesktops //apple_ref/applescript/func/assignWunderlistToAllDesktops //apple_ref/applescript/ftmplt/assignWunderlistToAllDesktops //apple_ref/applescript/defn/assignWunderlistToAllDesktops //apple_ref/applescript/macro/assignWunderlistToAllDesktops //apple_ref/doc/anysymbol/assignWunderlistToAllDesktops" machineGenerated="true" --><span class="function">assignWunderlistToAllDesktops</span><!-- /a -->()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/assignWunderlistToAllDesktops;name=end --></pre>
+</div>
 <hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/focusInbox;   name=focusInbox -->
 <a name="//apple_ref/applescript/func/focusInbox"></a>
 <h3><a name="focusInbox">focusInbox</a></h3>
@@ -709,14 +754,6 @@ according to the workflow's bundle.
 this workflow for available values</dd>
 </dl>
 </div>
-<hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/launchWunderlistIfNecessary;   name=launchWunderlistIfNecessary -->
-<a name="//apple_ref/applescript/func/launchWunderlistIfNecessary"></a>
-<h3><a name="launchWunderlistIfNecessary">launchWunderlistIfNecessary</a></h3>
-<hr class="afterName"><p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/launchWunderlistIfNecessary;name=start --><!-- begin abstract --><p>Launches the Wunderlist application if it is not already
-running and waits for it to load.<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/launchWunderlistIfNecessary;name=end --></p>
-<div class='declaration_indent'>
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/launchWunderlistIfNecessary;name=start --><span class="keyword">on</span> <!-- a logicalPath="//apple_ref/applescript/instm/launchWunderlistIfNecessary //apple_ref/applescript/clm/launchWunderlistIfNecessary //apple_ref/applescript/intfcm/launchWunderlistIfNecessary //apple_ref/applescript/intfm/launchWunderlistIfNecessary //apple_ref/applescript/func/launchWunderlistIfNecessary //apple_ref/applescript/ftmplt/launchWunderlistIfNecessary //apple_ref/applescript/defn/launchWunderlistIfNecessary //apple_ref/applescript/macro/launchWunderlistIfNecessary //apple_ref/doc/anysymbol/launchWunderlistIfNecessary" machineGenerated="true" --><span class="function">launchWunderlistIfNecessary</span><!-- /a -->()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/launchWunderlistIfNecessary;name=end --></pre>
-</div>
 <hr class="betweenAPIEntries"><!-- headerDoc=func;  uid=//apple_ref/applescript/func/qWorkflow;   name=qWorkflow -->
 <a name="//apple_ref/applescript/func/qWorkflow"></a>
 <h3><a name="qWorkflow">qWorkflow</a></h3>
@@ -821,7 +858,7 @@ setting controls how often the cached list data is refreshed.
 </p>
 <!-- headerDoc=discussion;uid=//apple_ref/applescript/data/listCacheInSeconds;name=end --><!-- end discussion -->
 <p class="gapBeforeFooter">&nbsp;</p><hr class="afterFooter"><div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Thursday, September 12, 2013
+<p class="hd_timestamp">Last Updated: Friday, September 13, 2013
 </p></div>
 </td></tr></table>
 </body></html>
