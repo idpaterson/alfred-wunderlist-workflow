@@ -22,8 +22,11 @@ build/info.plist: source/info.plist
 build/wunderlist.scpt: source/wunderlist.applescript
 	osacompile -x -o build/wunderlist.scpt source/wunderlist.applescript
 
-build/q_workflow.scpt: lib/qWorkflow/compiled\ source/q_workflow.scpt
+build/q_workflow.scpt: build/bin lib/qWorkflow/compiled\ source/q_workflow.scpt
 	osacompile -x -o build/q_workflow.scpt lib/qWorkflow/compiled\ source/q_workflow.scpt
+
+build/bin: lib/qWorkflow/compiled\ source/bin
+	cp -r lib/qWorkflow/compiled\ source/bin build/
 
 build/localization: source/localization
 	cp -r source/localization/* build/

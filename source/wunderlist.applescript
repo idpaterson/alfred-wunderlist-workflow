@@ -65,6 +65,28 @@ on activatePreviousApplication()
 	
 end activatePreviousApplication
 
+(*! 
+	@abstract  Uses the Dock.app menu to make Wunderlist visible on all
+	desktops, which is necessary for the list info to load reliably.
+*)
+on assignWunderlistToAllDesktops()
+
+	set optionsMenu to appl10n("OPTIONS", "Dock", "DockMenus")
+	set allDesktopsMenuItem to appl10n("ALL_DESKTOPS", "Dock", "DockMenus")
+
+	tell application "System Events" 
+		tell UI element "Wunderlist" of list 1 of process "Dock"
+
+			# Show the context menu for the Wunderlist dock icon
+			perform action "AXShowMenu"
+			click menu item optionsMenu of menu 1
+			click menu item allDesktopsMenuItem of menu 1 of menu item optionsMenu of menu 1
+
+		end tell
+	end tell
+
+end assignWunderlistToAllDesktops
+
 (*!
 	@abstract  Launches the Wunderlist application if it is not already
 	running and waits for it to load.
@@ -88,6 +110,18 @@ on launchWunderlistIfNecessary()
 			end repeat
 		end tell
 	end if
+
+	try 
+		tell application "System Events" to get window appName of process appName
+	on error
+		# Wunderlist is not on the current desktop. Use this opportunity to
+		# assign it.
+		assignWunderlistToAllDesktops()
+
+		# Tell the user what just happened. Unfortunately they're going to have to
+		# start their Alfred query again.
+		tell qWorkflow() to q_send_notification("Wunderlist on all desktops", "The workflow has made Wunderlist visible on all desktops to improve reliability.", "")
+	end try
 
 end launchWunderlistIfNecessary
 
@@ -430,8 +464,22 @@ end l10n
 	the Wunderlist application bundle for available values and translations
 *)
 on wll10n(key)
-	tell application "Wunderlist" 
-		return localized string key
+	return appl10n(key, "Wunderlist", "Localizable")
+end l10n
+
+(*!
+	@abstract   Returns the most appropriate translation of the specified string
+	according to the localization of the specified application.
+	@param key the string to localize, see <code>Localizable.strings</code> within
+	the application bundle for available values and translations
+	@param appName the name of the application from which to collect a localization
+	@param tableName the name of the strings file from which to load the translation
+	without the extension. For example, use <code>"Localizable"</code> to reference
+	<em>Example.app/Contents/Resources/en.lproj/Localizable.strings</em>
+*)
+on appl10n(key, appName, tableName)
+	tell application appName
+		return localized string key from table tableName
 	end tell
 end l10n
 
