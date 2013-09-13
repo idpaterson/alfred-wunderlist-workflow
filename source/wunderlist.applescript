@@ -83,14 +83,10 @@ on launchWunderlistIfNecessary()
 
 		# Wait for application to launch
 		tell application "System Events"
-			repeat until visible of process appName is false
+			repeat until count of windows of process appName > 0
 				delay 0.05
-				set visible of process appName to false
 			end repeat
 		end tell
-
-		# Allow UI to load
-		delay 1
 	end if
 
 end launchWunderlistIfNecessary
