@@ -66,6 +66,36 @@ on activatePreviousApplication()
 end activatePreviousApplication
 
 (*!
+	@abstract  Launches the Wunderlist application if it is not already
+	running and waits for it to load.
+*)
+on launchWunderlistIfNecessary()
+
+	set appName to "Wunderlist"
+	
+	tell application "System Events"
+		set wunderlistIsRunning to (name of processes) contains appName
+	end tell
+
+	# Wunderlist has to be running, if not 
+	if not wunderlistIsRunning then
+		tell application appName to launch
+
+		# Wait for application to launch
+		tell application "System Events"
+			repeat until visible of process appName is false
+				delay 0.05
+				set visible of process appName to false
+			end repeat
+		end tell
+
+		# Allow UI to load
+		delay 1
+	end if
+
+end launchWunderlistIfNecessary
+
+(*!
 	@abstract   Moves focus within the app to the Inbox list.
 	@discussion Uses the keyboard to move focus within the app to the Inbox list. 
 	The Inbox list is a good reference point because it is always at the top of the 
@@ -466,6 +496,7 @@ end qWorkflow
 	list identifier.
 *)
 on addTask(task)
+
 	if task is not "" then
 		# The format used to add a task to a specific list, e.g. 5::2% milk
 		set components to qWorkflow()'s q_split(task, "::")
@@ -491,6 +522,8 @@ on addTask(task)
 				return
 			end if
 		end if
+
+		launchWunderlistIfNecessary()
 		
 		activateWunderlist()
 		
@@ -512,6 +545,8 @@ on addTask(task)
 		activatePreviousApplication()
 
 	else 
+
+		launchWunderlistIfNecessary()
 		
 		# If there is no task, just show the Wunderlist window and prepare
 		# for task entry.
@@ -540,6 +575,8 @@ end addTask
 	@param task The text of the task
 *)
 on addTaskToList(listIndex, task)
+
+	launchWunderlistIfNecessary()
 	
 	activateWunderlist()
 
@@ -580,6 +617,8 @@ end addTask
 	@param task The text of the task
 *)
 on addTaskToInbox(task)
+
+	launchWunderlistIfNecessary()
 	
 	activateWunderlist()
 	
@@ -621,6 +660,8 @@ end addTaskToInbox
 	@param listName The name of the new list
 *)
 on addList(listName)
+
+	launchWunderlistIfNecessary()
 	
 	activateWunderlist()
 	
@@ -671,6 +712,9 @@ end addList
 	@param task The text of the task
 *)
 on showListOptions(task)
+
+	launchWunderlistIfNecessary()
+
 	# Load qWorkflow to format the output
 	set wf to qWorkflow()'s new_workflow()
 
