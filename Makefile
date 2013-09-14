@@ -45,5 +45,7 @@ docs: source/wunderlist.applescript
 	headerdoc2html -o docs source/wunderlist.applescript
 	mv docs/wunderlist_applescript/* docs/
 	rm -rf docs/wunderlist_applescript
+	gatherheaderdoc docs
+	rm docs/masterTOC.html
 
 .PHONY: all clean build/localization build/icons
