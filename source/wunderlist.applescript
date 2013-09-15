@@ -804,56 +804,102 @@ on showListOptions(task)
 	# Load qWorkflow to format the output
 	set wf to qWorkflow()'s new_workflow()
 
+	set taskComponents to qWorkflow()'s q_split(task, ":")
+	set listFilter to item 1 of taskComponents
+	set task to ""
+
+	if count of taskComponents is 2 then
+		set task to item 2 of taskComponents
+	end if
+
 	set allLists to getListInfoInWorkflow(wf)
+	set writableLists to {}
+	set matchingLists to {}
+	set canAutocomplete to true
 
 	# These lists do not allow addition of new tasks
 	set readonlyLists to {wll10n("smart_list_all"), wll10n("smart_list_assigned_to_me"), wll10n("smart_list_completed"), wll10n("smart_list_week")}
 
-	# TODO: filter and/or sort lists by user input
+	# Skip "smart lists" that do not allow creation of new tasks
 	repeat with listInfo in allLists
+		if listInfo's listName is not in readonlyLists then set writableLists's end to listInfo
+	end repeat
+
+	# Find lists matching the user's filter
+	repeat with listInfo in writableLists
+		ignoring case and diacriticals
+			if listInfo's listName contains listFilter then set matchingLists's end to listInfo
+		end ignoring
+	end repeat
+
+	# There are no matching lists, so just let the user type a
+	# task and select a list later using the arrow keys
+	if count of matchingLists is 0 then
+		set canAutocomplete to false
+		set matchingLists to writableLists
+
+		# If the user did not type a colon the listFilter will
+		# contain the text of the task. We know it doesn't match
+		# any of the lists so now we can just reassign this.
+		if task is "" then
+			set task to listFilter
+		end if
+	# Show "a task" as a placeholder in "Add [a task] to this list"
+	else if task is "" then
+		set task to "a task"
+	end if
+
+	# TODO: filter and/or sort lists by user input
+	repeat with listInfo in matchingLists
 		set listName to listName of listInfo
 
-		# Skip "smart lists" that do not allow creation of new tasks
-		if listName is not in readonlyLists then
-			set taskCount to taskCount of listInfo
-			set listIndex to listIndex of listInfo
-			# TODO: option to sort lists by most frequently used in Alfred
-			# temporarily disabled by not providing a uid
-			set theUid to missing value # "com.ipaterson.alfred.wunderlist.lists." & listName
-			set theArg to listIndex as text & "::" & task
-			set theSubtitle to "Add " & task & " to this list"
-			set theIcon to "/generic.png"
+		set taskCount to taskCount of listInfo
+		set listIndex to listIndex of listInfo
+		# TODO: option to sort lists by most frequently used in Alfred
+		# temporarily disabled by not providing a uid
+		set theUid to missing value # "com.ipaterson.alfred.wunderlist.lists." & listName
+		set theAutocomplete to missing value
+		set theArg to listIndex as text & "::" & task
+		set theSubtitle to "Add " & task & " to this list"
+		set theIcon to "/generic.png"
+		set isValid to true 
 
-			# TODO: find a way to determine whether the task count is
-			# accurate. Currently the Wunderlist UI populates the label
-			# with a random value if there are no tasks in a list.
-			# Unfortunately it does not seem possible to distinguish
-			# whether the number is visible or not based on the attributes
-			# available to AppleScript.
-			(*
-			set theSubtitle to taskCount as text
-
-			if taskCount is 1 then
-				set theSubtitle to theSubtitle & " task"
-			else
-				set theSubtitle to theSubtitle & " tasks"
-			end if
-			*)
-
-			# Choose the proper icon for each list
-			if listName is wll10n("smart_list_inbox") then
-				set theIcon to "/inbox.png"
-			else if listName is wll10n("smart_list_today") then
-				set theIcon to "/today.png"
-			else if listName is wll10n("smart_list_starred") then
-				set theIcon to "/starred.png"
-			end if
-
-			# Load the icon based on the configured theme 
-			set theIcon to "lists/" & iconTheme & theIcon
-			
-			add_result of wf with isValid given theUid:theUid, theArg:theArg, theTitle:listName, theSubtitle:theSubtitle, theAutocomplete:missing value, theIcon:theIcon, theType:missing value
+		# If autocompletion is possible, set isValid to false
+		# to enable autocomplete on tab
+		if canAutocomplete then
+			set theAutocomplete to listName & ":"
+			set isValid to false
 		end if
+
+		# TODO: find a way to determine whether the task count is
+		# accurate. Currently the Wunderlist UI populates the label
+		# with a random value if there are no tasks in a list.
+		# Unfortunately it does not seem possible to distinguish
+		# whether the number is visible or not based on the attributes
+		# available to AppleScript.
+		(*
+		set theSubtitle to taskCount as text
+
+		if taskCount is 1 then
+			set theSubtitle to theSubtitle & " task"
+		else
+			set theSubtitle to theSubtitle & " tasks"
+		end if
+		*)
+
+		# Choose the proper icon for each list
+		if listName is wll10n("smart_list_inbox") then
+			set theIcon to "/inbox.png"
+		else if listName is wll10n("smart_list_today") then
+			set theIcon to "/today.png"
+		else if listName is wll10n("smart_list_starred") then
+			set theIcon to "/starred.png"
+		end if
+
+		# Load the icon based on the configured theme 
+		set theIcon to "lists/" & iconTheme & theIcon
+		
+		add_result of wf given theUid:theUid, theArg:theArg, theTitle:listName, theSubtitle:theSubtitle, theAutocomplete:theAutocomplete, isValid:isValid, theIcon:theIcon, theType:missing value
 	end repeat
 	
 	return wf's to_xml("")
