@@ -1,5 +1,5 @@
 {
-    "version": 0.1,
+    "version": 0.101,
     "download_url": "https://raw.github.com/idpaterson/alfred-wunderlist-workflow/master/Wunderlist.alfredworkflow",
-    "description": "Initial release of the workflow."
+    "description": "Fixed a problem with returning to Terminal after adding a task rather than the previous app."
 }
