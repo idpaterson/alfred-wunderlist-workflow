@@ -38,7 +38,7 @@ property listCacheInSeconds : 30
 *)
 
 # Keep track of the current app
-property originalApp : path to frontmost application as text
+property originalApp : missing value
 
 # The path to this workflow within Alfred's preferences bundle
 property workflowFolder : missing value
@@ -51,6 +51,9 @@ property qWorkflowScript : missing value
 *)
 on activateWunderlist()
 	
+	# Ensure we can return to the current active application later
+	set originalApp to path to frontmost application as text
+
 	activate application "Wunderlist"
 	
 end activateWunderlist
