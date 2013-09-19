@@ -46,6 +46,9 @@ property workflowFolder : missing value
 # The qWorkflow script loaded into memory as necessary
 property qWorkflowScript : missing value
 
+# The current workflow created by qWorkflow
+property workflow : missing value
+
 (*! 
 	@abstract Causes Wunderlist to become the active application.
 *)
@@ -278,7 +281,7 @@ end setWindowViewNormal
 
 (*!
 	@abstract Loads some basic information about all of the visible lists in Wunderlist.
-	@discussion Wunderlist exposes a small amount of information about the tasks that
+	@discussion Wunderlist exposes a small amount of information about the lists that
 	can be retrieved by traversing the UI. This information includes the name of each
 	list and its number of tasks.
 
@@ -288,6 +291,12 @@ end setWindowViewNormal
 	appears to change in an undefined way, so unfortunately at this time the task
 	count is unreliable.
 
+	The list info is cached as specified by @link listCacheInSeconds @/link
+	to optimize repetitive access of the list, as with an Alfred Script Filter.
+
+	The keys <code>lists</code> and <code>listsUpdatedDate</code> in the default
+	<code>settings.plist</code> are used to track the lists state.
+
 	@return A list of records in the <code>ListInfo</code> format described below
 	@attributeList <code>ListInfo</code> record
 		<code>listName</code>  The display name of the list
@@ -295,6 +304,17 @@ end setWindowViewNormal
 	    <code>listIndex</code> The one-based index of the list
 *)
 on getListInfo()
+
+	set wf to getCurrentWorkflow()
+
+	# Load the list info and the cache date
+	set listInfo to wf's get_value("lists", "")
+	set lastUpdatedDate to wf's get_value("listsUpdatedDate", "")
+
+	# Reload the list info if the cached data is missing or expired
+	if lastUpdatedDate is not missing value and current date - lastUpdatedDate ≤ listCacheInSeconds then
+		return listInfo
+	end if
 
 	tell application "System Events"
 		tell process "Wunderlist"
@@ -321,40 +341,15 @@ on getListInfo()
 				
 			end repeat
 			
-			return listInfo
 		end tell
 	end tell
-	
-end getListInfo
 
-(*!
-	@abstract   Retrieves cached list info or loads the list data again if necessary
-	@discussion The list info is cached as specified by @link listCacheInSeconds @/link
-	to optimize repetitive access of the list, as with an Alfred Script Filter.
-
-	The keys <code>lists</code> and <code>listsUpdatedDate</code> in the default
-	<code>settings.plist</code> are used to track the lists state.
-	@see getListInfo
-	@param wf The qWorkflow workflow object for this script
-	@return A list of <code>ListValue</code> records
-*)
-on getListInfoInWorkflow(wf)
-
-	# Load the list info and the cache date
-	set listInfo to wf's get_value("lists", "")
-	set lastUpdatedDate to wf's get_value("listsUpdatedDate", "")
-
-	# Reload the list info if the cached data is missing or expired
-	if lastUpdatedDate is missing value or current date - lastUpdatedDate > listCacheInSeconds then
-		set listInfo to getListInfo()
-
-		wf's set_value("lists", listInfo, "")
-		wf's set_value("listsUpdatedDate", current date, "")
-	end if
+	wf's set_value("lists", listInfo, "")
+	wf's set_value("listsUpdatedDate", current date, "")
 
 	return listInfo
-
-end getListInfoInWorkflow
+	
+end getListInfo
 
 (*!
 	@abstract   Finds the index of the specified list in the list table
@@ -533,6 +528,18 @@ on qWorkflow()
 end qWorkflow
 
 (*!
+	@abstract Provides access to the current workflow constructed by qWorkflow.
+	@return The workflow constructed by qWorkflow's <code>new_workflow</code>
+*)
+on getCurrentWorkflow()
+	if workflow is missing value then
+		set workflow to qWorkflow()'s new_workflow()
+	end if 
+
+	return workflow
+end getCurrentWorkflow
+
+(*!
 	@abstract   Displays a notification in Notification Center.
 	@discussion Loads Title, Message, and Details text from the workflow's
 	localization and uses the strings to display a Notification Center
@@ -559,34 +566,32 @@ end sendNotification
 (*!
 	@abstract Adds a result to Wunderlist based on the workflow's
 	localization for the provided key.
-	@param wf The qWorkflow workflow object for this script
 	@param theKey The localization key supporting Title and Details
 	@param theArg The argument that will be passed on
 	@param theIcon The icon to use for the result item
 	@param isValid Sets whether the result item can be actioned
 	@param theAutocomplete The autocomplete value for the result item
 *)
-on addResultWithLocalization given wf:_wf, theKey:_key, theUid:_uid, theArg:_arg, theIcon:_icon, theAutocomplete:_autocomplete, theType:_type, isValid:_valid
+on addResultWithLocalization given theKey:_key, theUid:_uid, theArg:_arg, theIcon:_icon, theAutocomplete:_autocomplete, theType:_type, isValid:_valid
 
 	# Load localizations
 	set _title to l10n(_key & "/Title")
 	set _subtitle to l10n(_key & "/Details")
 
-	tell _wf to add_result given theUid:_uid, theArg:_arg, theTitle:_title, theSubtitle:_subtitle, theIcon:_icon, theAutocomplete:_autocomplete, theType:_type, isValid:_valid
+	tell getCurrentWorkflow() to add_result given theUid:_uid, theArg:_arg, theTitle:_title, theSubtitle:_subtitle, theIcon:_icon, theAutocomplete:_autocomplete, theType:_type, isValid:_valid
 
 end addResultWithLocalization
 
 (*!
 	@abstract Adds a result to Alfred that allows the task to be added to
 	the list that is currently active in Wunderlist.
-	@param wf The qWorkflow workflow object for this script
 	@param query The complete Alfred query
 *)
-on addResultForInsertingTaskInActiveList(wf, query)
+on addResultForInsertingTaskInActiveList(query)
 
 	# TODO: show the name of the active list so that there is no doubt which
 	# will receive the task.
-	addResultWithLocalization with isValid given wf:wf, theKey:"Results/Add task to active list", theUid:missing value, theArg:query, theIcon:"icon.png", theAutocomplete:missing value, theType:missing value
+	addResultWithLocalization with isValid given theKey:"Results/Add task to active list", theUid:missing value, theArg:query, theIcon:"icon.png", theAutocomplete:missing value, theType:missing value
 	
 end addResultForInsertingTaskInActiveList
 
@@ -842,9 +847,6 @@ on showListOptions(task)
 
 	launchWunderlistIfNecessary()
 
-	# Load qWorkflow to format the output
-	set wf to qWorkflow()'s new_workflow()
-
 	set taskComponents to qWorkflow()'s q_split(task, ":")
 	set listFilter to ""
 	set task to ""
@@ -857,7 +859,7 @@ on showListOptions(task)
 		set task to item 2 of taskComponents
 	end if
 
-	set allLists to getListInfoInWorkflow(wf)
+	set allLists to getListInfo()
 	set writableLists to {}
 	set matchingLists to {}
 	set canAutocomplete to true
@@ -895,7 +897,7 @@ on showListOptions(task)
 
 		# Since autocomplete is disabled, set the first item to
 		# the active list.
-		addResultForActiveList(wf, task)
+		addResultForInsertingTaskInActiveList(task)
 
 		# If the user did not type a colon the listFilter will
 		# contain the text of the task. We know it doesn't match
@@ -958,15 +960,15 @@ on showListOptions(task)
 		# Load the icon based on the configured theme 
 		set theIcon to "lists/" & iconTheme & theIcon
 		
-		add_result of wf given theUid:theUid, theArg:theArg, theTitle:listName, theSubtitle:theSubtitle, theAutocomplete:theAutocomplete, isValid:isValid, theIcon:theIcon, theType:missing value
+		tell getCurrentWorkflow() to add_result given theUid:theUid, theArg:theArg, theTitle:listName, theSubtitle:theSubtitle, theAutocomplete:theAutocomplete, isValid:isValid, theIcon:theIcon, theType:missing value
 	end repeat
 
 	# When autocompleting, show the active list option as the
 	# last result to avoid inhibiting tab completion
 	if canAutocomplete then
-		addResultForInsertingTaskInActiveList(wf, task)
+		addResultForInsertingTaskInActiveList(task)
 	end if
 	
-	return wf's to_xml("")
+	return getCurrentWorkflow()'s to_xml("")
 	
 end showListOptions
