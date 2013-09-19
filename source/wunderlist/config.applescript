@@ -2,6 +2,10 @@
 	@header     Configuration
 	@abstract   Basic configurations available to users building the
 	            workflow from source.
+	@discussion Each of the configurations provided here is a candidate
+	            for user-level configuration if it seems useful. Until
+	            the workflow supports that, configurable properties will
+	            be tracked here for clarity.
 	@author     Ian Paterson
 *)
 

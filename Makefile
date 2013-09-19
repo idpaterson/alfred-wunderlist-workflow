@@ -78,7 +78,7 @@ clean:
 	rm -rf Wunderlist.alfredworkflow Wunderlist.json
 
 # Generates documentation in gh-pages branch submodule at docs/
-docs: source/wunderlist.applescript
+docs: source/*.applescript source/*/*.applescript
 	headerdoc2html -o docs source/*.applescript source/*/*.applescript
 	gatherheaderdoc docs
 
