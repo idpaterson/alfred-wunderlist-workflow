@@ -8,29 +8,8 @@
 	@version    0.1
 *)
 
-(*! 
-	@group Configuration
-*)
-
-(*!
-	Determines which color theme to use for the list icons. These
-	icons 
-
-	@abstract Changes the appearance of list icons in Alfred
-	@attributelist Supported Values
-		light For use in dark-colored Alfred themes
-		dark  For use in light-colored Alfred themes
-*)
-property iconTheme : "light"
-
-(*!
-	The list of tasks available in Wunderlist is cached by this workflow,
-	enabling faster responses to typing in Script Filter inputs. This
-	setting controls how often the cached list data is refreshed.
-
-	@abstract Specifies how often to reload information about task lists
-*)
-property listCacheInSeconds : 30
+#include "../lib/qWorkflow/uncompiled source/q_workflow"
+#include "wunderlist/config"
 
 
 (*! 
@@ -42,9 +21,6 @@ property originalApp : missing value
 
 # The path to this workflow within Alfred's preferences bundle
 property workflowFolder : missing value
-
-# The qWorkflow script loaded into memory as necessary
-property qWorkflowScript : missing value
 
 (*! 
 	@abstract Causes Wunderlist to become the active application.
@@ -520,19 +496,6 @@ on getWorkflowFolder()
 end getWorkflowFolder
 
 (*!
-	@abstract Loads and returns qWorkflow, ensuring that it is only loaded once
-	and then reused as necessary.
-	@return The <code>script</code> object containing the qWorkflow library.
-*)
-on qWorkflow()
-	if qWorkflowScript is missing value then
-		set qWorkflowScript to load script POSIX file ((do shell script "pwd") & "/q_workflow.scpt")
-	end if 
-
-	return qWorkflowScript
-end qWorkflow
-
-(*!
 	@abstract   Displays a notification in Notification Center.
 	@discussion Loads Title, Message, and Details text from the workflow's
 	localization and uses the strings to display a Notification Center
@@ -548,7 +511,7 @@ on sendNotification(key)
 	set theDetails to l10n(key & "/Message")
 	set theExtra to l10n(key & "/Details")
 
-	tell qWorkflow() to q_send_notification(theMessage, theDetails, theExtra)
+	q_send_notification(theMessage, theDetails, theExtra)
 
 end sendNotification
 
@@ -588,7 +551,7 @@ on addTask(task)
 
 	if task is not "" then
 		# The format used to add a task to a specific list, e.g. 5::2% milk
-		set components to qWorkflow()'s q_split(task, "::")
+		set components to q_split(task, "::")
 
 		# If a list index is specified, add the task to it
 		if count of components is 2 then
@@ -598,7 +561,7 @@ on addTask(task)
 			return
 		end if
 
-		set components to qWorkflow()'s q_split(task, ":")
+		set components to q_split(task, ":")
 
 		# If a list name is specified, add the task to that list
 		if count of components is 2 then
@@ -805,7 +768,7 @@ on showListOptions(task)
 	launchWunderlistIfNecessary()
 
 	# Load qWorkflow to format the output
-	set wf to qWorkflow()'s new_workflow()
+	set wf to new_workflow()
 
 	set allLists to getListInfoInWorkflow(wf)
 
