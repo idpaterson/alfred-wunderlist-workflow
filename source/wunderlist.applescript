@@ -552,6 +552,44 @@ on sendNotification(key)
 
 end sendNotification
 
+(*!
+	@functiongroup Workflow Output
+*)
+
+(*!
+	@abstract Adds a result to Wunderlist based on the workflow's
+	localization for the provided key.
+	@param wf The qWorkflow workflow object for this script
+	@param theKey The localization key supporting Title and Details
+	@param theArg The argument that will be passed on
+	@param theIcon The icon to use for the result item
+	@param isValid Sets whether the result item can be actioned
+	@param theAutocomplete The autocomplete value for the result item
+*)
+on addResultWithLocalization given wf:_wf, theKey:_key, theUid:_uid, theArg:_arg, theIcon:_icon, theAutocomplete:_autocomplete, theType:_type, isValid:_valid
+
+	# Load localizations
+	set _title to l10n(_key & "/Title")
+	set _subtitle to l10n(_key & "/Details")
+
+	tell _wf to add_result given theUid:_uid, theArg:_arg, theTitle:_title, theSubtitle:_subtitle, theIcon:_icon, theAutocomplete:_autocomplete, theType:_type, isValid:_valid
+
+end addResultWithLocalization
+
+(*!
+	@abstract Adds a result to Alfred that allows the task to be added to
+	the list that is currently active in Wunderlist.
+	@param wf The qWorkflow workflow object for this script
+	@param query The complete Alfred query
+*)
+on addResultForInsertingTaskInActiveList(wf, query)
+
+	# TODO: show the name of the active list so that there is no doubt which
+	# will receive the task.
+	addResultWithLocalization with isValid given wf:wf, theKey:"Results/Add task to active list", theUid:missing value, theArg:query, theIcon:"icon.png", theAutocomplete:missing value, theType:missing value
+	
+end addResultForInsertingTaskInActiveList
+
 (*! 
 	@functiongroup Alfred Actions
 *)
@@ -808,8 +846,12 @@ on showListOptions(task)
 	set wf to qWorkflow()'s new_workflow()
 
 	set taskComponents to qWorkflow()'s q_split(task, ":")
-	set listFilter to item 1 of taskComponents
+	set listFilter to ""
 	set task to ""
+
+	if count of taskComponents ≥ 1 then
+		set listFilter to item 1 of taskComponents
+	end if
 
 	if count of taskComponents is 2 then
 		set task to item 2 of taskComponents
@@ -831,7 +873,17 @@ on showListOptions(task)
 	# Find lists matching the user's filter
 	repeat with listInfo in writableLists
 		ignoring case and diacriticals
-			if listInfo's listName contains listFilter then set matchingLists's end to listInfo
+			# The list is an exact match, look no further
+			if listInfo's listName is listFilter then
+				# Show only the matching list and add the task 
+				# on return
+				set matchingLists to {listInfo}
+				set canAutocomplete to false
+				exit repeat
+			# The list filter is a substring of this list name
+			else if listInfo's listName contains listFilter then 
+				set matchingLists's end to listInfo
+			end if
 		end ignoring
 	end repeat
 
@@ -840,6 +892,10 @@ on showListOptions(task)
 	if count of matchingLists is 0 then
 		set canAutocomplete to false
 		set matchingLists to writableLists
+
+		# Since autocomplete is disabled, set the first item to
+		# the active list.
+		addResultForActiveList(wf, task)
 
 		# If the user did not type a colon the listFilter will
 		# contain the text of the task. We know it doesn't match
@@ -852,7 +908,7 @@ on showListOptions(task)
 		set task to "a task"
 	end if
 
-	# TODO: filter and/or sort lists by user input
+	# Display all matching lists
 	repeat with listInfo in matchingLists
 		set listName to listName of listInfo
 
@@ -904,6 +960,12 @@ on showListOptions(task)
 		
 		add_result of wf given theUid:theUid, theArg:theArg, theTitle:listName, theSubtitle:theSubtitle, theAutocomplete:theAutocomplete, isValid:isValid, theIcon:theIcon, theType:missing value
 	end repeat
+
+	# When autocompleting, show the active list option as the
+	# last result to avoid inhibiting tab completion
+	if canAutocomplete then
+		addResultForInsertingTaskInActiveList(wf, task)
+	end if
 	
 	return wf's to_xml("")
 	
