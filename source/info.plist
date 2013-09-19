@@ -200,7 +200,7 @@ end tell</string>
 			<key>config</key>
 			<dict>
 				<key>escaping</key>
-				<integer>127</integer>
+				<integer>68</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"
 set wllib to load script POSIX file (workflowFolder &amp; "/wunderlist.scpt")

@@ -1,5 +1,5 @@
 {
-    "version": 0.101,
+    "version": 0.102,
     "download_url": "https://raw.github.com/idpaterson/alfred-wunderlist-workflow/master/Wunderlist.alfredworkflow",
-    "description": "Fixed a problem with returning to Terminal after adding a task rather than the previous app."
+    "description": "Fixed an issue with adding multiple-word tasks with the wl command."
 }
