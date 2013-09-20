@@ -317,6 +317,48 @@ on getListInfo()
 end getListInfo
 
 (*!
+	@abstract Loads information about the currently selected list in Wunderlist.
+	@discussion The active list is highlighted in the Wunderlist UI, but finding
+	it with UI traversal is not straightforward. In order to find which list is
+	selected, the <em>Rename Selected List</em> menu option is required. It 
+	creates an editable text element that is easy to isolate with AppleScript.
+
+	From the text element the name of the list can be retrieved. This allows the
+	proper result from @link getListInfo @/link to be returned.
+
+	@see getListInfo
+	@return A records in the <code>ListInfo</code> format
+*)
+on getListInfoForActiveList()
+
+	tell application "System Events"
+		tell process "Wunderlist"
+			# Rename the currently selected list. Unfortunately despite being
+			# focused, the UI element for the list is not actually marked as
+			# focused, so we have to use a workaround
+			click menu item 1 of menu 1 of menu bar item 4 of menu bar 1
+
+			# Get the list name from the text input
+			set theListName to value of static text 1 of button 1 of UI element 1 of UI element 1 of UI element 1 of splitter group 1 of window "Wunderlist" 
+
+			# New task to focus the task input and cancel the list rename
+			click menu item 1 of menu 1 of menu bar item 3 of menu bar 1
+
+		end tell
+	end tell
+
+	set listsInfo to getListInfo()
+
+	# Return the matching list
+	repeat with listInfo in listsInfo
+		if listName of listInfo is theListName
+			return listInfo
+		end 
+	end repeat
+
+end getListInfoForActiveList
+
+(*!
 	@abstract   Finds the index of the specified list in the list table
 	@discussion Returns a one-based index of the list with the specified name,
 	or <code>missing value</code> if the list does not exist
