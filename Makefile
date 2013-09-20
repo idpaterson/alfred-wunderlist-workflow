@@ -79,6 +79,7 @@ clean:
 
 # Generates documentation in gh-pages branch submodule at docs/
 docs: source/*.applescript source/*/*.applescript
+	rm -rf docs
 	headerdoc2html -o docs source/*.applescript source/*/*.applescript
 	gatherheaderdoc docs
 
