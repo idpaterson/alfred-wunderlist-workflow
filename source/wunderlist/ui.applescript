@@ -157,16 +157,12 @@ on focusListAtIndex(listIndex)
 	
 	focusInbox()
 	
-	tell application "System Events"
-		
-		repeat listIndex - 1 times
+	repeat listIndex - 1 times
+	
+		# Down arrow to go to the next list
+		tell application "System Events" to key code 125
 			
-			# Down arrow to go to the next list
-			key code 125
-			
-		end repeat
-		
-	end tell
+	end repeat
 	
 end focusListAtIndex
 
