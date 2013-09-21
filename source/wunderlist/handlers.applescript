@@ -317,8 +317,13 @@ on showListOptions(task)
 	# There are no matching lists, so just let the user type a
 	# task and select a list later using the arrow keys
 	if count of matchingLists is 0 then
-		set canAutocomplete to false
 		set matchingLists to writableLists
+
+		# If no text has been entered, allow autocompletiong,
+		# otherwise the user has begun to type a task. In
+		# that case, actioning a list in Alfred should insert
+		# the task into the list, not perform autocompletion.
+		if listFilter is not "" then set canAutocomplete to false
 
 		# Since autocomplete is disabled, set the first item to
 		# the active list.
@@ -330,8 +335,10 @@ on showListOptions(task)
 		if task is "" then
 			set task to listFilter
 		end if
+	end if
+
 	# Show "a task" as a placeholder in "Add [a task] to this list"
-	else if task is "" then
+	if task is "" then
 		set task to "a task"
 	end if
 
