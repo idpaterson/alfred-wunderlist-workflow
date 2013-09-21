@@ -285,7 +285,7 @@ on showListOptions(task)
 	set allLists to getListInfo()
 	set writableLists to {}
 	set matchingLists to {}
-	set canAutocomplete to true
+	set canAutocomplete to (task is "")
 
 	# These lists do not allow addition of new tasks
 	set readonlyLists to {wll10n("smart_list_all"), wll10n("smart_list_assigned_to_me"), wll10n("smart_list_completed"), wll10n("smart_list_week")}
