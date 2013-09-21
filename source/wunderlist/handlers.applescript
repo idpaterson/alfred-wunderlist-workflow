@@ -298,8 +298,10 @@ on showListOptions(task)
 	# Find lists matching the user's filter
 	repeat with listInfo in writableLists
 		ignoring case and diacriticals
-			# The list is an exact match, look no further
-			if listInfo's listName is listFilter then
+			# The list is an exact match and the user has typed
+			# (or autocompleted) the : following the list name, 
+			# look no further
+			if listInfo's listName is listFilter and count of taskComponents is 2 then
 				# Show only the matching list and add the task 
 				# on return
 				set matchingLists to {listInfo}
