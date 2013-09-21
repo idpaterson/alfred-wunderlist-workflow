@@ -394,12 +394,6 @@ on showListOptions(task)
 		
 		tell getCurrentWorkflow() to add_result given theUid:theUid, theArg:theArg, theTitle:listName, theSubtitle:theSubtitle, theAutocomplete:theAutocomplete, isValid:isValid, theIcon:theIcon, theType:missing value
 	end repeat
-
-	# When autocompleting, show the active list option as the
-	# last result to avoid inhibiting tab completion
-	if canAutocomplete then
-		addResultForInsertingTaskInActiveList(task)
-	end if
 	
 	return getCurrentWorkflow()'s to_xml("")
 	
