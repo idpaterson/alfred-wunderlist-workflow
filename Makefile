@@ -8,6 +8,7 @@
 # 	make docs  Generate documentation in docs/ with HeaderDoc
 #
 
+FULL_VERSION := `git describe --abbrev=0`
 VERSION := `git describe --abbrev=0 | sed 's/-.*//'`
 
 all: Wunderlist.alfredworkflow
@@ -15,7 +16,7 @@ all: Wunderlist.alfredworkflow
 # Prepares the workflow for a release
 # Requires a value for the RELEASE_NOTES macro
 #   make release RELEASE_NOTES="Foo"
-release: Wunderlist.json Wunderlist.alfredworkflow
+release: update-version-numbers Wunderlist.json Wunderlist.alfredworkflow
 
 # The installable workflow
 Wunderlist.alfredworkflow: build build/info.plist build/wunderlist.scpt build/icons build/localization build/update.json
@@ -72,6 +73,9 @@ require-release-notes:
 		$(error Must define RELEASE_NOTES macro to release)
     endif
 
+update-version-numbers:
+	perl -p -i -e "s/(\@version\s*)\S.*/\$${1}${FULL_VERSION}/" source/*.applescript source/*/*.applescript
+
 # Removes intermediary build files
 clean:
 	rm -rf build/
@@ -83,4 +87,4 @@ docs: source/*.applescript source/*/*.applescript
 	headerdoc2html -o docs source/*.applescript source/*/*.applescript
 	gatherheaderdoc docs
 
-.PHONY: all clean build/localization build/icons build/update.json Wunderlist.json require-release-notes
+.PHONY: all clean build/localization build/icons build/update.json Wunderlist.json require-release-notes update-version-numbers
