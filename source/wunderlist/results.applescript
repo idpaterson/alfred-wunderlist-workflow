@@ -7,19 +7,24 @@
 (*!
 	@abstract Adds a result to Wunderlist based on the workflow's
 	localization for the provided key.
-	@param theKey The localization key supporting Title and Details
-	@param theArg The argument that will be passed on
-	@param theIcon The icon to use for the result item
-	@param isValid Sets whether the result item can be actioned
-	@param theAutocomplete The autocomplete value for the result item
+	@param theKey:theKey The localization key supporting Title and Details
+	@param theUid:theUid The uid of the result for ordering by frequency of use
+	in Alfred, should be unique or `missing value` to maintain the order in
+	which results are sent to Alfred.
+	@param theArg:theArg The argument that will be passed on
+	@param theIcon:theIcon The icon to use for the result item
+	@param isValid:isValid Sets whether the result item can be actioned
+	@param theAutocomplete:theAutocomplete The autocomplete value for the result item
 *)
-on addResultWithLocalization given theKey:_key, theUid:_uid, theArg:_arg, theIcon:_icon, theAutocomplete:_autocomplete, theType:_type, isValid:_valid
+on addResultWithLocalization given theKey:theKey, theUid:theUid, theArg:theArg, theIcon:theIcon, theAutocomplete:theAutocomplete, theType:theType, isValid:isValid
 
 	# Load localizations
-	set _title to l10n(_key & "/Title")
-	set _subtitle to l10n(_key & "/Details")
+	set theTitle to l10n(theKey & "/Title")
+	set theSubtitle to l10n(theKey & "/Details")
 
-	tell getCurrentWorkflow() to add_result given theUid:_uid, theArg:_arg, theTitle:_title, theSubtitle:_subtitle, theIcon:_icon, theAutocomplete:_autocomplete, theType:_type, isValid:_valid
+	tell getCurrentWorkflow()
+		add_result given theUid:theUid, theArg:theArg, theTitle:theTitle, theSubtitle:theSubtitle, theIcon:theIcon, theAutocomplete:theAutocomplete, theType:theType, isValid:isValid
+	end tell
 
 end addResultWithLocalization
 
