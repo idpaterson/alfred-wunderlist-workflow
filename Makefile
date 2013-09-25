@@ -28,10 +28,10 @@ build:
 build/info.plist: source/info.plist
 	cp source/info.plist build/
 
-build/wunderlist.applescript: build source/wunderlist.applescript
+build/wunderlist.applescript: build source/*.applescript source/*/*.applescript
 	cp source/wunderlist.applescript build/wunderlist.applescript
 	# Replace all #includes with the file contents
-	perl -p -i -e '$$/=undef;s@#include "(.*?)"@open F, "source/$$1.applescript";<F>@ge' build/wunderlist.applescript
+	perl -i -e '$$/=undef;$$_=<>;s@#include "(.*?)"@open F, "source/$$1.applescript";<F>@ge;print' build/wunderlist.applescript
 	# Remove all comments that can be removed safely, because they are
 	# not compiled out.
 	perl -i -e '$$/=undef;$$_=<>;s/^\s*(#.*|--.*|\(\*![\s\S]*?\*\))\s?//gm;print' build/wunderlist.applescript 

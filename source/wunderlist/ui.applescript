@@ -2,6 +2,7 @@
 	@header     UI Interaction
 	@abstract   Interacts with the Wunderlist UI for reading and modifying data.
 	@discussion 
+	@version    0.2-beta.1
 *)
 
 (*! 
@@ -10,9 +11,6 @@
 
 # Keep track of the current app
 property originalApp : missing value
-
-# The path to this workflow within Alfred's preferences bundle
-property workflowFolder : missing value
 
 (*! 
 	@abstract Causes Wunderlist to become the active application.
@@ -112,10 +110,10 @@ end launchWunderlistIfNecessary
 	lists table.
 
 	The procedure for accessing the Inbox from any point in the app is as follows:
-	1. <code>⌘+f</code> Begin a search
+	1. <code>&#x2318;+f</code> Begin a search
 	2. Perform a search that will probably not return results and will not be too 
 	distracting. 3 space characters works fine.
-	3. <code>⌘+n</code> Navigate to the Inbox, focused on the Inbox list
+	3. <code>&#x2318;+n</code> Navigate to the Inbox, focused on the Inbox list
 *)
 on focusInbox()
 	
@@ -160,16 +158,12 @@ on focusListAtIndex(listIndex)
 	
 	focusInbox()
 	
-	tell application "System Events"
-		
-		repeat listIndex - 1 times
+	repeat listIndex - 1 times
+	
+		# Down arrow to go to the next list
+		tell application "System Events" to key code 125
 			
-			# Down arrow to go to the next list
-			key code 125
-			
-		end repeat
-		
-	end tell
+	end repeat
 	
 end focusListAtIndex
 
@@ -182,10 +176,10 @@ end focusListAtIndex
 	Wunderlist to its original view state.
 
 	The procedure for returning to the previous list is as follows:
-	1. <code>⌘+f</code> Return to the search input
+	1. <code>&#x2318;+f</code> Return to the search input
 	2. Press the delete key to clear the search, Wunderlist will switch back to the previously viewed list
-	3. <code>⌘+n</code> Move focus out of the search box into the task list
-	4. <code>⇧+tab</code> Return focus to the list table
+	3. <code>&#x2318;+n</code> Move focus out of the search box into the task list
+	4. <code>&#x21E7;+tab</code> Return focus to the list table
 *)
 on focusPreviousList()
 	
@@ -216,8 +210,8 @@ end focusPreviousList
 	because the first time switches the UI to the Inbox list.
 
 	The procedure for returning to the previous list is as follows:
-	1. <code>⌘+n</code> Focus the task input, or in some cases focus the Inbox
-	2. <code>⌘+n</code> For good measure in case the previous command focused the Inbox
+	1. <code>&#x2318;+n</code> Focus the task input, or in some cases focus the Inbox
+	2. <code>&#x2318;+n</code> For good measure in case the previous command focused the Inbox
 *)
 on focusTaskInput()
 	
@@ -251,10 +245,9 @@ end setWindowViewNormal
 	@functiongroup Accessing Data in Wunderlist
 *)
 
-
 (*!
 	@abstract Loads some basic information about all of the visible lists in Wunderlist.
-	@discussion Wunderlist exposes a small amount of information about the tasks that
+	@discussion Wunderlist exposes a small amount of information about the lists that
 	can be retrieved by traversing the UI. This information includes the name of each
 	list and its number of tasks.
 
@@ -264,6 +257,12 @@ end setWindowViewNormal
 	appears to change in an undefined way, so unfortunately at this time the task
 	count is unreliable.
 
+	The list info is cached as specified by @link listCacheInSeconds @/link
+	to optimize repetitive access of the list, as with an Alfred Script Filter.
+
+	The keys <code>lists</code> and <code>listsUpdatedDate</code> in the default
+	<code>settings.plist</code> are used to track the lists state.
+
 	@return A list of records in the <code>ListInfo</code> format described below
 	@attributeList <code>ListInfo</code> record
 		<code>listName</code>  The display name of the list
@@ -271,6 +270,17 @@ end setWindowViewNormal
 	    <code>listIndex</code> The one-based index of the list
 *)
 on getListInfo()
+
+	set wf to getCurrentWorkflow()
+
+	# Load the list info and the cache date
+	set listInfo to wf's get_value("lists", "")
+	set lastUpdatedDate to wf's get_value("listsUpdatedDate", "")
+
+	# Reload the list info if the cached data is missing or expired
+	if lastUpdatedDate is not missing value and current date - lastUpdatedDate � listCacheInSeconds then
+		return listInfo
+	end if
 
 	tell application "System Events"
 		tell process "Wunderlist"
@@ -297,40 +307,57 @@ on getListInfo()
 				
 			end repeat
 			
-			return listInfo
 		end tell
 	end tell
+
+	wf's set_value("lists", listInfo, "")
+	wf's set_value("listsUpdatedDate", current date, "")
+
+	return listInfo
 	
 end getListInfo
 
 (*!
-	@abstract   Retrieves cached list info or loads the list data again if necessary
-	@discussion The list info is cached as specified by @link listCacheInSeconds @/link
-	to optimize repetitive access of the list, as with an Alfred Script Filter.
+	@abstract Loads information about the currently selected list in Wunderlist.
+	@discussion The active list is highlighted in the Wunderlist UI, but finding
+	it with UI traversal is not straightforward. In order to find which list is
+	selected, the <em>Rename Selected List</em> menu option is required. It 
+	creates an editable text element that is easy to isolate with AppleScript.
 
-	The keys <code>lists</code> and <code>listsUpdatedDate</code> in the default
-	<code>settings.plist</code> are used to track the lists state.
+	From the text element the name of the list can be retrieved. This allows the
+	proper result from @link getListInfo @/link to be returned.
+
 	@see getListInfo
-	@param wf The qWorkflow workflow object for this script
-	@return A list of <code>ListValue</code> records
+	@return A records in the <code>ListInfo</code> format
 *)
-on getListInfoInWorkflow(wf)
+on getListInfoForActiveList()
 
-	# Load the list info and the cache date
-	set listInfo to wf's get_value("lists", "")
-	set lastUpdatedDate to wf's get_value("listsUpdatedDate", "")
+	tell application "System Events"
+		tell process "Wunderlist"
+			# Rename the currently selected list. Unfortunately despite being
+			# focused, the UI element for the list is not actually marked as
+			# focused, so we have to use a workaround
+			click menu item 1 of menu 1 of menu bar item 4 of menu bar 1
 
-	# Reload the list info if the cached data is missing or expired
-	if lastUpdatedDate is missing value or current date - lastUpdatedDate > listCacheInSeconds then
-		set listInfo to getListInfo()
+			# Get the list name from the text input
+			set theListName to value of static text 1 of button 1 of UI element 1 of UI element 1 of UI element 1 of splitter group 1 of window "Wunderlist" 
 
-		wf's set_value("lists", listInfo, "")
-		wf's set_value("listsUpdatedDate", current date, "")
-	end if
+			# New task to focus the task input and cancel the list rename
+			click menu item 1 of menu 1 of menu bar item 3 of menu bar 1
 
-	return listInfo
+		end tell
+	end tell
 
-end getListInfoInWorkflow
+	set listsInfo to getListInfo()
+
+	# Return the matching list
+	repeat with listInfo in listsInfo
+		if listName of listInfo is theListName
+			return listInfo
+		end 
+	end repeat
+
+end getListInfoForActiveList
 
 (*!
 	@abstract   Finds the index of the specified list in the list table

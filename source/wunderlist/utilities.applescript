@@ -1,6 +1,7 @@
 (*!
 	@header     Utilities
 	@abstract   A collection of useful functions.
+	@version    0.2-beta.1
 *)
 
 (*!
@@ -60,8 +61,14 @@ on appl10n(key, appName, tableName)
 end l10n
 
 (*!
-	@functiongroup Filesystem
+	@functiongroup Alfred Helpers
 *)
+
+# The current workflow created by qWorkflow
+property workflow : missing value
+
+# The path to this workflow within Alfred's preferences bundle
+property workflowFolder : missing value
 
 (*!
 	@abstract Returns the path to the workflow folder within Alfred preferences.
@@ -76,8 +83,16 @@ on getWorkflowFolder()
 end getWorkflowFolder
 
 (*!
-	@functiongroup Alfred Helpers
+	@abstract Provides access to the current workflow constructed by qWorkflow.
+	@return The workflow constructed by qWorkflow's <code>new_workflow</code>
 *)
+on getCurrentWorkflow()
+	if workflow is missing value then
+		set workflow to new_workflow()
+	end if 
+
+	return workflow
+end getCurrentWorkflow
 
 (*!
 	@abstract   Displays a notification in Notification Center.
