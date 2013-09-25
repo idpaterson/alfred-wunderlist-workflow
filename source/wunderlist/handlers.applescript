@@ -250,6 +250,10 @@ on addList(listName)
 	end tell
 
 	focusTaskInput()
+
+	# Make sure that the new list is picked up the next time
+	# the list info is displayed
+	invalidateListInfoCache()
 	
 end addList
 

@@ -475,3 +475,13 @@ on getTaskInfoForFocusedList()
 	end tell
 	
 end getTaskInfoForFocusedList
+
+(*!
+	@abstract Ensures that the next time the list info is requested, it will be
+	reloaded from the UI rather than the cache.
+*)
+on invalidateListInfoCache()
+	set wf to getCurrentWorkflow()
+
+	wf's set_value("listsUpdatedDate", date ("1/1/2000" as string) , "")
+end invalidateListInfoCache
