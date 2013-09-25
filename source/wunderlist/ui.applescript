@@ -249,7 +249,7 @@ end setWindowViewNormal
 	@abstract Loads some basic information about all of the visible lists in Wunderlist.
 	@discussion Wunderlist exposes a small amount of information about the lists that
 	can be retrieved by traversing the UI. This information includes the name of each
-	list and its number of tasks.
+	list, its number of tasks.
 
 	Unfortunately, the number of tasks returned is undefined when there are no tasks in 
 	a list. Wunderlist does not set the value of the task count label to zero, nor does
@@ -263,11 +263,13 @@ end setWindowViewNormal
 	The keys <code>lists</code> and <code>listsUpdatedDate</code> in the default
 	<code>settings.plist</code> are used to track the lists state.
 
-	@return A list of records in the <code>ListInfo</code> format described below
+	@return A list of records in the <code>ListInfo</code> format described below,
+	sorted in the order displayed in Wunderlist.
 	@attributeList <code>ListInfo</code> record
 		<code>listName</code>  The display name of the list
 		<code>taskCount</code> The number of uncompleted tasks in the list
-	    <code>listIndex</code> The one-based index of the list
+	    <code>listIndex</code> The one-based index of the list in the UI
+	    <code>listPosition</code> The position of the list in the UI in {x, y} format
 *)
 on getListInfo()
 
@@ -287,28 +289,48 @@ on getListInfo()
 			# The immediate parent element of all the list elements
 			set listsContainer to UI element 1 of UI element 1 of UI element 1 of UI element 1 of splitter group 1 of window "Wunderlist"
 			
-			set listValues to value of static texts of UI elements of listsContainer
+			set {listValues, listPositions} to {value, position} of static texts of UI elements of listsContainer
 			
 			set listInfo to {}
-			set listIndex to 0
-			
-			repeat with listValue in listValues
+
+			repeat with i from 1 to count of listValues
+				set listValue to item i of listValues
+
 				if (count of listValue) is 2 then
 					# There are a few elements in addition to the list elements,
 					# but the list elements are easily identifiable as those having 
 					# 2 children.
 					set {listName, taskCount} to listValue
+
+					# Get the position of the first static text
+					set listPosition to item 1 of item i of listPositions
 					
-					set listIndex to listIndex + 1
 					set taskCount to taskCount as integer
 					
-					set listInfo to listInfo & {{listName:listName, taskCount:taskCount, listIndex:listIndex}}
+					set listInfo to listInfo & {{listName:listName, taskCount:taskCount, listIndex:-1, listPosition:listPosition}}
 				end if
-				
 			end repeat
 			
 		end tell
 	end tell
+
+	script sorter
+		on getYPositionOfListInfo(listInfo)
+			# Grab the Y component of the position
+			return item 2 of listInfo's listPosition
+		end getYPositionOfListInfo
+	end script
+
+	# Sort the list based on the actual y-axis order of the list. When the
+	# list is scrolled, cells are reused which places them at the end of the
+	# UI elements list. This ensures that we show the results in the order
+	# in which the user will see them in Wunderlist.
+	set listInfo to quickSortWithKeyHandler(listInfo, sorter's getYPositionOfListInfo)
+
+	# Set the list index based on the order of the sorted list
+	repeat with i from 1 to count of listInfo
+		set listIndex of item i of listInfo to i
+	end repeat
 
 	wf's set_value("lists", listInfo, "")
 	wf's set_value("listsUpdatedDate", current date, "")
