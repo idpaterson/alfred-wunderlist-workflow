@@ -136,8 +136,9 @@ end quickSort
 	a key to be extracted from complex data types with a handler.
 	@discussion This implementation of quick sort selects a starting pivot
 	in the middle of the list to ensure optimal sorting of lists that are
-	already partially sorted. Consider the following example:
-	<pre><code>    set fruits to [{name:"Kumquat", color:"orange"},{name:"Apple", color:"red"},{name:"Lychee", color:"pink"}]
+	already partially sorted. Values are sorted in ascending order.
+	Consider the following example:
+	<pre><code>    set fruits to {{name:"Kumquat", color:"orange"},{name:"Apple", color:"red"},{name:"Lychee", color:"pink"}}
 
     on getFruitName(fruitInfo)
 	    return name of fruitInfo
@@ -186,7 +187,7 @@ on quickSortWithKeyHandler(theList, keyHandler)
 			set item rightIndex of bs's alist to temp
 			set tempIndex to leftIndex
 			repeat with pointer from leftIndex to (rightIndex - 1)
-				if getKey(item pointer of bs's alist) â‰¤ pivotValue then
+				if getKey(item pointer of bs's alist) ² pivotValue then
 					set temp to item pointer of bs's alist
 					set item pointer of bs's alist to item tempIndex of bs's alist
 					set item tempIndex of bs's alist to temp
