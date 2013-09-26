@@ -36,6 +36,22 @@ In OS X Mavericks:
 Features
 --------
 
+### Add a new task to any list
+
+To add a task to a list other than the inbox, use the Alfred shortcut `wl`, followed by the text of the task. Select the appropriate list from those shown by using the arrow keys to highlight the desired list, then press Return to add the task. If you do not select a list, the task will be added in whichever list is currently visible in Wunderlist.
+
+	wl Recycle used ink cartridges
+
+You can also type the name of a list followed by a colon to add the task in a specific list. Simply begin typing the list name then press `tab` or `return` to autocomplete the name of the list. Autocompletion allows efficient task entry using just a few keystrokes.
+
+	wl off                                  -- Alfred shows lists containing "off"
+	wl Office:                              -- Press tab to autocomplete the list name
+	wl Office:Recycle used ink cartridges   -- Type the task then press return
+
+Autocompletion also allows adding tasks based on just a portion of the list name. Simply type a few letters in the list name followed by a colon and the text of the task.
+
+	wl off:Recycle used ink cartridges
+
 ### Add a new task to the inbox
 
 To add a task directly to the inbox, use the Alfred shortcut `wlin`, followed by the text of the task. The new task will be added in your inbox, allowing you to later file it into the appropriate folder. This is often the easiest way to add tasks quickly and avoid getting distracted by categorization.
@@ -44,17 +60,9 @@ To add a task directly to the inbox, use the Alfred shortcut `wlin`, followed by
 
 After entering the task, you will be returned to whichever application you were using prior to adding the task. Wunderlist will also be returned to whichever list you were viewing prior to the inbox. 
 
-Used without any arguments, `wl` simply opens Wunderlist to the inbox.
+Used without any arguments, `wlin` simply opens Wunderlist to the inbox. 
 
-### Add a new task to any list
-
-To add a task to a list other than the inbox, use the Alfred shortcut `wl`, followed by the text of the task. Select the appropriate list from those shown by using the arrow keys to highlight the desired list, then press Return to add the task. If you do not select a list, the task will be added in whichever list is currently visible in Wunderlist.
-
-	wl Recycle used ink cartridges
-
-You can also type the name of a list followed by a colon. In the future this workflow will employ autocompletion to select the proper list so that you do not have to do that manually.
-
-	wl Office:Recycle used ink cartridges
+**Note** This command may eventually be removed in favor of `wl in:Recycle used ink cartridges`, which could work better for different localizations of Wunderlist. For example, Spanish language users will add tasks to their *Bandeja de entrada*, so `wlin` does not make as much sense as `wl ba:` or `wl en:`.
 
 ### Add a new list 
 
