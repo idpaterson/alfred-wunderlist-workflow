@@ -275,6 +275,7 @@ on showListOptions(task)
 
 	launchWunderlistIfNecessary()
 
+	set wf to getCurrentWorkflow()
 	set taskComponents to q_split(task, ":")
 	set listFilter to ""
 	set task to ""
@@ -292,29 +293,42 @@ on showListOptions(task)
 	set matchingLists to {}
 	set canAutocomplete to (task is "")
 
+	# Get list names from Wunderlist in the current locale
+	set list_all to wll10n("smart_list_all")
+	set list_assignedToMe to wll10n("smart_list_assigned_to_me")
+	set list_completed to wll10n("smart_list_completed")
+	set list_week to wll10n("smart_list_week")
+	set list_inbox to wll10n("smart_list_inbox")
+	set list_today to wll10n("smart_list_today")
+	set list_starred to wll10n("smart_list_starred")
+
 	# These lists do not allow addition of new tasks
-	set readonlyLists to {wll10n("smart_list_all"), wll10n("smart_list_assigned_to_me"), wll10n("smart_list_completed"), wll10n("smart_list_week")}
+	set readonlyLists to {list_all, list_assignedToMe, list_completed, list_week}
 
-	# Skip "smart lists" that do not allow creation of new tasks
+	# Skip "smart lists" that do not allow creation of new tasks and
+	# find lists matching the user's filter
 	repeat with listInfo in allLists
-		if listInfo's listName is not in readonlyLists then set writableLists's end to listInfo
-	end repeat
-
-	# Find lists matching the user's filter
-	repeat with listInfo in writableLists
 		ignoring case and diacriticals
-			# The list is an exact match and the user has typed
-			# (or autocompleted) the : following the list name, 
-			# look no further
-			if listInfo's listName is listFilter and count of taskComponents is 2 then
-				# Show only the matching list and add the task 
-				# on return
-				set matchingLists to {listInfo}
-				set canAutocomplete to false
-				exit repeat
-			# The list filter is a substring of this list name
-			else if listInfo's listName contains listFilter then 
-				set matchingLists's end to listInfo
+			if listInfo's listName is not in readonlyLists then 
+				# If nothing matches the filter we need to have a 
+				# record of all the lists that accept tasks
+				set writableLists's end to listInfo
+
+				if listInfo's listName contains listFilter then 
+					# The list is an exact match and the user has typed
+					# (or autocompleted) the : following the list name, 
+					# look no further
+					if listInfo's listName is listFilter and count of taskComponents is 2 then
+						# Show only the matching list and add the task 
+						# on return
+						set matchingLists to {listInfo}
+						set canAutocomplete to false
+						exit repeat
+					# The list filter is a substring of this list name
+					else
+						set matchingLists's end to listInfo
+					end if 
+				end if
 			end if
 		end ignoring
 	end repeat
@@ -386,20 +400,20 @@ on showListOptions(task)
 		*)
 
 		# Choose the proper icon for each list
-		if listName is wll10n("smart_list_inbox") then
+		if listName is list_inbox then
 			set theIcon to "/inbox.png"
-		else if listName is wll10n("smart_list_today") then
+		else if listName is list_today then
 			set theIcon to "/today.png"
-		else if listName is wll10n("smart_list_starred") then
+		else if listName is list_starred then
 			set theIcon to "/starred.png"
 		end if
 
 		# Load the icon based on the configured theme 
 		set theIcon to "lists/" & iconTheme & theIcon
 		
-		tell getCurrentWorkflow() to add_result given theUid:theUid, theArg:theArg, theTitle:listName, theSubtitle:theSubtitle, theAutocomplete:theAutocomplete, isValid:isValid, theIcon:theIcon, theType:missing value
+		tell wf to add_result given theUid:theUid, theArg:theArg, theTitle:listName, theSubtitle:theSubtitle, theAutocomplete:theAutocomplete, isValid:isValid, theIcon:theIcon, theType:missing value
 	end repeat
 	
-	return getCurrentWorkflow()'s to_xml("")
+	return wf's to_xml("")
 	
 end showListOptions
