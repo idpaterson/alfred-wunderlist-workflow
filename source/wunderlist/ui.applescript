@@ -95,6 +95,13 @@ on launchWunderlistIfNecessary()
 		# Tell the user what just happened. Unfortunately they're going to have to
 		# start their Alfred query again.
 		sendNotification("Messages/Wunderlist is now on all desktops")
+
+		# Wait for the window to become available
+		tell application "System Events"
+			repeat until count of windows of process appName > 0
+				delay 0.05
+			end repeat
+		end tell
 	end try
 
 end launchWunderlistIfNecessary
