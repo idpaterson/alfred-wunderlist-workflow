@@ -69,17 +69,17 @@ on launchWunderlistIfNecessary()
 
 	set appName to "Wunderlist"
 	
-	tell application "System Events"
-		set wunderlistIsRunning to (name of processes) contains appName
-	end tell
-
-	# Wunderlist has to be running, if not 
-	if not wunderlistIsRunning then
+	# Wunderlist has to be running, if not we need to launch it and wait
+	if application appName is not running then
 		tell application appName to launch
-
+		
 		# Wait for application to launch
 		tell application "System Events"
-			repeat until count of windows of process appName > 0
+			# Wait up to ~3 seconds, if any longer than that Wunderlist may
+			# be assigned to a specific desktop other than the current one.
+			set attempts to 0
+			repeat until count of windows of process appName > 0 or attempts > 60
+				set attempts to attempts + 1
 				delay 0.05
 			end repeat
 		end tell
