@@ -1,7 +1,7 @@
 (*!
 	@header     Utilities
 	@abstract   A collection of useful functions.
-	@version    0.2-beta.1
+	@version    0.2-beta.2
 *)
 
 (*!
