@@ -181,24 +181,19 @@ end tell</string>
 				<key>argumenttype</key>
 				<integer>1</integer>
 				<key>escaping</key>
-				<integer>68</integer>
+				<integer>102</integer>
 				<key>keyword</key>
 				<string>wl</string>
 				<key>runningsubtext</key>
 				<string>Loading lists…</string>
 				<key>script</key>
-				<string>set workflowFolder to do shell script "pwd"
-set wunderlistlib to load script POSIX file (workflowFolder &amp; "/wunderlist.scpt")
-
-tell wunderlistlib 
-	showListOptions("{query}" as text)
-end tell</string>
+				<string>/usr/bin/env osascript "`pwd`/wunderlist.scpt" showListOptions "{query}"</string>
 				<key>subtext</key>
 				<string>Drop a new task in the specified list</string>
 				<key>title</key>
 				<string>New task in Wunderlist</string>
 				<key>type</key>
-				<integer>6</integer>
+				<integer>0</integer>
 				<key>withspace</key>
 				<true/>
 			</dict>

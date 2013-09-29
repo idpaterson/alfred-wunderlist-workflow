@@ -417,3 +417,14 @@ on showListOptions(task)
 	return wf's to_xml("")
 	
 end showListOptions
+
+on run argv
+	if count of argv ³ 2 then
+		set theCommand to item 1 of argv
+		set theQuery to item 2 of argv
+
+		if theCommand is "showListOptions" then
+			showListOptions(theQuery)
+		end if
+	end if
+end run
