@@ -6,7 +6,7 @@
 	            for user-level configuration if it seems useful. Until
 	            the workflow supports that, configurable properties will
 	            be tracked here for clarity.
-	@version    0.2-beta.2
+	@version    0.2-beta.3
 *)
 
 (*!

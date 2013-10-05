@@ -5,7 +5,7 @@
 	            As Wunderlist 2 does not yet provide AppleScript support, the features are limited
 	            to those that are keyboard-accessible. Regardless, it saves a lot of keystrokes!
 	@author     Ian Paterson
-	@version    0.2-beta.2
+	@version    0.2-beta.3
 *)
 
 #include "../lib/qWorkflow/uncompiled source/q_workflow"

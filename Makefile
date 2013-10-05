@@ -16,7 +16,7 @@ all: Wunderlist.alfredworkflow
 # Prepares the workflow for a release
 # Requires a value for the RELEASE_NOTES macro
 #   make release RELEASE_NOTES="Foo"
-release: update-version-numbers Wunderlist.json Wunderlist.alfredworkflow
+release: update-version-numbers clean Wunderlist.json Wunderlist.alfredworkflow
 
 # The installable workflow
 Wunderlist.alfredworkflow: build build/info.plist build/wunderlist.scpt build/filters.php build/icons build/localization build/update.json

@@ -20,7 +20,7 @@
     workflow, only the Double Quotes and Backslashes options should be
     checked. Excess escaping can cause problems handling simple characters
     such as spaces.
-	@version    0.2-beta.2
+	@version    0.2-beta.3
 *)
 
 (*!

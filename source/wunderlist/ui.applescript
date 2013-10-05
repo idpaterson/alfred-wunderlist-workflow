@@ -2,7 +2,7 @@
 	@header     UI Interaction
 	@abstract   Interacts with the Wunderlist UI for reading and modifying data.
 	@discussion 
-	@version    0.2-beta.2
+	@version    0.2-beta.3
 *)
 
 (*! 
