@@ -418,20 +418,48 @@ on showListOptions(task)
 	
 end showListOptions
 
-on run argv
+(*!
+	@abstract Provides support for command line operations
+	@attributelist Commands
+	showListOptions See @link showListOptions @/link, returns 1
+	updateListInfo See @link getListInfo @/link, returns 1 if the lists could be loaded, otherwise 0 (which may occur if Wunderlist is not visible on the current desktop)
+	forceUpdateListInfo Ensures that list info is loaded which may require switching to the desktop showing Wunderlist.
+	@param argv The list of arguments from the command line
+	@return 1 for success or 0 for error
+*)
+on run(argv)
+	set status to 0
+
 	if count of argv ³ 2 then
 		set theCommand to item 1 of argv
 		set theQuery to item 2 of argv
 
 		if theCommand is "showListOptions" then
 			showListOptions(theQuery)
+			set status to 1
 		end if
 	else if count of argv = 1 then
 		set theCommand to item 1 of argv
 
 		if theCommand is "updateListInfo" then
+			if count of getListInfo() > 0 then
+				set status to 1
+			end if
+		else if theCommand is "forceUpdateListInfo" then
 			invalidateListInfoCache()
-			getListInfo()
+			if count of getListInfo() > 0 then
+				set status to 1
+			else
+				# Switch to the desktop containing Wunderlist if necessary
+				tell application "Wunderlist" to activate
+				delay 0.5
+				
+				if count of getListInfo() > 0 then
+					set status to 1
+				end if
+			end if
 		end if
 	end if
+
+	return status
 end run

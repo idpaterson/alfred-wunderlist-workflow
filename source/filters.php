@@ -80,12 +80,29 @@ function getListInfo($attempts = 0)
 	$lists = $settings['lists'];
 	$listsUpdatedTimestamp = $settings['listsUpdatedDate'];
 
-	if ($attempts < 5 && (empty($lists) || time() - $listsUpdatedTimestamp > 30))
+	if ($attempts < 2 && (empty($lists) || time() - $listsUpdatedTimestamp > 30))
 	{
-		# Use AppleScript to fetch the list info from the Wunderlist UI
-		`/usr/bin/env osascript wunderlist.scpt updateListInfo`;
+		$status = 0;
 
-		return getListInfo($attempts + 1);
+		if (empty($lists))
+		{
+			# Use AppleScript to fetch the list info from the Wunderlist UI, 
+			# forcing it to do whatever necessary to load the info
+			$status = rtrim(`/usr/bin/env osascript wunderlist.scpt forceUpdateListInfo`);
+		}
+		else
+		{
+			# Use AppleScript to fetch the list info from the Wunderlist UI
+			$status = rtrim(`/usr/bin/env osascript wunderlist.scpt updateListInfo`);
+		}
+
+		# The list info was refreshed and should be reloaded from settings.
+		# Otherwise, the list info could not be reloaded so return whatever 
+		# was cached
+		if ($status == '1')
+		{
+			return getListInfo($attempts + 1);
+		}
 	}
 
 	return $lists;

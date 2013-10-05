@@ -37,6 +37,7 @@ end activatePreviousApplication
 (*! 
 	@abstract  Uses the Dock.app menu to make Wunderlist visible on all
 	desktops, which is necessary for the list info to load reliably.
+	@deprecated in version 0.2
 *)
 on assignWunderlistToAllDesktops()
 
@@ -88,13 +89,8 @@ on launchWunderlistIfNecessary()
 	try 
 		tell application "System Events" to get window appName of process appName
 	on error
-		# Wunderlist is not on the current desktop. Use this opportunity to
-		# assign it.
-		assignWunderlistToAllDesktops()
-
-		# Tell the user what just happened. Unfortunately they're going to have to
-		# start their Alfred query again.
-		sendNotification("Messages/Wunderlist is now on all desktops")
+		# Wunderlist is not on the current desktop, so switch to it.
+		tell application appName to activate
 
 		# Wait for the window to become available
 		tell application "System Events"
@@ -291,33 +287,34 @@ on getListInfo()
 		return listInfo
 	end if
 
+	set listInfo to {}
+
 	tell application "System Events"
 		tell process "Wunderlist"
-			# The immediate parent element of all the list elements
-			set listsContainer to UI element 1 of UI element 1 of UI element 1 of UI element 1 of splitter group 1 of window "Wunderlist"
-			
-			set {listValues, listPositions} to {value, position} of static texts of UI elements of listsContainer
-			
-			set listInfo to {}
+			if count of windows > 0 then
+				# The immediate parent element of all the list elements
+				set listsContainer to UI element 1 of UI element 1 of UI element 1 of UI element 1 of splitter group 1 of window "Wunderlist"
+				
+				set {listValues, listPositions} to {value, position} of static texts of UI elements of listsContainer
 
-			repeat with i from 1 to count of listValues
-				set listValue to item i of listValues
+				repeat with i from 1 to count of listValues
+					set listValue to item i of listValues
 
-				if (count of listValue) is 2 then
-					# There are a few elements in addition to the list elements,
-					# but the list elements are easily identifiable as those having 
-					# 2 children.
-					set {listName, taskCount} to listValue
+					if (count of listValue) is 2 then
+						# There are a few elements in addition to the list elements,
+						# but the list elements are easily identifiable as those having 
+						# 2 children.
+						set {listName, taskCount} to listValue
 
-					# Get the position of the first static text
-					set listPosition to item 1 of item i of listPositions
-					
-					set taskCount to taskCount as integer
-					
-					set listInfo to listInfo & {{listName:listName, taskCount:taskCount, listIndex:-1, listPosition:listPosition}}
-				end if
-			end repeat
-			
+						# Get the position of the first static text
+						set listPosition to item 1 of item i of listPositions
+						
+						set taskCount to taskCount as integer
+						
+						set listInfo to listInfo & {{listName:listName, taskCount:taskCount, listIndex:-1, listPosition:listPosition}}
+					end if
+				end repeat
+			end if
 		end tell
 	end tell
 
@@ -339,8 +336,12 @@ on getListInfo()
 		set listIndex of item i of listInfo to i
 	end repeat
 
-	wf's set_value("lists", listInfo, "")
-	wf's set_value("listsUpdatedDate", current date, "")
+	# Allow the previous value to persist even if it is expired in the case
+	# where we cannot load newer list data.
+	if count of listInfo > 0 then
+		wf's set_value("lists", listInfo, "")
+		wf's set_value("listsUpdatedDate", current date, "")
+	end if
 
 	return listInfo
 	
