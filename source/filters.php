@@ -49,12 +49,19 @@ function getWorkflowSettings()
 {
 	global $workflow;
 
-	# workflows.php does not handle property lists with anything other than 
-	# single-line string data. Therefore it is necessary to use CFPropertyList
-	# which will retrieve values from the settings list in the proper data
-	# type.
-	$plist = new \CFPropertyList\CFPropertyList($workflow->data() . '/settings.plist', \CFPropertyList\CFPropertyList::FORMAT_XML);
-	return $plist->toArray();
+	try
+	{
+		# workflows.php does not handle property lists with anything other than 
+		# single-line string data. Therefore it is necessary to use CFPropertyList
+		# which will retrieve values from the settings list in the proper data
+		# type.
+		$plist = new \CFPropertyList\CFPropertyList($workflow->data() . '/settings.plist', \CFPropertyList\CFPropertyList::FORMAT_XML);
+		return $plist->toArray();
+	}
+	catch (Exception $e)
+	{
+		return array();
+	}
 }
 
 /*!
