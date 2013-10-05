@@ -426,5 +426,12 @@ on run argv
 		if theCommand is "showListOptions" then
 			showListOptions(theQuery)
 		end if
+	else if count of argv = 1 then
+		set theCommand to item 1 of argv
+
+		if theCommand is "updateListInfo" then
+			invalidateListInfoCache()
+			getListInfo()
+		end if
 	end if
 end run

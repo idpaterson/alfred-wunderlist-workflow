@@ -187,7 +187,7 @@ end tell</string>
 				<key>runningsubtext</key>
 				<string>Loading lists…</string>
 				<key>script</key>
-				<string>/usr/bin/env osascript "`pwd`/wunderlist.scpt" showListOptions "{query}"</string>
+				<string>/usr/bin/env php "`pwd`/filters.php" filterListsToAddTask "{query}"</string>
 				<key>subtext</key>
 				<string>Drop a new task in the specified list</string>
 				<key>title</key>

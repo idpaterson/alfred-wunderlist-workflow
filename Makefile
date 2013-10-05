@@ -19,7 +19,7 @@ all: Wunderlist.alfredworkflow
 release: update-version-numbers Wunderlist.json Wunderlist.alfredworkflow
 
 # The installable workflow
-Wunderlist.alfredworkflow: build build/info.plist build/wunderlist.scpt build/icons build/localization build/update.json
+Wunderlist.alfredworkflow: build build/info.plist build/wunderlist.scpt build/filters.php build/icons build/localization build/update.json
 	cd build/ && zip -r ../Wunderlist.alfredworkflow *
 
 build:
@@ -39,6 +39,15 @@ build/wunderlist.applescript: build source/*.applescript source/*/*.applescript
 build/wunderlist.scpt: build build/wunderlist.applescript build/bin/q_notifier.helper lib/qWorkflow/compiled\ source/q_workflow.scpt
 	osacompile -x -o build/wunderlist.scpt build/wunderlist.applescript
 	rm build/wunderlist.applescript
+
+build/filters.php: build source/filters.php build/workflows.php build/CFPropertyList
+	cp source/filters.php build/
+
+build/workflows.php: lib/Workflows/workflows.php
+	cp lib/Workflows/workflows.php build/
+
+build/CFPropertyList: lib/CFPropertyList/classes/CFPropertyList
+	cp -r lib/CFPropertyList/classes/CFPropertyList build/
 
 build/bin:
 	mkdir -p build/bin
@@ -74,7 +83,11 @@ require-release-notes:
     endif
 
 update-version-numbers:
-	perl -p -i -e "s/(\@version\s*)\S.*/\$${1}${FULL_VERSION}/" source/*.applescript source/*/*.applescript
+	perl -p -i -e "s/(\@version\s*)\S.*/\$${1}${FULL_VERSION}/" source/*.applescript source/*/*.applescript source/*.php
+
+deps:
+	brew install gettext
+	brew link gettext
 
 # Removes intermediary build files
 clean:
@@ -82,9 +95,9 @@ clean:
 	rm -rf Wunderlist.alfredworkflow Wunderlist.json
 
 # Generates documentation in gh-pages branch submodule at docs/
-docs: source/*.applescript source/*/*.applescript
+docs: source/*.applescript source/*/*.applescript source/*.php
 	rm -rf docs
-	headerdoc2html -o docs source/*.applescript source/*/*.applescript
+	headerdoc2html -o docs source/*.applescript source/*/*.applescript source/*.php
 	gatherheaderdoc docs
 
 .PHONY: all clean build/localization build/icons build/update.json Wunderlist.json require-release-notes update-version-numbers
