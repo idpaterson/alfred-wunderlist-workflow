@@ -213,13 +213,21 @@ function filterListsToAddTask($query)
 	{
 		$matchingLists = $writableLists;
 
-		# If no text has been entered, allow autocompletiong,
+		# If no text has been entered, allow autocompleting,
 		# otherwise the user has begun to type a task. In
 		# that case, actioning a list in Alfred should insert
 		# the task into the list, not perform autocompletion.
 		if ($listFilter !== '')
 		{
 			$canAutocomplete = false;
+
+			# The task contained a colon which should not be
+			# misinterpreted as filtering the list because
+			# we know that no lists matched.
+			if ($task !== '')
+			{
+				$task = $listFilter . ':' . $task;
+			}
 		}
 
 		# Since autocomplete is disabled, set the first item to
