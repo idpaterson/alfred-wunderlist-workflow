@@ -16,9 +16,6 @@ property originalApp : missing value
 	@abstract Causes Wunderlist to become the active application.
 *)
 on activateWunderlist()
-	
-	# Ensure we can return to the current active application later
-	set originalApp to path to frontmost application as text
 
 	activate application "Wunderlist"
 	
@@ -69,6 +66,9 @@ end assignWunderlistToAllDesktops
 on launchWunderlistIfNecessary()
 
 	set appName to "Wunderlist"
+	
+	# Ensure we can return to the current active application later
+	set originalApp to path to frontmost application as text
 	
 	# Wunderlist has to be running, if not we need to launch it and wait
 	if application appName is not running then
