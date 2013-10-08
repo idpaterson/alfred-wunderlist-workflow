@@ -251,12 +251,6 @@ function filterListsToAddTask($query)
 		}
 	}
 
-	# Show 'a task' as a placeholder in 'Add [a task] to this list'
-	if ($task === '')
-	{
-		$task = 'a task';
-	}
-
 	# Display all matching lists
 	foreach ($matchingLists as $listInfo)
 	{
@@ -265,10 +259,11 @@ function filterListsToAddTask($query)
 		$listIndex = $listInfo['listIndex'];
 
 		# Populate data for the result
+		# Show 'a task' as a placeholder in 'Add [a task] to this list'
 		$uid = null;
 		$arg = $listIndex . '::' . $task;
 		$title = $listName;
-		$subtitle = 'Add ' . $task . ' to this list';
+		$subtitle = 'Add ' . ($task ? $task : 'a task') . ' to this list';
 		$icon = '/generic.png';
 		$valid = true;
 		$autocompletion = null;
