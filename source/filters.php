@@ -226,7 +226,7 @@ function filterListsToAddTask($query)
 			# we know that no lists matched.
 			if ($task !== '')
 			{
-				$task = $listFilter . ':' . $task;
+				$task = $query;
 			}
 		}
 
