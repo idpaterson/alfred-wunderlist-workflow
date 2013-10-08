@@ -162,7 +162,7 @@ function filterListsToAddTask($query)
 	$allLists = getListInfo();
 	$writableLists = array();
 	$matchingLists = array();
-	$canAutocomplete = $task == '';
+	$canAutocomplete = !$hasTask;
 
 	# Get list names from Wunderlist in the current locale
 	$list_all = 'All';
@@ -270,13 +270,14 @@ function filterListsToAddTask($query)
 		$title = $listName;
 		$subtitle = 'Add ' . $task . ' to this list';
 		$icon = '/generic.png';
-		$valid = !$canAutocomplete;
+		$valid = true;
 		$autocompletion = null;
 
 		# If autocompletion is possible, set isValid to false
 		# to enable autocomplete on tab
-		if ($autocompletion)
+		if ($canAutocomplete)
 		{
+			$valid = true;
 			$autocompletion = $listName . ':';
 		}
 
