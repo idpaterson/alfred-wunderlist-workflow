@@ -12,7 +12,7 @@ Setup
 
 Download the latest stable version of this workflow [here](https://raw.github.com/idpaterson/alfred-wunderlist-workflow/master/Wunderlist.alfredworkflow). After downloading, simply double-click to install the workflow in Alfred. 
 
-The workflow can also be built from source. After cloning the repository, just call `make` from the project directory to build `Wunderlist.alfredworkflow` locally, then double-click to install. [The documentation](http://idpaterson.github.io/alfred-wunderlist-workflow/) should be helpful for anyone wishing to work on this project; please submit a pull request if you add anything that others might appreciate!
+The workflow can also be built from source. After cloning the repository, just call `make` from the project directory to build `Wunderlist.alfredworkflow` locally, then double-click to install. [The documentation](http://idpaterson.github.io/alfred-wunderlist-workflow/) and [test cases](TESTING.md) should be helpful for anyone wishing to work on this project; please submit a pull request if you add anything that others might appreciate!
 
 ### Enable *Access for Assistive Devices*
 In order to interact with Wunderlist, your computer must allow scripts like this workflow to communicate with other apps.
