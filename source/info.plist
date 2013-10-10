@@ -6,17 +6,6 @@
 	<string>com.ipaterson.alfred.wunderlist</string>
 	<key>connections</key>
 	<dict>
-		<key>00339C85-5768-4E36-B3D7-43F3799B5337</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>239A9877-8986-413F-957E-EF06D15719AC</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
 		<key>0F2D229C-18BA-4E40-A81D-D796A6E159BC</key>
 		<array>
 			<dict>
@@ -160,51 +149,6 @@ end tell</string>
 				<string>set workflowFolder to do shell script "pwd"
 set wllib to load script POSIX file (workflowFolder &amp; "/wunderlist.scpt")
 
-set task to "{query}" as text
-
-tell wllib
-	addTask(task)
-end tell</string>
-				<key>type</key>
-				<integer>6</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>239A9877-8986-413F-957E-EF06D15719AC</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>keyword</key>
-				<string>wl</string>
-				<key>subtext</key>
-				<string>Add a new task in the active list</string>
-				<key>text</key>
-				<string>Most recently used list</string>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>00339C85-5768-4E36-B3D7-43F3799B5337</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>escaping</key>
-				<integer>68</integer>
-				<key>script</key>
-				<string>set workflowFolder to do shell script "pwd"
-set wllib to load script POSIX file (workflowFolder &amp; "/wunderlist.scpt")
-
 ### From qWorkflow
 on q_split(s, delim)
 	set oldDelims to AppleScript's text item delimiters
@@ -237,24 +181,19 @@ end tell</string>
 				<key>argumenttype</key>
 				<integer>1</integer>
 				<key>escaping</key>
-				<integer>68</integer>
+				<integer>102</integer>
 				<key>keyword</key>
 				<string>wl</string>
 				<key>runningsubtext</key>
 				<string>Loading lists…</string>
 				<key>script</key>
-				<string>set workflowFolder to do shell script "pwd"
-set wunderlistlib to load script POSIX file (workflowFolder &amp; "/wunderlist.scpt")
-
-tell wunderlistlib 
-	showListOptions("{query}" as text)
-end tell</string>
+				<string>/usr/bin/env php "`pwd`/filters.php" filterListsToAddTask "{query}"</string>
 				<key>subtext</key>
 				<string>Drop a new task in the specified list</string>
 				<key>title</key>
 				<string>New task in Wunderlist</string>
 				<key>type</key>
-				<integer>6</integer>
+				<integer>0</integer>
 				<key>withspace</key>
 				<true/>
 			</dict>
@@ -270,17 +209,7 @@ end tell</string>
 	<string>Readme</string>
 	<key>uidata</key>
 	<dict>
-		<key>00339C85-5768-4E36-B3D7-43F3799B5337</key>
-		<dict>
-			<key>ypos</key>
-			<real>370</real>
-		</dict>
 		<key>0F2D229C-18BA-4E40-A81D-D796A6E159BC</key>
-		<dict>
-			<key>ypos</key>
-			<real>490</real>
-		</dict>
-		<key>239A9877-8986-413F-957E-EF06D15719AC</key>
 		<dict>
 			<key>ypos</key>
 			<real>370</real>
@@ -288,7 +217,7 @@ end tell</string>
 		<key>3E4DEE0B-5C4C-4A9E-85A7-AC0826AB49F9</key>
 		<dict>
 			<key>ypos</key>
-			<real>490</real>
+			<real>370</real>
 		</dict>
 		<key>4647E456-6DB2-4EAB-807C-F4B3B5AB33E8</key>
 		<dict>
