@@ -73,7 +73,9 @@ build/update.json: build
 Wunderlist.json: require-release-notes
 	cp source/alleyoop/Wunderlist.json.mustache Wunderlist.json
 	sed -i "" "s/{{ *version *}}/${VERSION}/" Wunderlist.json
-	sed -i "" "s/{{ *release_notes *}}/${RELEASE_NOTES}/" Wunderlist.json
+
+	# Escape release notes to avoid breaking the regex syntax
+	sed -i "" "s/{{ *release_notes *}}/`echo ${RELEASE_NOTES} | sed -e 's/[\/&]/\\\\&/g'`/" Wunderlist.json
 
 # If the make command did not specify RELEASE_NOTES="Foo" the release
 # cannot be built
@@ -96,7 +98,9 @@ clean:
 
 # Generates documentation in gh-pages branch submodule at docs/
 docs: source/*.applescript source/*/*.applescript source/*.php
-	rm -rf docs
+	# Delete old docs without removing the .git directory
+	find docs/* -type d -not -name '.git' | xargs rm -rf
+	rm -rf docs/*.html
 	headerdoc2html -o docs source/*.applescript source/*/*.applescript source/*.php
 	gatherheaderdoc docs
 

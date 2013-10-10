@@ -31,7 +31,7 @@
 				when it comes to platform specifics such as localization. 
 				This script will likely be replaced with a compiled Cocoa 
 				utility that combines speed and platform suitability.
-	@version    0.2-beta.3
+	@version    0.2
 */
 
 require_once 'workflows.php';
@@ -68,7 +68,7 @@ function getWorkflowSettings()
 	@abstract   Loads list info from the cache or reloads it from Wunderlist
 	@discussion 
 
-	@param $attempts Guards against infinite recursion, for internal use only
+	@param attempts Guards against infinite recursion, for internal use only
 	@return an array of associative arrays in the <code>ListInfo</code> format
 	@see //apple_ref/applescript/func/getListInfo getListInfo in AppleScript
 */
@@ -131,7 +131,7 @@ function getListInfo($attempts = 0)
 	to be entered in the first task matching that substring. The match is case 
 	insensitive but is sensitive to accents and other diacritical marks.
 	<pre><code>    gro:2% milk</code></pre>
-	@param task The text of the task, optionally specified with a substring of a 
+	@param query The text of the task, optionally specified with a substring of a 
 	list name followed by a colon to designate the list into which the task should
 	be added.
 */
@@ -165,6 +165,9 @@ function filterListsToAddTask($query)
 	$canAutocomplete = !$hasTask;
 
 	# Get list names from Wunderlist in the current locale
+	# Oops, PHP does not excel at handling Mac strings files, so
+	# this will need to wait until the filters are rewritten as
+	# a Cocoa utility
 	$list_all = 'All';
 	$list_assignedToMe = 'Assigned to Me';
 	$list_completed = 'Completed';

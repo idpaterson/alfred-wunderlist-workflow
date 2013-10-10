@@ -2,7 +2,7 @@
 	@header     Alfred Results
 	@abstract   Utilities for displaying results in Alfred.
 	@discussion
-	@version    0.2-beta.3
+	@version    0.2
 *)
 
 (*!
