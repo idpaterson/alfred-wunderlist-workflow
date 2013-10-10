@@ -1,0 +1,377 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<html>
+<head>
+<title>Alfred Script Filters</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="HeaderDoc">
+<meta name="xcode-display" content="render">
+<style><!--
+.toc_contents_text {
+    padding-left: 1em;
+    text-indent: -1em;
+}
+
+ul.tocSubEntryList li.tocSubEntry {
+    list-style: none;
+}
+
+#colorbox {
+		display: none;
+}
+.spec_sheet_line {
+		margin-bottom: 1px;
+}
+.collapsible {
+		display: none;
+}
+.toc_leadspace {
+		width: 10; min-width: 10;
+}
+.disclosure_triangle_td {
+		width: 14; min-width: 14;
+		font-size: 10px;
+		vertical-align: middle;
+}
+.specbox td {
+		font-size: 13px;
+}
+.specbox td a {
+		font-size: 13px;
+}
+.specbox td code {
+		font-size: 13px;
+}
+.specbox td tt {
+		font-size: 13px;
+}
+.specbox td pre {
+		font-size: 13px;
+}
+.specbox a {
+		font-size: 12px;
+}
+.disclosure_triangle_td a:hover {
+		text-decoration: none;
+}
+.disclosure_triangle_td a:hover {
+		text-decoration: none;
+}
+.hd_toc_box {
+		padding-top: 10px;
+		padding-right: 15px;
+}.tocSeparator {
+		margin-top: 15px;
+		padding-bottom: 0px;
+		margin-bottom: 0px;
+}
+.tocSubEntryList {
+		margin-left: 0px;
+		padding-left: 40px;
+		padding-top: 0px;
+		margin-top: 2px;
+		padding-bottom: 0px;
+		margin-bottom: 8px;
+}
+.hd_toc_heading_table {
+		margin-top: 2px;
+		margin-bottom: 2px;
+}
+.hd_toc_entry_table {
+		margin-top: 2px;
+		margin-bottom: 2px;
+}
+.tocSubEntry {
+		margin-left: 0px;
+		padding-left: 0px;
+		margin-top: 0px;
+		margin-bottom: 1px;
+}
+.tocSubEntry a {
+		font-size: 10pt;
+}
+.tocSubheading {
+		padding-left: 14px;
+		margin-left: 0px;
+		margin-top: 5px;
+		padding-top: 0px;
+		font-size: 16px;
+		color: #808080;
+}
+
+#tocMenu {
+		border-right: 1px solid #c0c0c0;
+		background-color: #f4f4ff;
+		top:0px;
+		left:0px;
+		width:230px;
+		height:100%;
+}
+#bodyContents {
+		width: auto;
+		padding-left: 15px;
+}
+--></style>
+<script language="JavaScript" type="text/javascript"><!--
+function getNewHTTPObject()
+{
+        var xmlhttp;
+
+        /** Special IE only code ... */
+        /*@cc_on
+          @if (@_jscript_version >= 5)
+              try
+              {
+                  xmlhttp = new ActiveXObject('Msxml2.XMLHTTP');
+              }
+              catch (e)
+              {
+                  try
+                  {
+                      xmlhttp = new ActiveXObject('Microsoft.XMLHTTP');
+                  }
+                  catch (E)
+                  {
+                      xmlhttp = false;
+                  }
+             }
+          @else
+             xmlhttp = false;
+        @end @*/
+
+        /** Every other browser on the planet */
+        if (!xmlhttp && typeof XMLHttpRequest != 'undefined')
+        {
+            try
+            {
+                xmlhttp = new XMLHttpRequest();
+            }
+            catch (e)
+            {
+                xmlhttp = false;
+            }
+        }
+
+        return xmlhttp;
+}
+
+function hidetoc() {
+	var toc = document.getElementById('tocMenu');
+	var src = toc.getAttribute('src');
+	var xhr = getNewHTTPObject();
+	xhr.open('GET', src, true);
+	xhr.onreadystatechange = function() {
+		if(xhr.readyState == 4) {
+			var toc = document.getElementById('tocMenu');
+			toc.innerHTML = xhr.responseText;
+		}
+	}
+	xhr.send(null);
+	var origURL = parent.document.URL;
+	var contentURL = origURL.substring(origURL.indexOf('?')+1, origURL.length);
+	if (contentURL.length == origURL.length) {
+		jumpPos = origURL.substring(origURL.indexOf('#')+1, origURL.length);
+	}
+	if (contentURL == "hidetoc") {
+		var body = document.getElementById('bodyContents');
+		if (toc && body) {
+			toc.style.display = 'none';
+			body.style.marginLeft = '0px';
+		}
+	}
+}
+
+function disclosure_triangle(elt) {
+   var linkelt = elt;
+   while (elt && elt.tagName != 'TABLE') { elt = elt.parentNode;}
+   if (!elt) { return; }
+   while (elt && elt.tagName != 'DIV') { elt = elt.nextSibling;}
+   if (!elt) { return; }
+   if (parseInt(linkelt.getAttribute('state'))) {
+      // It's open.  Close it
+      linkelt.innerHTML = '&#x25B7;';
+      linkelt.setAttribute('state', 0);
+      linkelt.setAttribute('class', 'closed_disclosure_triangle');
+      elt.style.display = 'none';
+   } else {
+      // It's closed.  Open it
+      linkelt.innerHTML = '&#x25BC;';
+      linkelt.setAttribute('state', 1);
+      linkelt.setAttribute('class', 'open_disclosure_triangle');
+      elt.style.display = 'block';
+   }
+}
+--></script><style type="text/css"><!--.char {background:transparent; color:#A535AE;}.comment {background:transparent; color:#919191;}.function {background:transparent; color:#21439C;}.keyword {background:transparent; color:#FF5600;}.number {background:transparent; color:#A535AE;}.param {background:transparent; color:#A535AE;}.preprocessor {background:transparent; color:#236e25}.string {background:transparent; color:#00A33F;}.template {background:transparent; color:#761550;}.type {background:transparent; color:#21439C;}.var {background:transparent; color:#A535AE;}div {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}td {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}span.hd_tocAccessSpace { display: block; font-size: 1px; height: 3px; min-height: 3px; }span.hd_tocGroupSpace { display: block; font-size: 1px; height: 3px; min-height: 3px; }span.hd_tocGroup { display: block; font-weight: bold; font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000; margin-left: 0px; padding-left: 40px; }span.hd_tocGroup + span.hd_tocAccess { padding-top: 5px; }td.toc_contents_text {font-size: 11pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000; }li.tocSubEntry {font-size: 11pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}p {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}h2.h2tight { margin-top: 0px; padding-top: 0px; }h1 { margin-top: 13px; padding-top: 0px; }h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}h5 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10.1pt; font-weight: bold;}pre {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666; font-size: 10pt;}pre a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}pre a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}code a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}code a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}tt a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}tt a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}body  {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt; padding-left: 0px; padding-top: 0px; margin-left: 0px; margin-top: 0px; border: none; }#hd_outermost_table { margin-left: 0px; border-spacing: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tr { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tr > td { border-spacing: 0px; margin-left: 0px; margin-top: 0px; }#hd_outermost_table > tbody > tr { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tbody > tr > td { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-top: 3px; }.afterName { display: none; }.list_indent { margin-left: 40px; }.declaration_indent { margin-left: 40px; margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; min-height: 12px; vertical-align: middle; }.declaration_indent pre { margin-top: 20px; padding-top: 0px; margin-bottom: 20px; padding-bottom: 0px; }.gapBeforeFooter { display: none; }hr { height: 0px; min-height: 0px; border-top: none; border-left: none; border-right: none; border-bottom: 1px solid #909090;}hr.afterHeader { display: none }.param_group_indent { margin-left: 25px; }.param_indent { margin-left: 40px; margin-top: 0px; padding-top: 0px; }.param_indent dl { margin-top: 4px; padding-top: 0px; }dl dd > p:first-child { margin-top: 2px; padding-top: 0px; }.param_indent dl dd > p:first-child { margin-top: 2px; padding-top: 0px; }.group_indent { margin-left: 40px; }.group_desc_indent { margin-left: 20px; }.warning_indent { margin-left: 40px; }.important_indent { margin-left: 40px; }.note_indent { margin-left: 40px; }h3 {       color: #3C4C6C;}.tight {       margin-top: 2px; margin-bottom: 0px;       padding-top: 0px; padding-bottom: 0px;}h3 a {       color: #3C4C6C;	font-size: 16px;	font-style: normal;	font-variant: normal;	font-weight: bold;	height: 0px;	line-height: normal;}.hd_tocAccess { display: block; margin-left: 40px; font-style: italic; font-size: 10px; font-weight: normal; color: #303030; }.tocSubheading { margin-bottom: 4px; }--></style>
+</head>
+<body bgcolor="#ffffff" onload="hidetoc();">
+<!-- headerDoc=Header;  uid=//apple_ref/doc/header/filters.php;   name=Alfred Script Filters -->
+<a name="//apple_ref/doc/header/filters.php"></a>
+<table id="hd_outermost_table" height="100%" width="100%"><tr>
+<td valign="top" id="tocMenu" src="toc.html"></td>
+<td id="bodyContents" valign="top">
+<a name="top"></a>
+<h1><a name="AlfredScriptFilters">Alfred Script Filters</a></h1>
+<div class="spec_sheet_info_box"><table cellspacing="0" class="specbox"><tr>
+<td scope="row"><b>Version:</b></td>
+<td><div style="margin-bottom:1px"><div class="content_text">0.2</div></div></td>
+</tr></table></div>
+<h2>Introduction</h2>
+<p><!-- headerDoc=abstract;uid=//apple_ref/doc/header/filters.php;name=start --><!-- begin abstract --></p>
+<p>Provides filters that take input directly from Alfred for 
+the purpose of filtering lists or selecting options.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/doc/header/filters.php;name=end --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/doc/header/filters.php;name=start --><p>In order to use a handler within Alfred, simply call the
+script with two arguments: the name of the filter to call
+and the user's query.
+</p>
+<p>See the following example for using a bash script to run a 
+filter. Note that backquotes, double quotes, backslashes,
+and dollar signs should be escaped when providing input
+this way. Excess escaping can cause problems handling simple 
+characters such as spaces.
+				</p>
+<pre><code>    /usr/bin/env php "`pwd`/filters.php" filterListsToAddTask "{query}"</code></pre>
+
+<p>Why PHP? This is a [likely temporary] solution to slow 
+feedback from applescript for list filtering. It was found
+that a simple Hello World script took 90ms to run with
+osascript, making AppleScript unsuitable for live filtering.
+Simple script language alternatives such as Python and PHP
+were put through similar tests. By far Perl was the fastest.
+However, in order to be useful the language must have an 
+Alfred workflow library and load it efficiently. Perl did not
+and Python's two options were both shockingly slow. This left
+PHP which was capable of 60ms response times once the logic
+was fully implemented. 
+</p>
+<p>Unfortunately, PHP and AppleScript do not play well together
+when it comes to platform specifics such as localization. 
+This script will likely be replaced with a compiled Cocoa 
+utility that combines speed and platform suitability.
+<!-- headerDoc=discussion;uid=//apple_ref/doc/header/filters.php;name=end --><!-- end discussion -->
+</p>
+<hr class="afterClassOrHeaderInfo">
+<br><a name="HeaderDoc_functions"></a>
+<h2 class="h2tight">Functions</h2>
+<dl>
+<dt><tt><a href="index.html#//apple_ref/php/func/filterListsToAddTask" target="_top">filterListsToAddTask</a></tt></dt>
+<dd><p>A Script Filter input that shows the user's lists in Alfred, allowing
+a task to be added to a specific list.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/php/func/getListInfo" target="_top">getListInfo</a></tt></dt>
+<dd><p>Loads list info from the cache or reloads it from Wunderlist
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/php/func/getWorkflowSettings" target="_top">getWorkflowSettings</a></tt></dt>
+<dd><p>Loads the workflow's <code>settings.plist</code> into an 
+associative array.
+</p></dd>
+</dl>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/php/func/filterListsToAddTask;   name=filterListsToAddTask --><a name="//apple_ref/php/func/filterListsToAddTask"></a>
+<h3><a name="filterListsToAddTask">filterListsToAddTask</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/php/func/filterListsToAddTask;name=start --><!-- begin abstract --></p>
+<p>A Script Filter input that shows the user's lists in Alfred, allowing
+a task to be added to a specific list.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/php/func/filterListsToAddTask;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/php/func/filterListsToAddTask;name=start --><span class="keyword">function</span> <a machinegenerated="true" href="index.html#//apple_ref/php/func/filterListsToAddTask" logicalPath="//apple_ref/php/instm/filterListsToAddTask //apple_ref/php/clm/filterListsToAddTask //apple_ref/php/intfcm/filterListsToAddTask //apple_ref/php/intfm/filterListsToAddTask //apple_ref/php/func/filterListsToAddTask" target="_top"><span class="function">filterListsToAddTask</span></a>(
+    $<span class="param">query</span>) <!-- headerDoc=declaration;uid=//apple_ref/php/func/filterListsToAddTask;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/filterListsToAddTask/query;   name=filterListsToAddTask::query -->
+<a name="//apple_ref/doc/functionparam/filterListsToAddTask/query"></a>
+<code>query</code>
+</dt>
+<dd><p>The text of the task, optionally specified with a substring of a 
+list name followed by a colon to designate the list into which the task should
+be added.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/php/func/filterListsToAddTask;name=start --><p>Queries the Wunderlist UI to provide all of the lists into which
+new tasks can be added. The response is formatted for Alfred to display in
+a way that allows the user to type their task, then action a specific list to
+insert the task there.
+</p>
+<p>After selecting one of these options, the final query will be a concatenation 
+of the list index and the user's task in a format suitable for 
+<a href="../handlers_applescript/index.html#//apple_ref/applescript/func/addTaskToList" logicalPath="//apple_ref/applescript/func/addTaskToList" target="_top">addTaskToList</a>:
+	</p>
+<pre><code>    5::2% milk</code></pre>
+
+<p>The user may also select a list by autocompletion or substring matching. If the
+query text is a substring of any of the list names, the lists will be filtered
+to show only those that match. The user can action a list item to autocomplete 
+the list name in the following format:
+	</p>
+<pre><code>    Groceries:2% milk</code></pre>
+
+<p>Alternatively, the user can type a colon character indicating that the task is
+to be entered in the first task matching that substring. The match is case 
+insensitive but is sensitive to accents and other diacritical marks.
+	</p>
+<pre><code>    gro:2% milk</code></pre>
+<!-- headerDoc=discussion;uid=//apple_ref/php/func/filterListsToAddTask;name=end --><!-- end discussion -->
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/php/func/getListInfo;   name=getListInfo --><a name="//apple_ref/php/func/getListInfo"></a>
+<h3><a name="getListInfo">getListInfo</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/php/func/getListInfo;name=start --><!-- begin abstract --></p>
+<p>Loads list info from the cache or reloads it from Wunderlist
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/php/func/getListInfo;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/php/func/getListInfo;name=start --><span class="keyword">function</span> <a machinegenerated="true" href="index.html#//apple_ref/php/func/getListInfo" logicalPath="//apple_ref/php/instm/getListInfo //apple_ref/php/clm/getListInfo //apple_ref/php/intfcm/getListInfo //apple_ref/php/intfm/getListInfo //apple_ref/php/func/getListInfo" target="_top"><span class="function">getListInfo</span></a>(
+    $<span class="param">attempts</span> = <span class="number">0</span>) <!-- headerDoc=declaration;uid=//apple_ref/php/func/getListInfo;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/getListInfo/attempts;   name=getListInfo::attempts -->
+<a name="//apple_ref/doc/functionparam/getListInfo/attempts"></a>
+<code>attempts</code>
+</dt>
+<dd><p>Guards against infinite recursion, for internal use only</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>an array of associative arrays in the <code>ListInfo</code> format
+
+<!-- end return value --></p>
+<p><b>See</b></p>
+<div class="list_indent"><dl>
+<dt><p><a href="../ui_applescript/index.html#//apple_ref/applescript/func/getListInfo" logicalPath="//apple_ref/applescript/func/getListInfo" target="_top">getListInfo in AppleScript</a></p></dt>
+<dd></dd>
+</dl></div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/php/func/getWorkflowSettings;   name=getWorkflowSettings --><a name="//apple_ref/php/func/getWorkflowSettings"></a>
+<h3><a name="getWorkflowSettings">getWorkflowSettings</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/php/func/getWorkflowSettings;name=start --><!-- begin abstract --></p>
+<p>Loads the workflow's <code>settings.plist</code> into an 
+associative array.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/php/func/getWorkflowSettings;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/php/func/getWorkflowSettings;name=start --><span class="keyword">function</span> <a machinegenerated="true" href="index.html#//apple_ref/php/func/getWorkflowSettings" logicalPath="//apple_ref/php/instm/getWorkflowSettings //apple_ref/php/clm/getWorkflowSettings //apple_ref/php/intfcm/getWorkflowSettings //apple_ref/php/intfm/getWorkflowSettings //apple_ref/php/func/getWorkflowSettings" target="_top"><span class="function">getWorkflowSettings</span></a>() <!-- headerDoc=declaration;uid=//apple_ref/php/func/getWorkflowSettings;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>An associative array containing each of the keys from the
+property list in native PHP data structures.
+
+<!-- end return value --></p>
+<p class="gapBeforeFooter">&nbsp;</p>
+<hr class="afterFooter">
+<div class="hd_copyright_and_timestamp">
+<p class="hd_timestamp">Last Updated: Thursday, October 10, 2013
+</p>
+</div>
+</td>
+</tr></table>
+</body>
+</html>

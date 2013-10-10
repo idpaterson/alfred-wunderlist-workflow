@@ -1,1027 +1,229 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<title>Wunderlist for Alfred</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf8">
-<meta name="generator" content="HeaderDoc">
-<meta name="xcode-display" content="render">
-<style><!--
-.toc_contents_text {
-    padding-left: 1em;
-    text-indent: -1em;
-}
-
-ul.tocSubEntryList li.tocSubEntry {
-    list-style: none;
-}
-
-#colorbox {
-		display: none;
-}
-.spec_sheet_line {
-		margin-bottom: 1px;
-}
-.collapsible {
-		display: none;
-}
-.toc_leadspace {
-		width: 10; min-width: 10;
-}
-.disclosure_triangle_td {
-		width: 14; min-width: 14;
-		font-size: 10px;
-		vertical-align: middle;
-}
-.specbox td {
-		font-size: 13px;
-}
-.specbox td a {
-		font-size: 13px;
-}
-.specbox td code {
-		font-size: 13px;
-}
-.specbox td tt {
-		font-size: 13px;
-}
-.specbox td pre {
-		font-size: 13px;
-}
-.specbox a {
-		font-size: 12px;
-}
-.disclosure_triangle_td a:hover {
-		text-decoration: none;
-}
-.disclosure_triangle_td a:hover {
-		text-decoration: none;
-}
-.hd_toc_box {
-		padding-top: 10px;
-		padding-right: 15px;
-}.tocSeparator {
-		margin-top: 15px;
-		padding-bottom: 0px;
-		margin-bottom: 0px;
-}
-.tocSubEntryList {
-		margin-left: 0px;
-		padding-left: 40px;
-		padding-top: 0px;
-		margin-top: 2px;
-		padding-bottom: 0px;
-		margin-bottom: 8px;
-}
-.hd_toc_heading_table {
-		margin-top: 2px;
-		margin-bottom: 2px;
-}
-.hd_toc_entry_table {
-		margin-top: 2px;
-		margin-bottom: 2px;
-}
-.tocSubEntry {
-		margin-left: 0px;
-		padding-left: 0px;
-		margin-top: 0px;
-		margin-bottom: 1px;
-}
-.tocSubEntry a {
-		font-size: 10pt;
-}
-.tocSubheading {
-		padding-left: 14px;
-		margin-left: 0px;
-		margin-top: 5px;
-		padding-top: 0px;
-		font-size: 16px;
-		color: #808080;
-}
-
-#tocMenu {
-		border-right: 1px solid #c0c0c0;
-		background-color: #f4f4ff;
-		top:0px;
-		left:0px;
-		width:230px;
-		height:100%;
-}
-#bodyContents {
-		width: auto;
-		padding-left: 15px;
-}
---></style>
-<script language="JavaScript" type="text/javascript"><!--
-function getNewHTTPObject()
-{
-        var xmlhttp;
-
-        /** Special IE only code ... */
-        /*@cc_on
-          @if (@_jscript_version >= 5)
-              try
-              {
-                  xmlhttp = new ActiveXObject('Msxml2.XMLHTTP');
-              }
-              catch (e)
-              {
-                  try
-                  {
-                      xmlhttp = new ActiveXObject('Microsoft.XMLHTTP');
-                  }
-                  catch (E)
-                  {
-                      xmlhttp = false;
-                  }
-             }
-          @else
-             xmlhttp = false;
-        @end @*/
-
-        /** Every other browser on the planet */
-        if (!xmlhttp && typeof XMLHttpRequest != 'undefined')
-        {
-            try
-            {
-                xmlhttp = new XMLHttpRequest();
-            }
-            catch (e)
-            {
-                xmlhttp = false;
-            }
-        }
-
-        return xmlhttp;
-}
-
-function hidetoc() {
-	var toc = document.getElementById('tocMenu');
-	var src = toc.getAttribute('src');
-	var xhr = getNewHTTPObject();
-	xhr.open('GET', src, true);
-	xhr.onreadystatechange = function() {
-		if(xhr.readyState == 4) {
-			var toc = document.getElementById('tocMenu');
-			toc.innerHTML = xhr.responseText;
-		}
-	}
-	xhr.send(null);
-	var origURL = parent.document.URL;
-	var contentURL = origURL.substring(origURL.indexOf('?')+1, origURL.length);
-	if (contentURL.length == origURL.length) {
-		jumpPos = origURL.substring(origURL.indexOf('#')+1, origURL.length);
-	}
-	if (contentURL == "hidetoc") {
-		var body = document.getElementById('bodyContents');
-		if (toc && body) {
-			toc.style.display = 'none';
-			body.style.marginLeft = '0px';
-		}
-	}
-}
-
-function disclosure_triangle(elt) {
-   var linkelt = elt;
-   while (elt && elt.tagName != 'TABLE') { elt = elt.parentNode;}
-   if (!elt) { return; }
-   while (elt && elt.tagName != 'DIV') { elt = elt.nextSibling;}
-   if (!elt) { return; }
-   if (parseInt(linkelt.getAttribute('state'))) {
-      // It's open.  Close it
-      linkelt.innerHTML = '&#x25B7;';
-      linkelt.setAttribute('state', 0);
-      linkelt.setAttribute('class', 'closed_disclosure_triangle');
-      elt.style.display = 'none';
-   } else {
-      // It's closed.  Open it
-      linkelt.innerHTML = '&#x25BC;';
-      linkelt.setAttribute('state', 1);
-      linkelt.setAttribute('class', 'open_disclosure_triangle');
-      elt.style.display = 'block';
-   }
-}
---></script><style type="text/css"><!--.char {background:transparent; color:#A535AE;}.comment {background:transparent; color:#919191;}.function {background:transparent; color:#21439C;}.keyword {background:transparent; color:#FF5600;}.number {background:transparent; color:#A535AE;}.param {background:transparent; color:#A535AE;}.preprocessor {background:transparent; color:#236e25}.string {background:transparent; color:#00A33F;}.template {background:transparent; color:#761550;}.type {background:transparent; color:#21439C;}.var {background:transparent; color:#A535AE;}div {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}td {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}span.hd_tocAccessSpace { display: block; font-size: 1px; height: 3px; min-height: 3px; }span.hd_tocGroupSpace { display: block; font-size: 1px; height: 3px; min-height: 3px; }span.hd_tocGroup { display: block; font-weight: bold; font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000; margin-left: 0px; padding-left: 40px; }span.hd_tocGroup + span.hd_tocAccess { padding-top: 5px; }td.toc_contents_text {font-size: 11pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000; }li.tocSubEntry {font-size: 11pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}p {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}h2.h2tight { margin-top: 0px; padding-top: 0px; }h1 { margin-top: 13px; padding-top: 0px; }h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}h5 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10.1pt; font-weight: bold;}pre {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666; font-size: 10pt;}pre a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}pre a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}code a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}code a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}tt a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}tt a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}body  {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt; padding-left: 0px; padding-top: 0px; margin-left: 0px; margin-top: 0px; border: none; }#hd_outermost_table { margin-left: 0px; border-spacing: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tr { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tr > td { border-spacing: 0px; margin-left: 0px; margin-top: 0px; }#hd_outermost_table > tbody > tr { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tbody > tr > td { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-top: 3px; }.afterName { display: none; }.list_indent { margin-left: 40px; }.declaration_indent { margin-left: 40px; margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; min-height: 12px; vertical-align: middle; }.declaration_indent pre { margin-top: 20px; padding-top: 0px; margin-bottom: 20px; padding-bottom: 0px; }.gapBeforeFooter { display: none; }hr { height: 0px; min-height: 0px; border-top: none; border-left: none; border-right: none; border-bottom: 1px solid #909090;}hr.afterHeader { display: none }.param_group_indent { margin-left: 25px; }.param_indent { margin-left: 40px; margin-top: 0px; padding-top: 0px; }.param_indent dl { margin-top: 4px; padding-top: 0px; }dl dd > p:first-child { margin-top: 2px; padding-top: 0px; }.param_indent dl dd > p:first-child { margin-top: 2px; padding-top: 0px; }.group_indent { margin-left: 40px; }.group_desc_indent { margin-left: 20px; }.warning_indent { margin-left: 40px; }.important_indent { margin-left: 40px; }.note_indent { margin-left: 40px; }h3 {       color: #3C4C6C;}.tight {       margin-top: 2px; margin-bottom: 0px;       padding-top: 0px; padding-bottom: 0px;}h3 a {       color: #3C4C6C;	font-size: 16px;	font-style: normal;	font-variant: normal;	font-weight: bold;	height: 0px;	line-height: normal;}.hd_tocAccess { display: block; margin-left: 40px; font-style: italic; font-size: 10px; font-weight: normal; color: #303030; }.tocSubheading { margin-bottom: 4px; }--></style>
+<meta http-equiv="Content-Type" content="text/html; charset=ascii">
+<title>API Reference: Wunderlist for Alfred</title>
+<!-- A big scary CSS block --><style type="text/css"><!--#pagehead { FONT-WEIGHT: bold; FONT-SIZE: 32px; COLOR: #000000; FONT-FAMILY: lucida grande, geneva, helvetica, arial, sans-serif; } td { font-size: 10px; } a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #0000ff;} a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #0000ff;} a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #ff6600;} a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #ff6600;} a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #ff6600;} h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;} body {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10pt;} --></style>
+<!-- End big scary CSS block -->
 </head>
-<body bgcolor="#ffffff" onload="hidetoc();">
-<!-- headerDoc=Header;  uid=//apple_ref/doc/header/wunderlist.applescript;   name=Wunderlist for Alfred -->
-<a name="//apple_ref/doc/header/wunderlist.applescript"></a>
-<table id="hd_outermost_table" height="100%" width="100%"><tr>
-<td valign="top" id="tocMenu" src="toc.html"></td>
-<td id="bodyContents" valign="top">
-<a name="top"></a>
-<h1><a name="WunderlistforAlfred">Wunderlist for Alfred</a></h1>
-<div class="spec_sheet_info_box"><table cellspacing="0" class="specbox">
+<meta name="ROBOTS" content="NOINDEX">
+<body bgcolor="#ffffff">
+
+<a name="MYTAG"></a>
+
+<center>
+
+<!-- start of header -->
+<!--#include virtual="/path/to/header.html"-->
+<!-- end of header -->
+
+<table border="0" cellpadding="0" cellspacing="0" width="600">
+<tr height="5">
+<td width="600" height="5"><br></td>
+			</tr>
 <tr>
-<td scope="row"><b>Author:</b></td>
-<td><div style="margin-bottom:1px"><div class="content_text">Ian Paterson</div></div></td>
-</tr>
+<td width="600">
+					<div id="pagehead">Wunderlist for Alfred</div>
+				</td>
+			</tr>
+<tr height="10">
+<td width="600" height="10"><br></td>
+			</tr>
 <tr>
-<td scope="row"><b>Version:</b></td>
-<td><div style="margin-bottom:1px"><div class="content_text">0.1</div></div></td>
-</tr>
-</table></div>
-<h2>Introduction</h2>
-<p><!-- headerDoc=abstract;uid=//apple_ref/doc/header/wunderlist.applescript;name=start --><!-- begin abstract --></p>
-<p>Control Wunderlist 2 from Alfred
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/doc/header/wunderlist.applescript;name=end --></p>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/doc/header/wunderlist.applescript;name=start --><p>This AppleScript provides a means to control the Wunderlist 2 Mac app from Alfred.
+<td valign="top" width="600"><font face="Geneva,Helvetica,Arial" size="2"><span id="bodytext"> 
+<p>This AppleScript provides a means to control the Wunderlist 2 Mac app from Alfred.
 As Wunderlist 2 does not yet provide AppleScript support, the features are limited
 to those that are keyboard-accessible. Regardless, it saves a lot of keystrokes!
-<!-- headerDoc=discussion;uid=//apple_ref/doc/header/wunderlist.applescript;name=end --><!-- end discussion -->
-</p>
-<hr class="afterClassOrHeaderInfo">
-<br><a name="HeaderDoc_groups"><h2 class="h2tight">Groups</h2></a>
-
-<h3>Utilities</h3>
-<div class="group_desc_indent">
-</div>
-<h4>Group members:</h4>
-<div class="group_indent">
-<dl>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/addList" logicalPath="//apple_ref/applescript/func/addList" target="_top">addList</a></tt></dt>
-<dd><p>Adds a new list to Wunderlist
-</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/addTaskToInbox" logicalPath="//apple_ref/applescript/func/addTaskToInbox" target="_top">addTaskToInbox</a></tt></dt>
-<dd><p>Adds a task to the Inbox list in Wunderlist
-</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/addTaskToList" logicalPath="//apple_ref/applescript/func/addTaskToList" target="_top">addTaskToList</a></tt></dt>
-<dd><p>Adds a task to the specified list in Wunderlist
-</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/appl10n" logicalPath="//apple_ref/applescript/func/appl10n" target="_top">appl10n</a></tt></dt>
-<dd><p>Returns the most appropriate translation of the specified string
-according to the localization of the specified application.
-</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/getWorkflowFolder" logicalPath="//apple_ref/applescript/func/getWorkflowFolder" target="_top">getWorkflowFolder</a></tt></dt>
-<dd><p>Returns the path to the workflow folder within Alfred preferences.
-</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/l10n" logicalPath="//apple_ref/applescript/func/l10n" target="_top">l10n</a></tt></dt>
-<dd><p>Returns the most appropriate translation of the specified string
-according to the workflow's bundle.
-</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/qWorkflow" logicalPath="//apple_ref/applescript/func/qWorkflow" target="_top">qWorkflow</a></tt></dt>
-<dd>
-<p>Loads and returns qWorkflow, ensuring that it is only loaded once
-and then reused as necessary.
-</p>
-</dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/sendNotification" logicalPath="//apple_ref/applescript/func/sendNotification" target="_top">sendNotification</a></tt></dt>
-<dd><p>Displays a notification in Notification Center.
-</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/showListOptions" logicalPath="//apple_ref/applescript/func/showListOptions" target="_top">showListOptions</a></tt></dt>
-<dd><p>A Script Filter input that shows the user's lists in Alfred, allowing
-a task to be added to a specific list.
-</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/wll10n" logicalPath="//apple_ref/applescript/func/wll10n" target="_top">wll10n</a></tt></dt>
-<dd><p>Returns the most appropriate translation of the specified string
-according to the localization of the Wunderlist application.
-</p></dd>
-</dl>
-</div>
-<p>&nbsp;</p>
-<h3>Configuration</h3>
-<div class="group_desc_indent">
-</div>
-<h4>Group members:</h4>
-<div class="group_indent">
-<dl>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/data/iconTheme" logicalPath="//apple_ref/applescript/data/iconTheme" target="_top">iconTheme</a></tt></dt>
-<dd><p>Changes the appearance of list icons in Alfred
-</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/data/listCacheInSeconds" logicalPath="//apple_ref/applescript/data/listCacheInSeconds" target="_top">listCacheInSeconds</a></tt></dt>
-<dd><p>Specifies how often to reload information about task lists</p></dd>
-</dl>
-</div>
-<p>&nbsp;</p>
-<h3>Interaction with Wunderlist</h3>
-<div class="group_desc_indent">
-</div>
-<h4>Group members:</h4>
-<div class="group_indent">
-<dl>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/activatePreviousApplication" logicalPath="//apple_ref/applescript/func/activatePreviousApplication" target="_top">activatePreviousApplication</a></tt></dt>
-<dd><p>Activates the original <code>frontmost application</code> 
-before the script was started.</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/activateWunderlist" logicalPath="//apple_ref/applescript/func/activateWunderlist" target="_top">activateWunderlist</a></tt></dt>
-<dd><p>Causes Wunderlist to become the active application.</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/assignWunderlistToAllDesktops" logicalPath="//apple_ref/applescript/func/assignWunderlistToAllDesktops" target="_top">assignWunderlistToAllDesktops</a></tt></dt>
-<dd><p>Uses the Dock.app menu to make Wunderlist visible on all
-desktops, which is necessary for the list info to load reliably.</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/focusInbox" logicalPath="//apple_ref/applescript/func/focusInbox" target="_top">focusInbox</a></tt></dt>
-<dd><p>Moves focus within the app to the Inbox list.
-</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/focusListAtIndex" logicalPath="//apple_ref/applescript/func/focusListAtIndex" target="_top">focusListAtIndex</a></tt></dt>
-<dd><p>Moves focus within the app to the specified list.
-</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/focusTaskInput" logicalPath="//apple_ref/applescript/func/focusTaskInput" target="_top">focusTaskInput</a></tt></dt>
-<dd><p>Switches keyboard focus to the task input field.
-</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/getIndexOfListNamed" logicalPath="//apple_ref/applescript/func/getIndexOfListNamed" target="_top">getIndexOfListNamed</a></tt></dt>
-<dd><p>Finds the index of the specified list in the list table
-</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/getListInfo" logicalPath="//apple_ref/applescript/func/getListInfo" target="_top">getListInfo</a></tt></dt>
-<dd><p>Loads some basic information about all of the visible lists in Wunderlist.
-</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/getListInfoInWorkflow" logicalPath="//apple_ref/applescript/func/getListInfoInWorkflow" target="_top">getListInfoInWorkflow</a></tt></dt>
-<dd><p>Retrieves cached list info or loads the list data again if necessary
-</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/getTaskInfoForFocusedList" logicalPath="//apple_ref/applescript/func/getTaskInfoForFocusedList" target="_top">getTaskInfoForFocusedList</a></tt></dt>
-<dd><p>Loads info about the tasks in the currently visible task list
-</p></dd>
-<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/setWindowViewNormal" logicalPath="//apple_ref/applescript/func/setWindowViewNormal" target="_top">setWindowViewNormal</a></tt></dt>
-<dd><p>Switches to the "Normal" view in Wunderlist where both the list and 
-tasks are visible.</p></dd>
-</dl>
-</div>
-<hr class="afterGroupHeading">
-<a name="HeaderDoc_functions"></a>
-<h2 class="h2tight">Functions</h2>
-<dl>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/activatePreviousApplication" target="_top">activatePreviousApplication</a></tt></dt>
-<dd><p>Activates the original <code>frontmost application</code> 
-before the script was started.</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/activateWunderlist" target="_top">activateWunderlist</a></tt></dt>
-<dd><p>Causes Wunderlist to become the active application.</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/addList" target="_top">addList</a></tt></dt>
-<dd><p>Adds a new list to Wunderlist
-</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/addTaskToInbox" target="_top">addTaskToInbox</a></tt></dt>
-<dd><p>Adds a task to the Inbox list in Wunderlist
-</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/addTaskToList" target="_top">addTaskToList</a></tt></dt>
-<dd><p>Adds a task to the specified list in Wunderlist
-</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/appl10n" target="_top">appl10n</a></tt></dt>
-<dd><p>Returns the most appropriate translation of the specified string
-according to the localization of the specified application.
-</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/assignWunderlistToAllDesktops" target="_top">assignWunderlistToAllDesktops</a></tt></dt>
-<dd><p>Uses the Dock.app menu to make Wunderlist visible on all
-desktops, which is necessary for the list info to load reliably.</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/focusInbox" target="_top">focusInbox</a></tt></dt>
-<dd><p>Moves focus within the app to the Inbox list.
-</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/focusListAtIndex" target="_top">focusListAtIndex</a></tt></dt>
-<dd><p>Moves focus within the app to the specified list.
-</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/focusTaskInput" target="_top">focusTaskInput</a></tt></dt>
-<dd><p>Switches keyboard focus to the task input field.
-</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/getIndexOfListNamed" target="_top">getIndexOfListNamed</a></tt></dt>
-<dd><p>Finds the index of the specified list in the list table
-</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/getListInfo" target="_top">getListInfo</a></tt></dt>
-<dd><p>Loads some basic information about all of the visible lists in Wunderlist.
-</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/getListInfoInWorkflow" target="_top">getListInfoInWorkflow</a></tt></dt>
-<dd><p>Retrieves cached list info or loads the list data again if necessary
-</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/getTaskInfoForFocusedList" target="_top">getTaskInfoForFocusedList</a></tt></dt>
-<dd><p>Loads info about the tasks in the currently visible task list
-</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/getWorkflowFolder" target="_top">getWorkflowFolder</a></tt></dt>
-<dd><p>Returns the path to the workflow folder within Alfred preferences.
-</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/l10n" target="_top">l10n</a></tt></dt>
-<dd><p>Returns the most appropriate translation of the specified string
-according to the workflow's bundle.
-</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/qWorkflow" target="_top">qWorkflow</a></tt></dt>
-<dd>
-<p>Loads and returns qWorkflow, ensuring that it is only loaded once
-and then reused as necessary.
-</p>
-</dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/sendNotification" target="_top">sendNotification</a></tt></dt>
-<dd><p>Displays a notification in Notification Center.
-</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/setWindowViewNormal" target="_top">setWindowViewNormal</a></tt></dt>
-<dd><p>Switches to the "Normal" view in Wunderlist where both the list and 
-tasks are visible.</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/showListOptions" target="_top">showListOptions</a></tt></dt>
-<dd><p>A Script Filter input that shows the user's lists in Alfred, allowing
-a task to be added to a specific list.
-</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/func/wll10n" target="_top">wll10n</a></tt></dt>
-<dd><p>Returns the most appropriate translation of the specified string
-according to the localization of the Wunderlist application.
-</p></dd>
-</dl>
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/activatePreviousApplication;   name=activatePreviousApplication --><a name="//apple_ref/applescript/func/activatePreviousApplication"></a>
-<h3><a name="activatePreviousApplication">activatePreviousApplication</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/activatePreviousApplication;name=start --><!-- begin abstract --></p>
-<p>Activates the original <code>frontmost application</code> 
-before the script was started.<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/activatePreviousApplication;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/activatePreviousApplication;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/activatePreviousApplication" logicalPath="//apple_ref/applescript/instm/activatePreviousApplication //apple_ref/applescript/clm/activatePreviousApplication //apple_ref/applescript/intfcm/activatePreviousApplication //apple_ref/applescript/intfm/activatePreviousApplication //apple_ref/applescript/func/activatePreviousApplication" target="_top"><span class="function">activatePreviousApplication</span></a>()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/activatePreviousApplication;name=end --></pre>
-</div>
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/activateWunderlist;   name=activateWunderlist --><a name="//apple_ref/applescript/func/activateWunderlist"></a>
-<h3><a name="activateWunderlist">activateWunderlist</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/activateWunderlist;name=start --><!-- begin abstract --></p>
-<p>Causes Wunderlist to become the active application.<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/activateWunderlist;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/activateWunderlist;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/activateWunderlist" logicalPath="//apple_ref/applescript/instm/activateWunderlist //apple_ref/applescript/clm/activateWunderlist //apple_ref/applescript/intfcm/activateWunderlist //apple_ref/applescript/intfm/activateWunderlist //apple_ref/applescript/func/activateWunderlist" target="_top"><span class="function">activateWunderlist</span></a>()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/activateWunderlist;name=end --></pre>
-</div>
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/addList;   name=addList --><a name="//apple_ref/applescript/func/addList"></a>
-<h3><a name="addList">addList</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/addList;name=start --><!-- begin abstract --></p>
-<p>Adds a new list to Wunderlist
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/addList;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/addList;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/addList" logicalPath="//apple_ref/applescript/instm/addList //apple_ref/applescript/clm/addList //apple_ref/applescript/intfcm/addList //apple_ref/applescript/intfm/addList //apple_ref/applescript/func/addList" target="_top"><span class="function">addList</span></a>(
-    <span class="param">listName</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/addList;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/addList/listName;   name=addList::listName -->
-<a name="//apple_ref/doc/functionparam/addList/listName"></a>
-<code>listName</code>
-</dt>
-<dd><p>The name of the new list</p></dd>
-</dl>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/addList;name=start --><p>After calling this handler, Wunderlist remains activated with the keyboard focus 
-on the task input for the new list.
-</p>
-<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/addList;name=end --><!-- end discussion -->
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/addTaskToInbox;   name=addTaskToInbox --><a name="//apple_ref/applescript/func/addTaskToInbox"></a>
-<h3><a name="addTaskToInbox">addTaskToInbox</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/addTaskToInbox;name=start --><!-- begin abstract --></p>
-<p>Adds a task to the Inbox list in Wunderlist
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/addTaskToInbox;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/addTaskToInbox;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/addTaskToInbox" logicalPath="//apple_ref/applescript/instm/addTaskToInbox //apple_ref/applescript/clm/addTaskToInbox //apple_ref/applescript/intfcm/addTaskToInbox //apple_ref/applescript/intfm/addTaskToInbox //apple_ref/applescript/func/addTaskToInbox" target="_top"><span class="function">addTaskToInbox</span></a>(
-    <span class="param">task</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/addTaskToInbox;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/addTaskToInbox/task;   name=addTaskToInbox::task -->
-<a name="//apple_ref/doc/functionparam/addTaskToInbox/task"></a>
-<code>task</code>
-</dt>
-<dd><p>The text of the task</p></dd>
-</dl>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/addTaskToInbox;name=start --><p>Provides a shortcut for entering tasks directly in the Inbox.
-</p>
-<p>After calling this handler, the previous application is reactivated. However, if 
-<code>task</code> is not specified, Wunderlist will remain active with the 
-keyboard focus on the task input for the Inbox.
-</p>
-<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/addTaskToInbox;name=end --><!-- end discussion -->
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/addTaskToList;   name=addTaskToList --><a name="//apple_ref/applescript/func/addTaskToList"></a>
-<h3><a name="addTaskToList">addTaskToList</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/addTaskToList;name=start --><!-- begin abstract --></p>
-<p>Adds a task to the specified list in Wunderlist
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/addTaskToList;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/addTaskToList;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/addTaskToList" logicalPath="//apple_ref/applescript/instm/addTaskToList //apple_ref/applescript/clm/addTaskToList //apple_ref/applescript/intfcm/addTaskToList //apple_ref/applescript/intfm/addTaskToList //apple_ref/applescript/func/addTaskToList" target="_top"><span class="function">addTaskToList</span></a>(
-    <span class="param">listIndex</span>,
-    <span class="param">task</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/addTaskToList;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/addTaskToList/listIndex;   name=addTaskToList::listIndex -->
-<a name="//apple_ref/doc/functionparam/addTaskToList/listIndex"></a>
-<code>listIndex</code>
-</dt>
-<dd><p>The integer one-based index of the list as it appears in the 
-list table</p></dd>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/addTaskToList/task;   name=addTaskToList::task -->
-<a name="//apple_ref/doc/functionparam/addTaskToList/task"></a>
-<code>task</code>
-</dt>
-<dd><p>The text of the task</p></dd>
-</dl>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/addTaskToList;name=start --><p>Uses <a href="index.html#//apple_ref/applescript/func/focusListAtIndex" logicalPath="//apple_ref/applescript/func/focusListAtIndex" target="_top">focusListAtIndex</a> to focus the specified list,
-then inserts the task.
-</p>
-<p>If the specified list does not allow task input, such as <em>Assigned to Me</em>
-or <em>Week</em>, the task will be added in the Inbox.
-</p>
-<p>After calling this handler, the previous application is reactivated. However, if 
-<code>task</code> is not specified, Wunderlist will remain active with the 
-keyboard focus on the task input for the specified list.
-</p>
-<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/addTaskToList;name=end --><!-- end discussion -->
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/appl10n;   name=appl10n --><a name="//apple_ref/applescript/func/appl10n"></a>
-<h3><a name="appl10n">appl10n</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/appl10n;name=start --><!-- begin abstract --></p>
-<p>Returns the most appropriate translation of the specified string
-according to the localization of the specified application.
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/appl10n;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/appl10n;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/appl10n" logicalPath="//apple_ref/applescript/instm/appl10n //apple_ref/applescript/clm/appl10n //apple_ref/applescript/intfcm/appl10n //apple_ref/applescript/intfm/appl10n //apple_ref/applescript/func/appl10n" target="_top"><span class="function">appl10n</span></a>(
-    <span class="param">key</span>,
-    <span class="param">appName</span>,
-    <span class="param">tableName</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/appl10n;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/appl10n/key;   name=appl10n::key -->
-<a name="//apple_ref/doc/functionparam/appl10n/key"></a>
-<code>key</code>
-</dt>
-<dd><p>the string to localize, see <code>Localizable.strings</code> within
-the application bundle for available values and translations</p></dd>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/appl10n/appName;   name=appl10n::appName -->
-<a name="//apple_ref/doc/functionparam/appl10n/appName"></a>
-<code>appName</code>
-</dt>
-<dd><p>the name of the application from which to collect a localization</p></dd>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/appl10n/tableName;   name=appl10n::tableName -->
-<a name="//apple_ref/doc/functionparam/appl10n/tableName"></a>
-<code>tableName</code>
-</dt>
-<dd><p>the name of the strings file from which to load the translation
-without the extension. For example, use <code>"Localizable"</code> to reference
-<em>Example.app/Contents/Resources/en.lproj/Localizable.strings</em></p></dd>
-</dl>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
-<p><!-- begin return value --></p>
-<p>The localized string for the given key, or the key itself if no
-localization was found.
-<!-- end return value --></p>
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/assignWunderlistToAllDesktops;   name=assignWunderlistToAllDesktops --><a name="//apple_ref/applescript/func/assignWunderlistToAllDesktops"></a>
-<h3><a name="assignWunderlistToAllDesktops">assignWunderlistToAllDesktops</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/assignWunderlistToAllDesktops;name=start --><!-- begin abstract --></p>
-<p>Uses the Dock.app menu to make Wunderlist visible on all
-desktops, which is necessary for the list info to load reliably.<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/assignWunderlistToAllDesktops;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/assignWunderlistToAllDesktops;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/assignWunderlistToAllDesktops" logicalPath="//apple_ref/applescript/instm/assignWunderlistToAllDesktops //apple_ref/applescript/clm/assignWunderlistToAllDesktops //apple_ref/applescript/intfcm/assignWunderlistToAllDesktops //apple_ref/applescript/intfm/assignWunderlistToAllDesktops //apple_ref/applescript/func/assignWunderlistToAllDesktops" target="_top"><span class="function">assignWunderlistToAllDesktops</span></a>()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/assignWunderlistToAllDesktops;name=end --></pre>
-</div>
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/focusInbox;   name=focusInbox --><a name="//apple_ref/applescript/func/focusInbox"></a>
-<h3><a name="focusInbox">focusInbox</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/focusInbox;name=start --><!-- begin abstract --></p>
-<p>Moves focus within the app to the Inbox list.
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/focusInbox;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/focusInbox;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/focusInbox" logicalPath="//apple_ref/applescript/instm/focusInbox //apple_ref/applescript/clm/focusInbox //apple_ref/applescript/intfcm/focusInbox //apple_ref/applescript/intfm/focusInbox //apple_ref/applescript/func/focusInbox" target="_top"><span class="function">focusInbox</span></a>()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/focusInbox;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/focusInbox;name=start --><p>Uses the keyboard to move focus within the app to the Inbox list. 
-The Inbox list is a good reference point because it is always at the top of the 
-lists table.
-</p>
-<p>The procedure for accessing the Inbox from any point in the app is as follows:
-</p>
-<ol start="1">
-<li><p> <code>&#8984;+f</code> Begin a search
-</p></li>
-<li><p> Perform a search that will probably not return results and will not be too 
-distracting. 3 space characters works fine.
-</p></li>
-<li><p> <code>&#8984;+n</code> Navigate to the Inbox, focused on the Inbox list</p></li>
-</ol>
-<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/focusInbox;name=end --><!-- end discussion --><hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/focusListAtIndex;   name=focusListAtIndex --><a name="//apple_ref/applescript/func/focusListAtIndex"></a>
-<h3><a name="focusListAtIndex">focusListAtIndex</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/focusListAtIndex;name=start --><!-- begin abstract --></p>
-<p>Moves focus within the app to the specified list.
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/focusListAtIndex;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/focusListAtIndex;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/focusListAtIndex" logicalPath="//apple_ref/applescript/instm/focusListAtIndex //apple_ref/applescript/clm/focusListAtIndex //apple_ref/applescript/intfcm/focusListAtIndex //apple_ref/applescript/intfm/focusListAtIndex //apple_ref/applescript/func/focusListAtIndex" target="_top"><span class="function">focusListAtIndex</span></a>(
-    <span class="param">listIndex</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/focusListAtIndex;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/focusListAtIndex/listIndex;   name=focusListAtIndex::listIndex -->
-<a name="//apple_ref/doc/functionparam/focusListAtIndex/listIndex"></a>
-<code>listIndex</code>
-</dt>
-<dd><p>The numerical one-based index of the desired list.</p></dd>
-</dl>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/focusListAtIndex;name=start --><p>After calling focusInbox as a reference, simply use the 
-arrow keys to move focus to the desired list.
-</p>
-<p>The procedure for focusing a specific list is as follows:
-</p>
-<ol start="1">
-<li><p> Focus the Inbox list
-</p></li>
-<li><p> Press the down arrow as necessary until the list is focused
-</p></li>
-</ol>
-<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/focusListAtIndex;name=end --><!-- end discussion --><hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/focusTaskInput;   name=focusTaskInput --><a name="//apple_ref/applescript/func/focusTaskInput"></a>
-<h3><a name="focusTaskInput">focusTaskInput</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/focusTaskInput;name=start --><!-- begin abstract --></p>
-<p>Switches keyboard focus to the task input field.
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/focusTaskInput;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/focusTaskInput;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/focusTaskInput" logicalPath="//apple_ref/applescript/instm/focusTaskInput //apple_ref/applescript/clm/focusTaskInput //apple_ref/applescript/intfcm/focusTaskInput //apple_ref/applescript/intfm/focusTaskInput //apple_ref/applescript/func/focusTaskInput" target="_top"><span class="function">focusTaskInput</span></a>()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/focusTaskInput;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/focusTaskInput;name=start --><p>In certain views it is necessary to use the New Task shortcut twice
-because the first time switches the UI to the Inbox list.
-</p>
-<p>The procedure for returning to the previous list is as follows:
-</p>
-<ol start="1">
-<li><p> <code>&#8984;+n</code> Focus the task input, or in some cases focus the Inbox
-</p></li>
-<li><p> <code>&#8984;+n</code> For good measure in case the previous command focused the Inbox</p></li>
-</ol>
-<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/focusTaskInput;name=end --><!-- end discussion --><hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/getIndexOfListNamed;   name=getIndexOfListNamed --><a name="//apple_ref/applescript/func/getIndexOfListNamed"></a>
-<h3><a name="getIndexOfListNamed">getIndexOfListNamed</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getIndexOfListNamed;name=start --><!-- begin abstract --></p>
-<p>Finds the index of the specified list in the list table
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getIndexOfListNamed;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getIndexOfListNamed;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/getIndexOfListNamed" logicalPath="//apple_ref/applescript/instm/getIndexOfListNamed //apple_ref/applescript/clm/getIndexOfListNamed //apple_ref/applescript/intfcm/getIndexOfListNamed //apple_ref/applescript/intfm/getIndexOfListNamed //apple_ref/applescript/func/getIndexOfListNamed" target="_top"><span class="function">getIndexOfListNamed</span></a>(
-    <span class="param">theListName</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getIndexOfListNamed;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/getIndexOfListNamed/theListName;   name=getIndexOfListNamed::theListName -->
-<a name="//apple_ref/doc/functionparam/getIndexOfListNamed/theListName"></a>
-<code>theListName</code>
-</dt>
-<dd><p>Text exactly matching the name of a list</p></dd>
-</dl>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
-<p><!-- begin return value --></p>
-<p>The integer index or <code>missing value</code> if no list with
-the specified name exists
-<!-- end return value --></p>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/getIndexOfListNamed;name=start --><p>Returns a one-based index of the list with the specified name,
-or <code>missing value</code> if the list does not exist
-</p>
-<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/getIndexOfListNamed;name=end --><!-- end discussion -->
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/getListInfo;   name=getListInfo --><a name="//apple_ref/applescript/func/getListInfo"></a>
-<h3><a name="getListInfo">getListInfo</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getListInfo;name=start --><!-- begin abstract --></p>
-<p>Loads some basic information about all of the visible lists in Wunderlist.
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getListInfo;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getListInfo;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/getListInfo" logicalPath="//apple_ref/applescript/instm/getListInfo //apple_ref/applescript/clm/getListInfo //apple_ref/applescript/intfcm/getListInfo //apple_ref/applescript/intfm/getListInfo //apple_ref/applescript/func/getListInfo" target="_top"><span class="function">getListInfo</span></a>()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getListInfo;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
-<p><!-- begin return value --></p>
-<p>A list of records in the <code>ListInfo</code> format described below
-
-<!-- end return value --></p>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/getListInfo;name=start --><p>Wunderlist exposes a small amount of information about the tasks that
-can be retrieved by traversing the UI. This information includes the name of each
-list and its number of tasks.
-</p>
-<p>Unfortunately, the number of tasks returned is undefined when there are no tasks in 
-a list. Wunderlist does not set the value of the task count label to zero, nor does
-it hide the label in a way that is detectable by AppleScript. The value in the label
-appears to change in an undefined way, so unfortunately at this time the task
-count is unreliable.
-</p>
-<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/getListInfo;name=end --><!-- end discussion -->
-<p><b><code>ListInfo</code> record</b></p>
-<div class="list_indent"><dl>
-<dt><p><code>listName</code></p></dt>
-<dd> The display name of the list</dd>
-<dt><p><code>taskCount</code></p></dt>
-<dd>The number of uncompleted tasks in the list</dd>
-<dt><p><code>listIndex</code></p></dt>
-<dd>The one-based index of the list</dd>
-</dl></div>
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/getListInfoInWorkflow;   name=getListInfoInWorkflow --><a name="//apple_ref/applescript/func/getListInfoInWorkflow"></a>
-<h3><a name="getListInfoInWorkflow">getListInfoInWorkflow</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getListInfoInWorkflow;name=start --><!-- begin abstract --></p>
-<p>Retrieves cached list info or loads the list data again if necessary
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getListInfoInWorkflow;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getListInfoInWorkflow;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/getListInfoInWorkflow" logicalPath="//apple_ref/applescript/instm/getListInfoInWorkflow //apple_ref/applescript/clm/getListInfoInWorkflow //apple_ref/applescript/intfcm/getListInfoInWorkflow //apple_ref/applescript/intfm/getListInfoInWorkflow //apple_ref/applescript/func/getListInfoInWorkflow" target="_top"><span class="function">getListInfoInWorkflow</span></a>(
-    <span class="param">wf</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getListInfoInWorkflow;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/getListInfoInWorkflow/wf;   name=getListInfoInWorkflow::wf -->
-<a name="//apple_ref/doc/functionparam/getListInfoInWorkflow/wf"></a>
-<code>wf</code>
-</dt>
-<dd><p>The qWorkflow workflow object for this script</p></dd>
-</dl>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
-<p><!-- begin return value --></p>
-<p>A list of <code>ListValue</code> records
-<!-- end return value --></p>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/getListInfoInWorkflow;name=start --><p>The list info is cached as specified by <a href="index.html#//apple_ref/applescript/data/listCacheInSeconds" logicalPath="//apple_ref/applescript/data/listCacheInSeconds" target="_top">listCacheInSeconds</a>
-to optimize repetitive access of the list, as with an Alfred Script Filter.
-</p>
-<p>The keys <code>lists</code> and <code>listsUpdatedDate</code> in the default
-<code>settings.plist</code> are used to track the lists state.
-<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/getListInfoInWorkflow;name=end --><!-- end discussion -->
-</p>
-<p><b>See</b></p>
-<div class="list_indent"><dl>
-<dt><p><a href="index.html#//apple_ref/applescript/func/getListInfo" logicalPath="//apple_ref/applescript/func/getListInfo" target="_top">getListInfo</a></p></dt>
-<dd></dd>
-</dl></div>
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/getTaskInfoForFocusedList;   name=getTaskInfoForFocusedList --><a name="//apple_ref/applescript/func/getTaskInfoForFocusedList"></a>
-<h3><a name="getTaskInfoForFocusedList">getTaskInfoForFocusedList</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getTaskInfoForFocusedList;name=start --><!-- begin abstract --></p>
-<p>Loads info about the tasks in the currently visible task list
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getTaskInfoForFocusedList;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getTaskInfoForFocusedList;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/getTaskInfoForFocusedList" logicalPath="//apple_ref/applescript/instm/getTaskInfoForFocusedList //apple_ref/applescript/clm/getTaskInfoForFocusedList //apple_ref/applescript/intfcm/getTaskInfoForFocusedList //apple_ref/applescript/intfm/getTaskInfoForFocusedList //apple_ref/applescript/func/getTaskInfoForFocusedList" target="_top"><span class="function">getTaskInfoForFocusedList</span></a>()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getTaskInfoForFocusedList;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
-<p><!-- begin return value --></p>
-<p>A list of records in the <code>TaskInfo</code> format described below
-
-<!-- end return value --></p>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/getTaskInfoForFocusedList;name=start --><p>Loads some basic information about all of the items in the visible 
-list in Wunderlist. Unfortunately, due to limitations in the GUI access used to 
-load task info, this will only include tasks that are visible in the window.
-<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/getTaskInfoForFocusedList;name=end --><!-- end discussion -->
-</p>
-<p><b><code>TaskInfo</code> record</b></p>
-<div class="list_indent"><dl>
-<dt><p><code>taskName</code></p></dt>
-<dd> The display name of the task</dd>
-<dt><p><code>dueDate</code></p></dt>
-<dd>The due date of the task or <code>missing value</code> if not set</dd>
-<dt><p><code>taskIndex</code></p></dt>
-<dd>The one-based index of the task</dd>
-</dl></div>
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/getWorkflowFolder;   name=getWorkflowFolder --><a name="//apple_ref/applescript/func/getWorkflowFolder"></a>
-<h3><a name="getWorkflowFolder">getWorkflowFolder</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getWorkflowFolder;name=start --><!-- begin abstract --></p>
-<p>Returns the path to the workflow folder within Alfred preferences.
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getWorkflowFolder;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getWorkflowFolder;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/getWorkflowFolder" logicalPath="//apple_ref/applescript/instm/getWorkflowFolder //apple_ref/applescript/clm/getWorkflowFolder //apple_ref/applescript/intfcm/getWorkflowFolder //apple_ref/applescript/intfm/getWorkflowFolder //apple_ref/applescript/func/getWorkflowFolder" target="_top"><span class="function">getWorkflowFolder</span></a>()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getWorkflowFolder;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
-<p><!-- begin return value --></p>
-<p>The path to the workflow folder within Alfred preferences.
-<!-- end return value --></p>
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/l10n;   name=l10n --><a name="//apple_ref/applescript/func/l10n"></a>
-<h3><a name="l10n">l10n</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/l10n;name=start --><!-- begin abstract --></p>
-<p>Returns the most appropriate translation of the specified string
-according to the workflow's bundle.
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/l10n;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/l10n;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/l10n" logicalPath="//apple_ref/applescript/instm/l10n //apple_ref/applescript/clm/l10n //apple_ref/applescript/intfcm/l10n //apple_ref/applescript/intfm/l10n //apple_ref/applescript/func/l10n" target="_top"><span class="function">l10n</span></a>(
-    <span class="param">key</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/l10n;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/l10n/key;   name=l10n::key -->
-<a name="//apple_ref/doc/functionparam/l10n/key"></a>
-<code>key</code>
-</dt>
-<dd><p>the string to localize, see <code>Localizable.strings</code> within 
-this workflow for available values</p></dd>
-</dl>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
-<p><!-- begin return value --></p>
-<p>The localized string for the given key, or <code>missing value</code>
-if a value was not found for the key
-<!-- end return value --></p>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/l10n;name=start --><p>This workflow uses a simple hierarchical structure for localization
-to keep the keys organized and consistent. This means that the keys are not 
-suitable for display as with simple <code>"Foo" = "Foo";</code> translation by
-word or phrase. As a result, if the key is not localized, the handler will
-return <code>missing value</code>.
-</p>
-<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/l10n;name=end --><!-- end discussion -->
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/qWorkflow;   name=qWorkflow --><a name="//apple_ref/applescript/func/qWorkflow"></a>
-<h3><a name="qWorkflow">qWorkflow</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/qWorkflow;name=start --><!-- begin abstract --></p>
-<p>Loads and returns qWorkflow, ensuring that it is only loaded once
-and then reused as necessary.
-</p>
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/qWorkflow;name=end -->
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/qWorkflow;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/qWorkflow" logicalPath="//apple_ref/applescript/instm/qWorkflow //apple_ref/applescript/clm/qWorkflow //apple_ref/applescript/intfcm/qWorkflow //apple_ref/applescript/intfm/qWorkflow //apple_ref/applescript/func/qWorkflow" target="_top"><span class="function">qWorkflow</span></a>()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/qWorkflow;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
-<p><!-- begin return value --></p>
-<p>The <code>script</code> object containing the qWorkflow library.
-<!-- end return value --></p>
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/sendNotification;   name=sendNotification --><a name="//apple_ref/applescript/func/sendNotification"></a>
-<h3><a name="sendNotification">sendNotification</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/sendNotification;name=start --><!-- begin abstract --></p>
-<p>Displays a notification in Notification Center.
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/sendNotification;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/sendNotification;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/sendNotification" logicalPath="//apple_ref/applescript/instm/sendNotification //apple_ref/applescript/clm/sendNotification //apple_ref/applescript/intfcm/sendNotification //apple_ref/applescript/intfm/sendNotification //apple_ref/applescript/func/sendNotification" target="_top"><span class="function">sendNotification</span></a>(
-    <span class="param">key</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/sendNotification;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/sendNotification/key;   name=sendNotification::key -->
-<a name="//apple_ref/doc/functionparam/sendNotification/key"></a>
-<code>key</code>
-</dt>
-<dd><p>a <code>Messages/</code> localization key as specified in 
-<code>Localizable.strings</code></p></dd>
-</dl>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/sendNotification;name=start --><p>Loads Title, Message, and Details text from the workflow's
-localization and uses the strings to display a Notification Center
-notification to the user. Any combination of those subkeys may be 
-specified in the localization.
-</p>
-<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/sendNotification;name=end --><!-- end discussion -->
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/setWindowViewNormal;   name=setWindowViewNormal --><a name="//apple_ref/applescript/func/setWindowViewNormal"></a>
-<h3><a name="setWindowViewNormal">setWindowViewNormal</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/setWindowViewNormal;name=start --><!-- begin abstract --></p>
-<p>Switches to the "Normal" view in Wunderlist where both the list and 
-tasks are visible.<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/setWindowViewNormal;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/setWindowViewNormal;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/setWindowViewNormal" logicalPath="//apple_ref/applescript/instm/setWindowViewNormal //apple_ref/applescript/clm/setWindowViewNormal //apple_ref/applescript/intfcm/setWindowViewNormal //apple_ref/applescript/intfm/setWindowViewNormal //apple_ref/applescript/func/setWindowViewNormal" target="_top"><span class="function">setWindowViewNormal</span></a>()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/setWindowViewNormal;name=end --></pre>
-</div>
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/showListOptions;   name=showListOptions --><a name="//apple_ref/applescript/func/showListOptions"></a>
-<h3><a name="showListOptions">showListOptions</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/showListOptions;name=start --><!-- begin abstract --></p>
-<p>A Script Filter input that shows the user's lists in Alfred, allowing
-a task to be added to a specific list.
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/showListOptions;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/showListOptions;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/showListOptions" logicalPath="//apple_ref/applescript/instm/showListOptions //apple_ref/applescript/clm/showListOptions //apple_ref/applescript/intfcm/showListOptions //apple_ref/applescript/intfm/showListOptions //apple_ref/applescript/func/showListOptions" target="_top"><span class="function">showListOptions</span></a>(
-    <span class="param">task</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/showListOptions;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/showListOptions/task;   name=showListOptions::task -->
-<a name="//apple_ref/doc/functionparam/showListOptions/task"></a>
-<code>task</code>
-</dt>
-<dd><p>The text of the task</p></dd>
-</dl>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/showListOptions;name=start --><p>Queries the Wunderlist UI to provide all of the lists into which
-new tasks can be added. The response is formatted for Alfred to display in
-a way that allows the user to type their task, then action a specific list to
-insert the task there.
-</p>
-<p>After selecting one of these options, the final query will be a concatenation 
-of the list index and the user's task in a format suitable for 
-<a href="index.html#//apple_ref/applescript/func/addTaskToList" logicalPath="//apple_ref/applescript/func/addTaskToList" target="_top">addTaskToList</a>:
-	</p>
-<pre><code>    5::2% milk</code></pre>
-<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/showListOptions;name=end --><!-- end discussion -->
-<hr class="betweenAPIEntries">
-<!-- headerDoc=func;  uid=//apple_ref/applescript/func/wll10n;   name=wll10n --><a name="//apple_ref/applescript/func/wll10n"></a>
-<h3><a name="wll10n">wll10n</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/wll10n;name=start --><!-- begin abstract --></p>
-<p>Returns the most appropriate translation of the specified string
-according to the localization of the Wunderlist application.
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/wll10n;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/wll10n;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/wll10n" logicalPath="//apple_ref/applescript/instm/wll10n //apple_ref/applescript/clm/wll10n //apple_ref/applescript/intfcm/wll10n //apple_ref/applescript/intfm/wll10n //apple_ref/applescript/func/wll10n" target="_top"><span class="function">wll10n</span></a>(
-    <span class="param">key</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/wll10n;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/wll10n/key;   name=wll10n::key -->
-<a name="//apple_ref/doc/functionparam/wll10n/key"></a>
-<code>key</code>
-</dt>
-<dd><p>the string to localize, see <code>Localizable.strings</code> within
-the Wunderlist application bundle for available values and translations</p></dd>
-</dl>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
-<p><!-- begin return value --></p>
-<p>The localized string for the given key, or the key itself if no
-localization was found.
-<!-- end return value --></p>
-<hr class="betweenSections">
-<a name="HeaderDoc_vars"></a>
-<h2 class="h2tight">Globals</h2>
-<dl>
-<dt><tt><a href="index.html#//apple_ref/applescript/data/iconTheme" target="_top">iconTheme</a></tt></dt>
-<dd><p>Changes the appearance of list icons in Alfred
-</p></dd>
-<dt><tt><a href="index.html#//apple_ref/applescript/data/listCacheInSeconds" target="_top">listCacheInSeconds</a></tt></dt>
-<dd><p>Specifies how often to reload information about task lists</p></dd>
-</dl>
-<hr class="betweenAPIEntries">
-<!-- headerDoc=data;  uid=//apple_ref/applescript/data/iconTheme;   name=iconTheme --><a name="//apple_ref/applescript/data/iconTheme"></a>
-<h3><a name="iconTheme">iconTheme</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/data/iconTheme;name=start --><!-- begin abstract --></p>
-<p>Changes the appearance of list icons in Alfred
-<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/data/iconTheme;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/data/iconTheme;name=start --><span class="keyword">property</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/data/iconTheme" logicalPath="//apple_ref/applescript/econst/iconTheme //apple_ref/applescript/data/iconTheme" target="_top"><span class="var">iconTheme</span></a> : "<span class="string">light</span>" <!-- headerDoc=declaration;uid=//apple_ref/applescript/data/iconTheme;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/data/iconTheme;name=start --><p>Determines which color theme to use for the list icons. These
-icons 
-</p>
-<!-- headerDoc=discussion;uid=//apple_ref/applescript/data/iconTheme;name=end --><!-- end discussion -->
-<p><b>Supported Values</b></p>
-<div class="list_indent"><dl>
-<dt><p>light</p></dt>
-<dd>For use in dark-colored Alfred themes</dd>
-<dt><p>dark</p></dt>
-<dd> For use in light-colored Alfred themes</dd>
-</dl></div>
-<hr class="betweenAPIEntries">
-<!-- headerDoc=data;  uid=//apple_ref/applescript/data/listCacheInSeconds;   name=listCacheInSeconds --><a name="//apple_ref/applescript/data/listCacheInSeconds"></a>
-<h3><a name="listCacheInSeconds">listCacheInSeconds</a></h3>
-<hr class="afterName">
-<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/data/listCacheInSeconds;name=start --><!-- begin abstract --></p>
-<p>Specifies how often to reload information about task lists<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/data/listCacheInSeconds;name=end --></p>
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/data/listCacheInSeconds;name=start --><span class="keyword">property</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/data/listCacheInSeconds" logicalPath="//apple_ref/applescript/econst/listCacheInSeconds //apple_ref/applescript/data/listCacheInSeconds" target="_top"><span class="var">listCacheInSeconds</span></a> : <span class="number">30</span> <!-- headerDoc=declaration;uid=//apple_ref/applescript/data/listCacheInSeconds;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/data/listCacheInSeconds;name=start --><p>The list of tasks available in Wunderlist is cached by this workflow,
-enabling faster responses to typing in Script Filter inputs. This
-setting controls how often the cached list data is refreshed.
-</p>
-<!-- headerDoc=discussion;uid=//apple_ref/applescript/data/listCacheInSeconds;name=end --><!-- end discussion -->
-<p class="gapBeforeFooter">&nbsp;</p>
-<hr class="afterFooter">
-<div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Friday, September 13, 2013
-</p>
-</div>
+ </p></span></font></td>
+			</tr>
+<tr height="10">
+<td height="10" width="600"></td>
+			</tr>
+<tr height="5">
+<td height="5" width="600">
+					<hr alt="">
+<br>
 </td>
-</tr></table>
+			</tr>
+<tr>
+<td width="600" align="center" valign="top">
+<h2>Headers</h2>
+				
+      <blockquote class="groupindent">
+<table border="0" cellpadding="1" cellspacing="0" width="420">
+<tr>
+<td width="33%">
+<a name="group___header_AL" href="handlers_applescript/index.html">Alfred Handlers</a><br>
+</td>
+<td width="33%">
+<a href="filters_php/index.html">Alfred Script Filters</a><br>
+</td>
+<td width="33%">
+<a name="group___header_UI" href="ui_applescript/index.html">UI Interaction</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a href="results_applescript/index.html">Alfred Results</a><br>
+</td>
+<td width="33%">
+<a name="group___header_CO" href="config_applescript/index.html">Configuration</a><br>
+</td>
+<td width="33%">
+<a name="group___header_UT" href="utilities_applescript/index.html">Utilities</a><br>
+</td>
+</tr>
+</table>
+</blockquote>
+
+<h2>Functions</h2>
+      <blockquote class="groupindent">
+<table border="0" cellpadding="1" cellspacing="0" width="420">
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/activatePreviousApplication" name="group___function_AC" retarget="yes" href="ui_applescript/index.html#//apple_ref/applescript/func/activatePreviousApplication">activatePreviousApplication</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/focusInbox" name="group___function_FO" retarget="yes" href="ui_applescript/index.html#//apple_ref/applescript/func/focusInbox">focusInbox</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/php/func/getWorkflowSettings" retarget="yes" href="filters_php/index.html#//apple_ref/php/func/getWorkflowSettings">getWorkflowSettings</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/activateWunderlist" retarget="yes" href="ui_applescript/index.html#//apple_ref/applescript/func/activateWunderlist">activateWunderlist</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/focusListAtIndex" retarget="yes" href="ui_applescript/index.html#//apple_ref/applescript/func/focusListAtIndex">focusListAtIndex</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/invalidateListInfoCache" name="group___function_IN" retarget="yes" href="ui_applescript/index.html#//apple_ref/applescript/func/invalidateListInfoCache">invalidateListInfoCache</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/addList" name="group___function_AD" retarget="yes" href="handlers_applescript/index.html#//apple_ref/applescript/func/addList">addList</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/focusPreviousList" retarget="yes" href="ui_applescript/index.html#//apple_ref/applescript/func/focusPreviousList">focusPreviousList</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/l10n" name="group___function_L1" retarget="yes" href="utilities_applescript/index.html#//apple_ref/applescript/func/l10n">l10n</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/addResultForInsertingTaskInActiveList" retarget="yes" href="results_applescript/index.html#//apple_ref/applescript/func/addResultForInsertingTaskInActiveList">addResultForInsertingTaskInActiveList</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/focusTaskInput" retarget="yes" href="ui_applescript/index.html#//apple_ref/applescript/func/focusTaskInput">focusTaskInput</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/quickSort" name="group___function_QU" retarget="yes" href="utilities_applescript/index.html#//apple_ref/applescript/func/quickSort">quickSort</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/addResultWithLocalization" retarget="yes" href="results_applescript/index.html#//apple_ref/applescript/func/addResultWithLocalization">addResultWithLocalization</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/getCurrentWorkflow" name="group___function_GE" retarget="yes" href="utilities_applescript/index.html#//apple_ref/applescript/func/getCurrentWorkflow">getCurrentWorkflow</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/quickSortWithKeyHandler" retarget="yes" href="utilities_applescript/index.html#//apple_ref/applescript/func/quickSortWithKeyHandler">quickSortWithKeyHandler</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/addTask" retarget="yes" href="handlers_applescript/index.html#//apple_ref/applescript/func/addTask">addTask</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/getIndexOfListNamed" retarget="yes" href="ui_applescript/index.html#//apple_ref/applescript/func/getIndexOfListNamed">getIndexOfListNamed</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/run" name="group___function_RU" retarget="yes" href="handlers_applescript/index.html#//apple_ref/applescript/func/run">run</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/addTaskToInbox" retarget="yes" href="handlers_applescript/index.html#//apple_ref/applescript/func/addTaskToInbox">addTaskToInbox</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/getListInfo" retarget="yes" href="ui_applescript/index.html#//apple_ref/applescript/func/getListInfo">getListInfo</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/sendNotification" name="group___function_SE" retarget="yes" href="utilities_applescript/index.html#//apple_ref/applescript/func/sendNotification">sendNotification</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/addTaskToList" retarget="yes" href="handlers_applescript/index.html#//apple_ref/applescript/func/addTaskToList">addTaskToList</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/php/func/getListInfo" retarget="yes" href="filters_php/index.html#//apple_ref/php/func/getListInfo">getListInfo</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/setWindowViewNormal" retarget="yes" href="ui_applescript/index.html#//apple_ref/applescript/func/setWindowViewNormal">setWindowViewNormal</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/appl10n" name="group___function_AP" retarget="yes" href="utilities_applescript/index.html#//apple_ref/applescript/func/appl10n">appl10n</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/getListInfoForActiveList" retarget="yes" href="ui_applescript/index.html#//apple_ref/applescript/func/getListInfoForActiveList">getListInfoForActiveList</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/showListOptions" name="group___function_SH" retarget="yes" href="handlers_applescript/index.html#//apple_ref/applescript/func/showListOptions">showListOptions</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/assignWunderlistToAllDesktops" name="group___function_AS" retarget="yes" href="ui_applescript/index.html#//apple_ref/applescript/func/assignWunderlistToAllDesktops">assignWunderlistToAllDesktops</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/getTaskInfoForFocusedList" retarget="yes" href="ui_applescript/index.html#//apple_ref/applescript/func/getTaskInfoForFocusedList">getTaskInfoForFocusedList</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/wll10n" name="group___function_WL" retarget="yes" href="utilities_applescript/index.html#//apple_ref/applescript/func/wll10n">wll10n</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/php/func/filterListsToAddTask" name="group___function_FI" retarget="yes" href="filters_php/index.html#//apple_ref/php/func/filterListsToAddTask">filterListsToAddTask</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/applescript/func/getWorkflowFolder" retarget="yes" href="utilities_applescript/index.html#//apple_ref/applescript/func/getWorkflowFolder">getWorkflowFolder</a><br>
+</td>
+<td width="33%"></td>
+</tr>
+</table>
+</blockquote>
+
+    </td>
+			</tr>
+</table>
+<!-- start of footer --><!-- START FOOTER TABLE --><table width="600" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr><td width="600"><div style="min-width: 1px; width: 1px; min-height: 48px; height: 48px;"></div></td></tr>
+<tr><td bgcolor="#919699" colspan="2"><div style="width: 600px; min-width: 600px; height: 1px; min-height: 1px;"></div></td></tr>
+<tr><td><div style="width: 1; min-width: 1; height: 17px; min-height: 17px;"></div></td></tr>
+<tr>
+<td> 
+	<div align="center">
+	
+	</div>
+	</td>
+</tr>
+</table>
+</center>
+<!-- END FOOTER TABLE -->
+
+<!-- end of footer -->
+	
+
+
+	
+
 </body>
 </html>

@@ -1,0 +1,285 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<html>
+<head>
+<title>Configuration</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="HeaderDoc">
+<meta name="xcode-display" content="render">
+<style><!--
+.toc_contents_text {
+    padding-left: 1em;
+    text-indent: -1em;
+}
+
+ul.tocSubEntryList li.tocSubEntry {
+    list-style: none;
+}
+
+#colorbox {
+		display: none;
+}
+.spec_sheet_line {
+		margin-bottom: 1px;
+}
+.collapsible {
+		display: none;
+}
+.toc_leadspace {
+		width: 10; min-width: 10;
+}
+.disclosure_triangle_td {
+		width: 14; min-width: 14;
+		font-size: 10px;
+		vertical-align: middle;
+}
+.specbox td {
+		font-size: 13px;
+}
+.specbox td a {
+		font-size: 13px;
+}
+.specbox td code {
+		font-size: 13px;
+}
+.specbox td tt {
+		font-size: 13px;
+}
+.specbox td pre {
+		font-size: 13px;
+}
+.specbox a {
+		font-size: 12px;
+}
+.disclosure_triangle_td a:hover {
+		text-decoration: none;
+}
+.disclosure_triangle_td a:hover {
+		text-decoration: none;
+}
+.hd_toc_box {
+		padding-top: 10px;
+		padding-right: 15px;
+}.tocSeparator {
+		margin-top: 15px;
+		padding-bottom: 0px;
+		margin-bottom: 0px;
+}
+.tocSubEntryList {
+		margin-left: 0px;
+		padding-left: 40px;
+		padding-top: 0px;
+		margin-top: 2px;
+		padding-bottom: 0px;
+		margin-bottom: 8px;
+}
+.hd_toc_heading_table {
+		margin-top: 2px;
+		margin-bottom: 2px;
+}
+.hd_toc_entry_table {
+		margin-top: 2px;
+		margin-bottom: 2px;
+}
+.tocSubEntry {
+		margin-left: 0px;
+		padding-left: 0px;
+		margin-top: 0px;
+		margin-bottom: 1px;
+}
+.tocSubEntry a {
+		font-size: 10pt;
+}
+.tocSubheading {
+		padding-left: 14px;
+		margin-left: 0px;
+		margin-top: 5px;
+		padding-top: 0px;
+		font-size: 16px;
+		color: #808080;
+}
+
+#tocMenu {
+		border-right: 1px solid #c0c0c0;
+		background-color: #f4f4ff;
+		top:0px;
+		left:0px;
+		width:230px;
+		height:100%;
+}
+#bodyContents {
+		width: auto;
+		padding-left: 15px;
+}
+--></style>
+<script language="JavaScript" type="text/javascript"><!--
+function getNewHTTPObject()
+{
+        var xmlhttp;
+
+        /** Special IE only code ... */
+        /*@cc_on
+          @if (@_jscript_version >= 5)
+              try
+              {
+                  xmlhttp = new ActiveXObject('Msxml2.XMLHTTP');
+              }
+              catch (e)
+              {
+                  try
+                  {
+                      xmlhttp = new ActiveXObject('Microsoft.XMLHTTP');
+                  }
+                  catch (E)
+                  {
+                      xmlhttp = false;
+                  }
+             }
+          @else
+             xmlhttp = false;
+        @end @*/
+
+        /** Every other browser on the planet */
+        if (!xmlhttp && typeof XMLHttpRequest != 'undefined')
+        {
+            try
+            {
+                xmlhttp = new XMLHttpRequest();
+            }
+            catch (e)
+            {
+                xmlhttp = false;
+            }
+        }
+
+        return xmlhttp;
+}
+
+function hidetoc() {
+	var toc = document.getElementById('tocMenu');
+	var src = toc.getAttribute('src');
+	var xhr = getNewHTTPObject();
+	xhr.open('GET', src, true);
+	xhr.onreadystatechange = function() {
+		if(xhr.readyState == 4) {
+			var toc = document.getElementById('tocMenu');
+			toc.innerHTML = xhr.responseText;
+		}
+	}
+	xhr.send(null);
+	var origURL = parent.document.URL;
+	var contentURL = origURL.substring(origURL.indexOf('?')+1, origURL.length);
+	if (contentURL.length == origURL.length) {
+		jumpPos = origURL.substring(origURL.indexOf('#')+1, origURL.length);
+	}
+	if (contentURL == "hidetoc") {
+		var body = document.getElementById('bodyContents');
+		if (toc && body) {
+			toc.style.display = 'none';
+			body.style.marginLeft = '0px';
+		}
+	}
+}
+
+function disclosure_triangle(elt) {
+   var linkelt = elt;
+   while (elt && elt.tagName != 'TABLE') { elt = elt.parentNode;}
+   if (!elt) { return; }
+   while (elt && elt.tagName != 'DIV') { elt = elt.nextSibling;}
+   if (!elt) { return; }
+   if (parseInt(linkelt.getAttribute('state'))) {
+      // It's open.  Close it
+      linkelt.innerHTML = '&#x25B7;';
+      linkelt.setAttribute('state', 0);
+      linkelt.setAttribute('class', 'closed_disclosure_triangle');
+      elt.style.display = 'none';
+   } else {
+      // It's closed.  Open it
+      linkelt.innerHTML = '&#x25BC;';
+      linkelt.setAttribute('state', 1);
+      linkelt.setAttribute('class', 'open_disclosure_triangle');
+      elt.style.display = 'block';
+   }
+}
+--></script><style type="text/css"><!--.char {background:transparent; color:#A535AE;}.comment {background:transparent; color:#919191;}.function {background:transparent; color:#21439C;}.keyword {background:transparent; color:#FF5600;}.number {background:transparent; color:#A535AE;}.param {background:transparent; color:#A535AE;}.preprocessor {background:transparent; color:#236e25}.string {background:transparent; color:#00A33F;}.template {background:transparent; color:#761550;}.type {background:transparent; color:#21439C;}.var {background:transparent; color:#A535AE;}div {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}td {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}span.hd_tocAccessSpace { display: block; font-size: 1px; height: 3px; min-height: 3px; }span.hd_tocGroupSpace { display: block; font-size: 1px; height: 3px; min-height: 3px; }span.hd_tocGroup { display: block; font-weight: bold; font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000; margin-left: 0px; padding-left: 40px; }span.hd_tocGroup + span.hd_tocAccess { padding-top: 5px; }td.toc_contents_text {font-size: 11pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000; }li.tocSubEntry {font-size: 11pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}p {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}h2.h2tight { margin-top: 0px; padding-top: 0px; }h1 { margin-top: 13px; padding-top: 0px; }h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}h5 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10.1pt; font-weight: bold;}pre {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666; font-size: 10pt;}pre a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}pre a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}code a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}code a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}tt a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}tt a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}body  {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt; padding-left: 0px; padding-top: 0px; margin-left: 0px; margin-top: 0px; border: none; }#hd_outermost_table { margin-left: 0px; border-spacing: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tr { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tr > td { border-spacing: 0px; margin-left: 0px; margin-top: 0px; }#hd_outermost_table > tbody > tr { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tbody > tr > td { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-top: 3px; }.afterName { display: none; }.list_indent { margin-left: 40px; }.declaration_indent { margin-left: 40px; margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; min-height: 12px; vertical-align: middle; }.declaration_indent pre { margin-top: 20px; padding-top: 0px; margin-bottom: 20px; padding-bottom: 0px; }.gapBeforeFooter { display: none; }hr { height: 0px; min-height: 0px; border-top: none; border-left: none; border-right: none; border-bottom: 1px solid #909090;}hr.afterHeader { display: none }.param_group_indent { margin-left: 25px; }.param_indent { margin-left: 40px; margin-top: 0px; padding-top: 0px; }.param_indent dl { margin-top: 4px; padding-top: 0px; }dl dd > p:first-child { margin-top: 2px; padding-top: 0px; }.param_indent dl dd > p:first-child { margin-top: 2px; padding-top: 0px; }.group_indent { margin-left: 40px; }.group_desc_indent { margin-left: 20px; }.warning_indent { margin-left: 40px; }.important_indent { margin-left: 40px; }.note_indent { margin-left: 40px; }h3 {       color: #3C4C6C;}.tight {       margin-top: 2px; margin-bottom: 0px;       padding-top: 0px; padding-bottom: 0px;}h3 a {       color: #3C4C6C;	font-size: 16px;	font-style: normal;	font-variant: normal;	font-weight: bold;	height: 0px;	line-height: normal;}.hd_tocAccess { display: block; margin-left: 40px; font-style: italic; font-size: 10px; font-weight: normal; color: #303030; }.tocSubheading { margin-bottom: 4px; }--></style>
+</head>
+<body bgcolor="#ffffff" onload="hidetoc();">
+<!-- headerDoc=Header;  uid=//apple_ref/doc/header/config.applescript;   name=Configuration -->
+<a name="//apple_ref/doc/header/config.applescript"></a>
+<table id="hd_outermost_table" height="100%" width="100%"><tr>
+<td valign="top" id="tocMenu" src="toc.html"></td>
+<td id="bodyContents" valign="top">
+<a name="top"></a>
+<h1><a name="Configuration">Configuration</a></h1>
+<div class="spec_sheet_info_box"><table cellspacing="0" class="specbox"><tr>
+<td scope="row"><b>Version:</b></td>
+<td><div style="margin-bottom:1px"><div class="content_text">0.2</div></div></td>
+</tr></table></div>
+<h2>Introduction</h2>
+<p><!-- headerDoc=abstract;uid=//apple_ref/doc/header/config.applescript;name=start --><!-- begin abstract --></p>
+<p>Basic configurations available to users building the
+workflow from source.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/doc/header/config.applescript;name=end --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/doc/header/config.applescript;name=start --><p>Each of the configurations provided here is a candidate
+for user-level configuration if it seems useful. Until
+the workflow supports that, configurable properties will
+be tracked here for clarity.
+<!-- headerDoc=discussion;uid=//apple_ref/doc/header/config.applescript;name=end --><!-- end discussion -->
+</p>
+<hr class="afterClassOrHeaderInfo">
+<br><a name="HeaderDoc_vars"></a>
+<h2 class="h2tight">Globals</h2>
+<dl>
+<dt><tt><a href="index.html#//apple_ref/applescript/data/iconTheme" target="_top">iconTheme</a></tt></dt>
+<dd><p>Changes the appearance of list icons in Alfred
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/data/listCacheInSeconds" target="_top">listCacheInSeconds</a></tt></dt>
+<dd><p>Specifies how often to reload information about task lists</p></dd>
+</dl>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=data;  uid=//apple_ref/applescript/data/iconTheme;   name=iconTheme --><a name="//apple_ref/applescript/data/iconTheme"></a>
+<h3><a name="iconTheme">iconTheme</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/data/iconTheme;name=start --><!-- begin abstract --></p>
+<p>Changes the appearance of list icons in Alfred
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/data/iconTheme;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/data/iconTheme;name=start --><span class="keyword">property</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/data/iconTheme" logicalPath="//apple_ref/applescript/econst/iconTheme //apple_ref/applescript/data/iconTheme" target="_top"><span class="var">iconTheme</span></a> : "<span class="string">light</span>" <!-- headerDoc=declaration;uid=//apple_ref/applescript/data/iconTheme;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/data/iconTheme;name=start --><p>Determines which color theme to use for the list icons. These
+icons 
+</p>
+<!-- headerDoc=discussion;uid=//apple_ref/applescript/data/iconTheme;name=end --><!-- end discussion -->
+<p><b>Supported Values</b></p>
+<div class="list_indent"><dl>
+<dt><p>light</p></dt>
+<dd>For use in dark-colored Alfred themes</dd>
+<dt><p>dark</p></dt>
+<dd> For use in light-colored Alfred themes</dd>
+</dl></div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=data;  uid=//apple_ref/applescript/data/listCacheInSeconds;   name=listCacheInSeconds --><a name="//apple_ref/applescript/data/listCacheInSeconds"></a>
+<h3><a name="listCacheInSeconds">listCacheInSeconds</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/data/listCacheInSeconds;name=start --><!-- begin abstract --></p>
+<p>Specifies how often to reload information about task lists<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/data/listCacheInSeconds;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/data/listCacheInSeconds;name=start --><span class="keyword">property</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/data/listCacheInSeconds" logicalPath="//apple_ref/applescript/econst/listCacheInSeconds //apple_ref/applescript/data/listCacheInSeconds" target="_top"><span class="var">listCacheInSeconds</span></a> : <span class="number">30</span> <!-- headerDoc=declaration;uid=//apple_ref/applescript/data/listCacheInSeconds;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/data/listCacheInSeconds;name=start --><p>The list of tasks available in Wunderlist is cached by this workflow,
+enabling faster responses to typing in Script Filter inputs. This
+setting controls how often the cached list data is refreshed.
+</p>
+<!-- headerDoc=discussion;uid=//apple_ref/applescript/data/listCacheInSeconds;name=end --><!-- end discussion -->
+<p class="gapBeforeFooter">&nbsp;</p>
+<hr class="afterFooter">
+<div class="hd_copyright_and_timestamp">
+<p class="hd_timestamp">Last Updated: Thursday, October 10, 2013
+</p>
+</div>
+</td>
+</tr></table>
+</body>
+</html>

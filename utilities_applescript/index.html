@@ -1,0 +1,581 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<html>
+<head>
+<title>Utilities</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="generator" content="HeaderDoc">
+<meta name="xcode-display" content="render">
+<style><!--
+.toc_contents_text {
+    padding-left: 1em;
+    text-indent: -1em;
+}
+
+ul.tocSubEntryList li.tocSubEntry {
+    list-style: none;
+}
+
+#colorbox {
+		display: none;
+}
+.spec_sheet_line {
+		margin-bottom: 1px;
+}
+.collapsible {
+		display: none;
+}
+.toc_leadspace {
+		width: 10; min-width: 10;
+}
+.disclosure_triangle_td {
+		width: 14; min-width: 14;
+		font-size: 10px;
+		vertical-align: middle;
+}
+.specbox td {
+		font-size: 13px;
+}
+.specbox td a {
+		font-size: 13px;
+}
+.specbox td code {
+		font-size: 13px;
+}
+.specbox td tt {
+		font-size: 13px;
+}
+.specbox td pre {
+		font-size: 13px;
+}
+.specbox a {
+		font-size: 12px;
+}
+.disclosure_triangle_td a:hover {
+		text-decoration: none;
+}
+.disclosure_triangle_td a:hover {
+		text-decoration: none;
+}
+.hd_toc_box {
+		padding-top: 10px;
+		padding-right: 15px;
+}.tocSeparator {
+		margin-top: 15px;
+		padding-bottom: 0px;
+		margin-bottom: 0px;
+}
+.tocSubEntryList {
+		margin-left: 0px;
+		padding-left: 40px;
+		padding-top: 0px;
+		margin-top: 2px;
+		padding-bottom: 0px;
+		margin-bottom: 8px;
+}
+.hd_toc_heading_table {
+		margin-top: 2px;
+		margin-bottom: 2px;
+}
+.hd_toc_entry_table {
+		margin-top: 2px;
+		margin-bottom: 2px;
+}
+.tocSubEntry {
+		margin-left: 0px;
+		padding-left: 0px;
+		margin-top: 0px;
+		margin-bottom: 1px;
+}
+.tocSubEntry a {
+		font-size: 10pt;
+}
+.tocSubheading {
+		padding-left: 14px;
+		margin-left: 0px;
+		margin-top: 5px;
+		padding-top: 0px;
+		font-size: 16px;
+		color: #808080;
+}
+
+#tocMenu {
+		border-right: 1px solid #c0c0c0;
+		background-color: #f4f4ff;
+		top:0px;
+		left:0px;
+		width:230px;
+		height:100%;
+}
+#bodyContents {
+		width: auto;
+		padding-left: 15px;
+}
+--></style>
+<script language="JavaScript" type="text/javascript"><!--
+function getNewHTTPObject()
+{
+        var xmlhttp;
+
+        /** Special IE only code ... */
+        /*@cc_on
+          @if (@_jscript_version >= 5)
+              try
+              {
+                  xmlhttp = new ActiveXObject('Msxml2.XMLHTTP');
+              }
+              catch (e)
+              {
+                  try
+                  {
+                      xmlhttp = new ActiveXObject('Microsoft.XMLHTTP');
+                  }
+                  catch (E)
+                  {
+                      xmlhttp = false;
+                  }
+             }
+          @else
+             xmlhttp = false;
+        @end @*/
+
+        /** Every other browser on the planet */
+        if (!xmlhttp && typeof XMLHttpRequest != 'undefined')
+        {
+            try
+            {
+                xmlhttp = new XMLHttpRequest();
+            }
+            catch (e)
+            {
+                xmlhttp = false;
+            }
+        }
+
+        return xmlhttp;
+}
+
+function hidetoc() {
+	var toc = document.getElementById('tocMenu');
+	var src = toc.getAttribute('src');
+	var xhr = getNewHTTPObject();
+	xhr.open('GET', src, true);
+	xhr.onreadystatechange = function() {
+		if(xhr.readyState == 4) {
+			var toc = document.getElementById('tocMenu');
+			toc.innerHTML = xhr.responseText;
+		}
+	}
+	xhr.send(null);
+	var origURL = parent.document.URL;
+	var contentURL = origURL.substring(origURL.indexOf('?')+1, origURL.length);
+	if (contentURL.length == origURL.length) {
+		jumpPos = origURL.substring(origURL.indexOf('#')+1, origURL.length);
+	}
+	if (contentURL == "hidetoc") {
+		var body = document.getElementById('bodyContents');
+		if (toc && body) {
+			toc.style.display = 'none';
+			body.style.marginLeft = '0px';
+		}
+	}
+}
+
+function disclosure_triangle(elt) {
+   var linkelt = elt;
+   while (elt && elt.tagName != 'TABLE') { elt = elt.parentNode;}
+   if (!elt) { return; }
+   while (elt && elt.tagName != 'DIV') { elt = elt.nextSibling;}
+   if (!elt) { return; }
+   if (parseInt(linkelt.getAttribute('state'))) {
+      // It's open.  Close it
+      linkelt.innerHTML = '&#x25B7;';
+      linkelt.setAttribute('state', 0);
+      linkelt.setAttribute('class', 'closed_disclosure_triangle');
+      elt.style.display = 'none';
+   } else {
+      // It's closed.  Open it
+      linkelt.innerHTML = '&#x25BC;';
+      linkelt.setAttribute('state', 1);
+      linkelt.setAttribute('class', 'open_disclosure_triangle');
+      elt.style.display = 'block';
+   }
+}
+--></script><style type="text/css"><!--.char {background:transparent; color:#A535AE;}.comment {background:transparent; color:#919191;}.function {background:transparent; color:#21439C;}.keyword {background:transparent; color:#FF5600;}.number {background:transparent; color:#A535AE;}.param {background:transparent; color:#A535AE;}.preprocessor {background:transparent; color:#236e25}.string {background:transparent; color:#00A33F;}.template {background:transparent; color:#761550;}.type {background:transparent; color:#21439C;}.var {background:transparent; color:#A535AE;}div {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}td {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}span.hd_tocAccessSpace { display: block; font-size: 1px; height: 3px; min-height: 3px; }span.hd_tocGroupSpace { display: block; font-size: 1px; height: 3px; min-height: 3px; }span.hd_tocGroup { display: block; font-weight: bold; font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000; margin-left: 0px; padding-left: 40px; }span.hd_tocGroup + span.hd_tocAccess { padding-top: 5px; }td.toc_contents_text {font-size: 11pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000; }li.tocSubEntry {font-size: 11pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}p {font-size: 10pt; text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #000000;}a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #36c;}h2.h2tight { margin-top: 0px; padding-top: 0px; }h1 { margin-top: 13px; padding-top: 0px; }h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;}h5 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10.1pt; font-weight: bold;}pre {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666; font-size: 10pt;}pre a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}pre a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}pre a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}code a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}code a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}code a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}tt a { font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt;}tt a:link { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:visited { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:visited:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:active { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}tt a:hover { font-family: Courier, Consolas, monospace; color: #36c;font-size: 10pt;}body  {text-decoration: none; font-family: Courier, Consolas, monospace; color: #666;font-size: 10pt; padding-left: 0px; padding-top: 0px; margin-left: 0px; margin-top: 0px; border: none; }#hd_outermost_table { margin-left: 0px; border-spacing: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tr { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tr > td { border-spacing: 0px; margin-left: 0px; margin-top: 0px; }#hd_outermost_table > tbody > tr { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-left: 0px; padding-top: 0px; border: none; }#hd_outermost_table > tbody > tr > td { border-spacing: 0px; margin-left: 0px; margin-top: 0px; padding-top: 3px; }.afterName { display: none; }.list_indent { margin-left: 40px; }.declaration_indent { margin-left: 40px; margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; min-height: 12px; vertical-align: middle; }.declaration_indent pre { margin-top: 20px; padding-top: 0px; margin-bottom: 20px; padding-bottom: 0px; }.gapBeforeFooter { display: none; }hr { height: 0px; min-height: 0px; border-top: none; border-left: none; border-right: none; border-bottom: 1px solid #909090;}hr.afterHeader { display: none }.param_group_indent { margin-left: 25px; }.param_indent { margin-left: 40px; margin-top: 0px; padding-top: 0px; }.param_indent dl { margin-top: 4px; padding-top: 0px; }dl dd > p:first-child { margin-top: 2px; padding-top: 0px; }.param_indent dl dd > p:first-child { margin-top: 2px; padding-top: 0px; }.group_indent { margin-left: 40px; }.group_desc_indent { margin-left: 20px; }.warning_indent { margin-left: 40px; }.important_indent { margin-left: 40px; }.note_indent { margin-left: 40px; }h3 {       color: #3C4C6C;}.tight {       margin-top: 2px; margin-bottom: 0px;       padding-top: 0px; padding-bottom: 0px;}h3 a {       color: #3C4C6C;	font-size: 16px;	font-style: normal;	font-variant: normal;	font-weight: bold;	height: 0px;	line-height: normal;}.hd_tocAccess { display: block; margin-left: 40px; font-style: italic; font-size: 10px; font-weight: normal; color: #303030; }.tocSubheading { margin-bottom: 4px; }--></style>
+</head>
+<body bgcolor="#ffffff" onload="hidetoc();">
+<!-- headerDoc=Header;  uid=//apple_ref/doc/header/utilities.applescript;   name=Utilities -->
+<a name="//apple_ref/doc/header/utilities.applescript"></a>
+<table id="hd_outermost_table" height="100%" width="100%"><tr>
+<td valign="top" id="tocMenu" src="toc.html"></td>
+<td id="bodyContents" valign="top">
+<a name="top"></a>
+<h1><a name="Utilities">Utilities</a></h1>
+<div class="spec_sheet_info_box"><table cellspacing="0" class="specbox"><tr>
+<td scope="row"><b>Version:</b></td>
+<td><div style="margin-bottom:1px"><div class="content_text">0.2</div></div></td>
+</tr></table></div>
+<h2>Introduction</h2>
+<p><!-- headerDoc=abstract;uid=//apple_ref/doc/header/utilities.applescript;name=start --><!-- begin abstract --></p>
+<p>A collection of useful functions.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/doc/header/utilities.applescript;name=end --></p>
+<hr class="afterClassOrHeaderInfo">
+<br><a name="HeaderDoc_groups"><h2 class="h2tight">Groups</h2></a>
+
+<h3>Localization</h3>
+<div class="group_desc_indent">
+</div>
+<h4>Group members:</h4>
+<div class="group_indent">
+<dl>
+<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/appl10n" logicalPath="//apple_ref/applescript/func/appl10n" target="_top">appl10n</a></tt></dt>
+<dd><p>Returns the most appropriate translation of the specified string
+according to the localization of the specified application.
+</p></dd>
+<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/l10n" logicalPath="//apple_ref/applescript/func/l10n" target="_top">l10n</a></tt></dt>
+<dd><p>Returns the most appropriate translation of the specified string
+according to the workflow's bundle.
+</p></dd>
+<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/wll10n" logicalPath="//apple_ref/applescript/func/wll10n" target="_top">wll10n</a></tt></dt>
+<dd><p>Returns the most appropriate translation of the specified string
+according to the localization of the Wunderlist application.
+</p></dd>
+</dl>
+</div>
+<p> </p>
+<h3>Alfred Helpers</h3>
+<div class="group_desc_indent">
+</div>
+<h4>Group members:</h4>
+<div class="group_indent">
+<dl>
+<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/getCurrentWorkflow" logicalPath="//apple_ref/applescript/func/getCurrentWorkflow" target="_top">getCurrentWorkflow</a></tt></dt>
+<dd><p>Provides access to the current workflow constructed by qWorkflow.
+</p></dd>
+<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/getWorkflowFolder" logicalPath="//apple_ref/applescript/func/getWorkflowFolder" target="_top">getWorkflowFolder</a></tt></dt>
+<dd><p>Returns the path to the workflow folder within Alfred preferences.
+</p></dd>
+<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/sendNotification" logicalPath="//apple_ref/applescript/func/sendNotification" target="_top">sendNotification</a></tt></dt>
+<dd><p>Displays a notification in Notification Center.
+</p></dd>
+</dl>
+</div>
+<p> </p>
+<h3>Algorithms</h3>
+<div class="group_desc_indent">
+</div>
+<h4>Group members:</h4>
+<div class="group_indent">
+<dl>
+<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/quickSort" logicalPath="//apple_ref/applescript/func/quickSort" target="_top">quickSort</a></tt></dt>
+<dd><p>An implementation of the quick sort algorithm for simple
+comparable data types (string, number, date).
+</p></dd>
+<dt><tt><a machinegenerated="true" href="index.html#//apple_ref/applescript/func/quickSortWithKeyHandler" logicalPath="//apple_ref/applescript/func/quickSortWithKeyHandler" target="_top">quickSortWithKeyHandler</a></tt></dt>
+<dd><p>An implementation of the quick sort algorithm that allows
+a key to be extracted from complex data types with a handler.
+</p></dd>
+</dl>
+</div>
+<hr class="afterGroupHeading">
+<a name="HeaderDoc_functions"></a>
+<h2 class="h2tight">Functions</h2>
+<dl>
+<dt><tt><a href="index.html#//apple_ref/applescript/func/appl10n" target="_top">appl10n</a></tt></dt>
+<dd><p>Returns the most appropriate translation of the specified string
+according to the localization of the specified application.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/func/getCurrentWorkflow" target="_top">getCurrentWorkflow</a></tt></dt>
+<dd><p>Provides access to the current workflow constructed by qWorkflow.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/func/getWorkflowFolder" target="_top">getWorkflowFolder</a></tt></dt>
+<dd><p>Returns the path to the workflow folder within Alfred preferences.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/func/l10n" target="_top">l10n</a></tt></dt>
+<dd><p>Returns the most appropriate translation of the specified string
+according to the workflow's bundle.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/func/quickSort" target="_top">quickSort</a></tt></dt>
+<dd><p>An implementation of the quick sort algorithm for simple
+comparable data types (string, number, date).
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/func/quickSortWithKeyHandler" target="_top">quickSortWithKeyHandler</a></tt></dt>
+<dd><p>An implementation of the quick sort algorithm that allows
+a key to be extracted from complex data types with a handler.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/func/sendNotification" target="_top">sendNotification</a></tt></dt>
+<dd><p>Displays a notification in Notification Center.
+</p></dd>
+<dt><tt><a href="index.html#//apple_ref/applescript/func/wll10n" target="_top">wll10n</a></tt></dt>
+<dd><p>Returns the most appropriate translation of the specified string
+according to the localization of the Wunderlist application.
+</p></dd>
+</dl>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/applescript/func/appl10n;   name=appl10n --><a name="//apple_ref/applescript/func/appl10n"></a>
+<h3><a name="appl10n">appl10n</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/appl10n;name=start --><!-- begin abstract --></p>
+<p>Returns the most appropriate translation of the specified string
+according to the localization of the specified application.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/appl10n;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/appl10n;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/appl10n" logicalPath="//apple_ref/applescript/instm/appl10n //apple_ref/applescript/clm/appl10n //apple_ref/applescript/intfcm/appl10n //apple_ref/applescript/intfm/appl10n //apple_ref/applescript/func/appl10n" target="_top"><span class="function">appl10n</span></a>(
+    <span class="param">key</span>,
+    <span class="param">appName</span>,
+    <span class="param">tableName</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/appl10n;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/appl10n/key;   name=appl10n::key -->
+<a name="//apple_ref/doc/functionparam/appl10n/key"></a>
+<code>key</code>
+</dt>
+<dd><p>the string to localize, see <code>Localizable.strings</code> within
+the application bundle for available values and translations</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/appl10n/appName;   name=appl10n::appName -->
+<a name="//apple_ref/doc/functionparam/appl10n/appName"></a>
+<code>appName</code>
+</dt>
+<dd><p>the name of the application from which to collect a localization</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/appl10n/tableName;   name=appl10n::tableName -->
+<a name="//apple_ref/doc/functionparam/appl10n/tableName"></a>
+<code>tableName</code>
+</dt>
+<dd><p>the name of the strings file from which to load the translation
+without the extension. For example, use <code>"Localizable"</code> to reference
+<em>Example.app/Contents/Resources/en.lproj/Localizable.strings</em></p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>The localized string for the given key, or the key itself if no
+localization was found.
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/applescript/func/getCurrentWorkflow;   name=getCurrentWorkflow --><a name="//apple_ref/applescript/func/getCurrentWorkflow"></a>
+<h3><a name="getCurrentWorkflow">getCurrentWorkflow</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getCurrentWorkflow;name=start --><!-- begin abstract --></p>
+<p>Provides access to the current workflow constructed by qWorkflow.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getCurrentWorkflow;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getCurrentWorkflow;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/getCurrentWorkflow" logicalPath="//apple_ref/applescript/instm/getCurrentWorkflow //apple_ref/applescript/clm/getCurrentWorkflow //apple_ref/applescript/intfcm/getCurrentWorkflow //apple_ref/applescript/intfm/getCurrentWorkflow //apple_ref/applescript/func/getCurrentWorkflow" target="_top"><span class="function">getCurrentWorkflow</span></a>()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getCurrentWorkflow;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>The workflow constructed by qWorkflow's <code>new_workflow</code>
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/applescript/func/getWorkflowFolder;   name=getWorkflowFolder --><a name="//apple_ref/applescript/func/getWorkflowFolder"></a>
+<h3><a name="getWorkflowFolder">getWorkflowFolder</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getWorkflowFolder;name=start --><!-- begin abstract --></p>
+<p>Returns the path to the workflow folder within Alfred preferences.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/getWorkflowFolder;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getWorkflowFolder;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/getWorkflowFolder" logicalPath="//apple_ref/applescript/instm/getWorkflowFolder //apple_ref/applescript/clm/getWorkflowFolder //apple_ref/applescript/intfcm/getWorkflowFolder //apple_ref/applescript/intfm/getWorkflowFolder //apple_ref/applescript/func/getWorkflowFolder" target="_top"><span class="function">getWorkflowFolder</span></a>()<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/getWorkflowFolder;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>The path to the workflow folder within Alfred preferences.
+<!-- end return value --></p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/applescript/func/l10n;   name=l10n --><a name="//apple_ref/applescript/func/l10n"></a>
+<h3><a name="l10n">l10n</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/l10n;name=start --><!-- begin abstract --></p>
+<p>Returns the most appropriate translation of the specified string
+according to the workflow's bundle.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/l10n;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/l10n;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/l10n" logicalPath="//apple_ref/applescript/instm/l10n //apple_ref/applescript/clm/l10n //apple_ref/applescript/intfcm/l10n //apple_ref/applescript/intfm/l10n //apple_ref/applescript/func/l10n" target="_top"><span class="function">l10n</span></a>(
+    <span class="param">key</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/l10n;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/l10n/key;   name=l10n::key -->
+<a name="//apple_ref/doc/functionparam/l10n/key"></a>
+<code>key</code>
+</dt>
+<dd><p>the string to localize, see <code>Localizable.strings</code> within 
+this workflow for available values</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>The localized string for the given key, or <code>missing value</code>
+if a value was not found for the key
+<!-- end return value --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/l10n;name=start --><p>This workflow uses a simple hierarchical structure for localization
+to keep the keys organized and consistent. This means that the keys are not 
+suitable for display as with simple <code>"Foo" = "Foo";</code> translation by
+word or phrase. As a result, if the key is not localized, the handler will
+return <code>missing value</code>.
+</p>
+<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/l10n;name=end --><!-- end discussion -->
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/applescript/func/quickSort;   name=quickSort --><a name="//apple_ref/applescript/func/quickSort"></a>
+<h3><a name="quickSort">quickSort</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/quickSort;name=start --><!-- begin abstract --></p>
+<p>An implementation of the quick sort algorithm for simple
+comparable data types (string, number, date).
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/quickSort;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/quickSort;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/quickSort" logicalPath="//apple_ref/applescript/instm/quickSort //apple_ref/applescript/clm/quickSort //apple_ref/applescript/intfcm/quickSort //apple_ref/applescript/intfm/quickSort //apple_ref/applescript/func/quickSort" target="_top"><span class="function">quickSort</span></a>(
+    <span class="param">theList</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/quickSort;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/quickSort/theList;   name=quickSort::theList -->
+<a name="//apple_ref/doc/functionparam/quickSort/theList"></a>
+<code>theList</code>
+</dt>
+<dd><p>A list of simple comparable values (string, number, date)</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/quickSort;name=start --><p>Internally, this uses <a href="index.html#//apple_ref/applescript/func/quickSortWithKeyHandler" logicalPath="//apple_ref/applescript/func/quickSortWithKeyHandler" target="_top">quickSortWithKeyHandler</a>
+with the default key handler that causes the values of the list to be
+sorted directly.
+<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/quickSort;name=end --><!-- end discussion -->
+</p>
+<p><b>See</b></p>
+<div class="list_indent"><dl>
+<dt><p><a href="index.html#//apple_ref/applescript/func/quickSortWithKeyHandler" logicalPath="//apple_ref/applescript/func/quickSortWithKeyHandler" target="_top">quickSortWithKeyHandler</a></p></dt>
+<dd></dd>
+</dl></div>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/applescript/func/quickSortWithKeyHandler;   name=quickSortWithKeyHandler --><a name="//apple_ref/applescript/func/quickSortWithKeyHandler"></a>
+<h3><a name="quickSortWithKeyHandler">quickSortWithKeyHandler</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/quickSortWithKeyHandler;name=start --><!-- begin abstract --></p>
+<p>An implementation of the quick sort algorithm that allows
+a key to be extracted from complex data types with a handler.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/quickSortWithKeyHandler;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/quickSortWithKeyHandler;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/quickSortWithKeyHandler" logicalPath="//apple_ref/applescript/instm/quickSortWithKeyHandler //apple_ref/applescript/clm/quickSortWithKeyHandler //apple_ref/applescript/intfcm/quickSortWithKeyHandler //apple_ref/applescript/intfm/quickSortWithKeyHandler //apple_ref/applescript/func/quickSortWithKeyHandler" target="_top"><span class="function">quickSortWithKeyHandler</span></a>(
+    <span class="param">theList</span>,
+    <span class="param">keyHandler</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/quickSortWithKeyHandler;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/quickSortWithKeyHandler/theList;   name=quickSortWithKeyHandler::theList -->
+<a name="//apple_ref/doc/functionparam/quickSortWithKeyHandler/theList"></a>
+<code>theList</code>
+</dt>
+<dd><p>A list of simple comparable values (string, number, date)
+or complex types such as records and nested lists. The latter must be
+accompanied by a <code>keyHandler</code> to extract a comparable value
+for sorting.</p></dd>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/quickSortWithKeyHandler/keyHandler;   name=quickSortWithKeyHandler::keyHandler -->
+<a name="//apple_ref/doc/functionparam/quickSortWithKeyHandler/keyHandler"></a>
+<code>keyHandler</code>
+</dt>
+<dd><p>A handler that when given a value from 
+<code>theList</code> returns the value on which that item should be
+sorted. If <code>keyHandler</code> is <code>missing value</code> then
+the values in the list will be sorted directly.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/quickSortWithKeyHandler;name=start --><p>This implementation of quick sort selects a starting pivot
+in the middle of the list to ensure optimal sorting of lists that are
+already partially sorted. Values are sorted in ascending order.
+Consider the following example:
+	</p>
+<pre><code>    set fruits to {{name:"Kumquat", color:"orange"},{name:"Apple", color:"red"},{name:"Lychee", color:"pink"}}
+
+    on getFruitName(fruitInfo)
+	    return name of fruitInfo
+    end getFruitName
+
+    set fruits to quickSortWithKeyHandler(fruits, getFruitName)</code></pre>
+<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/quickSortWithKeyHandler;name=end --><!-- end discussion -->
+<p><b>Acknowledgements</b></p>
+
+<p></p>
+<p>This handler is based on code for the quick sort algorithm provided by
+<a href="http://macscripter.net/viewtopic.php?id=24766" target="_blank">
+Kevin Bradley at MacScripter</a>.</p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/applescript/func/sendNotification;   name=sendNotification --><a name="//apple_ref/applescript/func/sendNotification"></a>
+<h3><a name="sendNotification">sendNotification</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/sendNotification;name=start --><!-- begin abstract --></p>
+<p>Displays a notification in Notification Center.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/sendNotification;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/sendNotification;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/sendNotification" logicalPath="//apple_ref/applescript/instm/sendNotification //apple_ref/applescript/clm/sendNotification //apple_ref/applescript/intfcm/sendNotification //apple_ref/applescript/intfm/sendNotification //apple_ref/applescript/func/sendNotification" target="_top"><span class="function">sendNotification</span></a>(
+    <span class="param">key</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/sendNotification;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/sendNotification/key;   name=sendNotification::key -->
+<a name="//apple_ref/doc/functionparam/sendNotification/key"></a>
+<code>key</code>
+</dt>
+<dd><p>a <code>Messages/</code> localization key as specified in 
+<code>Localizable.strings</code></p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/applescript/func/sendNotification;name=start --><p>Loads Title, Message, and Details text from the workflow's
+localization and uses the strings to display a Notification Center
+notification to the user. Any combination of those subkeys may be 
+specified in the localization.
+</p>
+<!-- headerDoc=discussion;uid=//apple_ref/applescript/func/sendNotification;name=end --><!-- end discussion -->
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/applescript/func/wll10n;   name=wll10n --><a name="//apple_ref/applescript/func/wll10n"></a>
+<h3><a name="wll10n">wll10n</a></h3>
+<hr class="afterName">
+<p><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/wll10n;name=start --><!-- begin abstract --></p>
+<p>Returns the most appropriate translation of the specified string
+according to the localization of the Wunderlist application.
+<!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/applescript/func/wll10n;name=end --></p>
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/applescript/func/wll10n;name=start --><span class="keyword">on</span> <a machinegenerated="true" href="index.html#//apple_ref/applescript/func/wll10n" logicalPath="//apple_ref/applescript/instm/wll10n //apple_ref/applescript/clm/wll10n //apple_ref/applescript/intfcm/wll10n //apple_ref/applescript/intfm/wll10n //apple_ref/applescript/func/wll10n" target="_top"><span class="function">wll10n</span></a>(
+    <span class="param">key</span>)<!-- headerDoc=declaration;uid=//apple_ref/applescript/func/wll10n;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=functionparam;  uid=//apple_ref/doc/functionparam/wll10n/key;   name=wll10n::key -->
+<a name="//apple_ref/doc/functionparam/wll10n/key"></a>
+<code>key</code>
+</dt>
+<dd><p>the string to localize, see <code>Localizable.strings</code> within
+the Wunderlist application bundle for available values and translations</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>The localized string for the given key, or the key itself if no
+localization was found.
+<!-- end return value --></p>
+<p class="gapBeforeFooter"> </p>
+<hr class="afterFooter">
+<div class="hd_copyright_and_timestamp">
+<p class="hd_timestamp">Last Updated: Thursday, October 10, 2013
+</p>
+</div>
+</td>
+</tr></table>
+</body>
+</html>
