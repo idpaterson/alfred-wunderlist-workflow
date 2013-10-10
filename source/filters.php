@@ -31,7 +31,7 @@
 				when it comes to platform specifics such as localization. 
 				This script will likely be replaced with a compiled Cocoa 
 				utility that combines speed and platform suitability.
-	@version    0.2-beta.3
+	@version    0.2
 */
 
 require_once 'workflows.php';

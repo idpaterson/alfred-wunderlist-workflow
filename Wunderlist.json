@@ -1,5 +1,5 @@
 {
-    "version": 0.102,
+    "version": 0.2,
     "download_url": "https://raw.github.com/idpaterson/alfred-wunderlist-workflow/master/Wunderlist.alfredworkflow",
-    "description": "Fixed an issue with adding multiple-word tasks with the wl command."
+    "description": "Introduces autocompletion of lists for more efficient task entry. Instructions and details here https://github.com/idpaterson/alfred-wunderlist-workflow"
 }
