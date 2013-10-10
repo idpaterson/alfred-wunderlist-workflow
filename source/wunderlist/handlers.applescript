@@ -157,6 +157,9 @@ on addTaskToList(listIndex, task)
 		# Show that the task was added
 		delay 1
 		
+		# Return the user to whichever list was previously visible
+		focusPreviousList()
+		
 		activatePreviousApplication()
 	end if
 	
