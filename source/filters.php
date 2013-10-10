@@ -185,7 +185,7 @@ function filterListsToAddTask($query)
 			# record of all the lists that accept tasks
 			array_push($writableLists, $listInfo);
 
-			if ($listFilter === '' || strpos($listName, $listFilter) !== false)
+			if ($listFilter !== '' && strpos($listName, $listFilter) !== false)
 			{
 				# The list is an exact match and the user has typed
 				# (or autocompleted) the : following the list name, 
