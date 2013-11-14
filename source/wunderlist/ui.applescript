@@ -283,7 +283,7 @@ on getListInfo()
 	set lastUpdatedDate to wf's get_value("listsUpdatedDate", "")
 
 	# Reload the list info if the cached data is missing or expired
-	if lastUpdatedDate is not missing value and current date - lastUpdatedDate ² listCacheInSeconds then
+	if lastUpdatedDate is not missing value and listInfo is not missing value and current date - lastUpdatedDate ² listCacheInSeconds then
 		if (class of listInfo) is record then
 			return listInfo's theList
 		else

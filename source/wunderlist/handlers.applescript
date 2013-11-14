@@ -433,6 +433,8 @@ end showListOptions
 on run(argv)
 	set status to 0
 
+	launchWunderlistIfNecessary()
+
 	if count of argv ³ 2 then
 		set theCommand to item 1 of argv
 		set theQuery to item 2 of argv

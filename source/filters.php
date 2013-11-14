@@ -83,12 +83,6 @@ function getListInfo($attempts = 0)
 	$lists = $settings['lists'];
 	$listsUpdatedTimestamp = $settings['listsUpdatedDate'];
 
-	# Workaround for an AppleScript bug in Mavericks that broke list values
-	if ($lists['theList'])
-	{
-		$lists = $lists['theList'];
-	}
-
 	if ($attempts < 2 && (empty($lists) || time() - $listsUpdatedTimestamp > 30))
 	{
 		$status = 0;
@@ -113,6 +107,12 @@ function getListInfo($attempts = 0)
 			return getListInfo($attempts + 1);
 		}
 	}
+	# Workaround for an AppleScript bug in Mavericks that broke list values
+	else if ($lists['theList'])
+	{
+		$lists = $lists['theList'];
+	}
+
 
 	return $lists;
 }
