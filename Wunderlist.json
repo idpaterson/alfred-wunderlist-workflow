@@ -1,5 +1,5 @@
 {
-    "version": 0.2,
+    "version": 0.201,
     "download_url": "https://raw.github.com/idpaterson/alfred-wunderlist-workflow/master/Wunderlist.alfredworkflow",
-    "description": "Introduces autocompletion of lists for more efficient task entry. Instructions and details here https://github.com/idpaterson/alfred-wunderlist-workflow"
+    "description": "Workaround for critical Mavericks OS bug that corrupted the workflow settings and prevented the wl command from loading your lists."
 }
