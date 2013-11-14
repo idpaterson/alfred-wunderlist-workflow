@@ -284,7 +284,11 @@ on getListInfo()
 
 	# Reload the list info if the cached data is missing or expired
 	if lastUpdatedDate is not missing value and current date - lastUpdatedDate ² listCacheInSeconds then
-		return listInfo
+		if (class of listInfo) is record then
+			return listInfo's theList
+		else
+			return listInfo
+		end if
 	end if
 
 	set listInfo to {}
@@ -339,7 +343,11 @@ on getListInfo()
 	# Allow the previous value to persist even if it is expired in the case
 	# where we cannot load newer list data.
 	if count of listInfo > 0 then
-		wf's set_value("lists", listInfo, "")
+		# In Mavericks, a property list becomes immediately corrupted when a 
+		# list value is added to it. The property list is zeroed out and 
+		# becomes immediately unusable. To work around that we have to use
+		# a record instead of a list.
+		wf's set_value("lists", {theList: listInfo}, "")
 		wf's set_value("listsUpdatedDate", current date, "")
 	end if
 

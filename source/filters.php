@@ -60,6 +60,9 @@ function getWorkflowSettings()
 	}
 	catch (Exception $e)
 	{
+		# Delete file, which may be corrupt due to a Mavericks bug
+		unlink($workflow->data() . '/settings.plist');
+
 		return array();
 	}
 }
@@ -79,6 +82,12 @@ function getListInfo($attempts = 0)
 	$settings = getWorkflowSettings();
 	$lists = $settings['lists'];
 	$listsUpdatedTimestamp = $settings['listsUpdatedDate'];
+
+	# Workaround for an AppleScript bug in Mavericks that broke list values
+	if ($lists['theList'])
+	{
+		$lists = $lists['theList'];
+	}
 
 	if ($attempts < 2 && (empty($lists) || time() - $listsUpdatedTimestamp > 30))
 	{
