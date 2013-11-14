@@ -89,8 +89,12 @@ on launchWunderlistIfNecessary()
 	try 
 		tell application "System Events" to get window appName of process appName
 	on error
-		# Wunderlist is not on the current desktop, so switch to it.
+		# Wunderlist may not be on the current desktop, so switch to it.
 		tell application appName to activate
+
+		# Wunderlist may not be launching; if the user closed the window, such
+		# as with Cmd+W, use the new task command to bring the window back.
+		focusTaskInput()
 
 		# Wait for the window to become available
 		tell application "System Events"

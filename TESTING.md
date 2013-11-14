@@ -222,6 +222,18 @@ Navigation Between Apps
 | Press *return*                                             | —                  | —              | New task "Sample task" added in the *Inbox* list |
 | Wait a few seconds                                         | —                  | —              | Previous frontmost application is reactivated    |
 
+-----
+
+**Test 4.0.2 –** Switching back to previous application on the same desktop with Wunderlist window closed <a name="4.0.2"></a>
+
+|                         Action                        | Alfred Query |           Alfred Results          |            Wunderlist            |
+| ----------------------------------------------------- | ------------ | --------------------------------- | -------------------------------- |
+| Activate Wunderlist                                   | –            | –                                 | Any Wunderlist window is visible |
+| Press *Cmd+W* to close the window                     | –            | –                                 | Wunderlist has no visible window |
+| Activate an app on the **same** desktop as Wunderlist | —            | —                                 | –                                |
+| Type `wl` in Alfred                                   | `wl`         | Alfred closes                     | Wunderlist window reappears      |
+| Type `wl` in Alfred                                   | `wl`         | All lists with most recent on top | –                                |
+
 
 Checklist Template
 ------------------
@@ -248,4 +260,5 @@ Use this template for confirming test compliance on each release
 - [ ] **Test 3.1.0 –** Newly added list appears in `wl` command
 - [ ] **Test 4.0.0 –** Switching back to previous application on the same desktop
 - [ ] **Test 4.0.1 –** Switching back to previous application on a different desktop
+- [ ] **Test 4.0.2 –** Switching back to previous application on the same desktop with Wunderlist window closed
 ```
