@@ -12,7 +12,7 @@ Setup
 
 Download the latest stable version of this workflow [here](https://raw.github.com/idpaterson/alfred-wunderlist-workflow/master/Wunderlist.alfredworkflow). After downloading, simply double-click to install the workflow in Alfred. 
 
-The workflow can also be built from source. After cloning the repository, just call `make` from the project directory to build `Wunderlist.alfredworkflow` locally, then double-click to install. [The documentation](http://idpaterson.github.io/alfred-wunderlist-workflow/) and [test cases](TESTING.md) should be helpful for anyone wishing to work on this project; please submit a pull request if you add anything that others might appreciate!
+The workflow can also be built from source. After cloning the repository, just call `make` from the project directory to build `Wunderlist.alfredworkflow` locally, then double-click to install. [The documentation](http://idpaterson.github.io/alfred-wunderlist-workflow/) and [test cases](https://github.com/idpaterson/alfred-wunderlist-workflow/blob/master/TESTING.md) should be helpful for anyone wishing to work on this project; please submit a pull request if you add anything that others might appreciate!
 
 ### Enable *Access for Assistive Devices*
 In order to interact with Wunderlist, your computer must allow scripts like this workflow to communicate with other apps.
@@ -76,7 +76,8 @@ Limitations
 The current implementation relies heavily on keyboard navigation and shortcuts in Wunderlist 2 because it does [not yet](http://www.alfredforum.com/topic/1302-workflow-for-wunderlist-2/?p=8074) provide bindings for AppleScript. Improvements in this direction could make it possible to create and manage tasks with more fine-grained control over attributes such as due dates and Pro features. Please submit feature requests so that the workflow can be updated once Wunderlist 2 becomes more accessible via a public API or AppleScript bindings.
 
 Currently it does not seem possible to reliably control the following features. A click emulator such as [cliclick](http://www.bluem.net/en/mac/cliclick/) may be necessary in order to interact with some of the buttons that are not keyboard accessible:
-* Starred tasks (workaround: add tasks to the *Starred* list)
+
+* Starred tasks (workaround: add tasks to the Starred list)
 * Due dates
 * Reminders
 * Subtasks
@@ -87,6 +88,7 @@ Currently it does not seem possible to reliably control the following features. 
 * Pro features
 
 The following may be possible but would require significant effort.
+
 * Displaying tasks in Alfred (see discussion in [getTaskInfoForFocusedList()](http://idpaterson.github.io/alfred-wunderlist-workflow/index.html#//apple_ref/applescript/func/getTaskInfoForFocusedList))
 * Deleting specific tasks
 * Editing specific tasks
