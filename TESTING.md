@@ -3,6 +3,15 @@ Testing the Wunderlist Workflow
 
 The following test cases are intended to provide adequate coverage while maintaining ease of testing. Each release must be tested to ensure compliance with each of the tests and to avoid reintroducing bugs. While it may be possible to automate these tests in the future, currently that is outside of the scope of this project.
 
+Automated Tests
+---------------
+
+This workflow now includes a semi-automated testing procedure stepping through each of these tests with the option to run all or individual tests. Each test provides instructions for proper setup before running the test (such as making sure Wunderlist is running on a different desktop) as well as intructions to manually verify whether the test passed or failed. 
+
+At this time it is not within the scope of this project to automatically verify test results as this would require implementation of a lot of features that are not needed for normal operation of the workflow. Once Wunderlist supports AppleScript, that can be expected to change!
+
+To run the automated tests, simply execute `./run_tests.sh` from the project's root directory. Without arguments, all tests will be run. Alternatively, any number of tests can be specified to run specific tests or suites. For example you could run all tests in the *Go to a list* suite with `./run_tests.sh 2` or run all Unicode-related test with `./run_tests.sh 1.0.1 1.2.1 3.0.1`. At the start of each test, simply press *Cancel* to end the test run early.
+
 Adding Tasks
 ------------
 
@@ -68,6 +77,15 @@ Adding Tasks
 | Type `ample: task`    | `wl Sample: task` | All lists with most recent on top   | —                                                            |
 | Press *return*        | —                 | —                                   | New task *Sample: task* added in the most recently used list |
 
+-----
+
+**Test 1.2.3 –** `wl` task containing a colon with substring matching <a name="1.2.3"></a>
+
+|          Action         |     Alfred Query     |          Alfred Results          |                Wunderlist                |
+| ----------------------- | -------------------- | -------------------------------- | ---------------------------------------- |
+| Type `wl to:` in Alfred | `wl to:`             | *Today* and other matching lists | —                                        |
+| Type `Sample: task`     | `wl to:Sample: task` | *Today* and other matching lists | —                                        |
+| Press *return*          | —                    | —                                | New task *Sample: task* added in *Today* |
 
 #### Adding a task to a list by selecting the list
 
@@ -92,11 +110,12 @@ Adding Tasks
 
 **Test 1.3.2 –** `wl` task prefixed by a colon <a name="1.3.2"></a>
 
-|                    Action                    | Alfred Query |           Alfred Results          |             Wunderlist            |
-| -------------------------------------------- | ------------ | --------------------------------- | --------------------------------- |
-| Type `wl :Inbox` in Alfred                   | `wl :Inbox`  | All lists with most recent on top | —                                 |
-| Press *down arrow* until *Today* is selected | `wl :Inbox`  | Same lists with *Today* selected  | —                                 |
-| Press *return*                               | —            | —                                 | New task *Inbox* added in *Today* |
+|                    Action                    |    Alfred Query   |           Alfred Results          |                Wunderlist               |
+| -------------------------------------------- | ----------------- | --------------------------------- | --------------------------------------- |
+| Type `wl :Sample task` in Alfred             | `wl :Sample task` | All lists with most recent on top | —                                       |
+| Press *down arrow* until *Today* is selected | `wl :Sample task` | Same lists with *Today* selected  | —                                       |
+| Press *return*                               | —                 | —                                 | New task *Sample task* added in *Today* |
+|                                              |                   |                                   |                                         |
 
 
 #### Switching back to the previous list
@@ -235,6 +254,7 @@ Use this template for confirming test compliance on each release
 - [ ] **Test 1.2.0 –** Simple `wl` task with substring matching
 - [ ] **Test 1.2.1 –** Unicode and character escaping in `wl`
 - [ ] **Test 1.2.2 –** `wl` task containing a colon
+- [ ] **Test 1.2.3 –** `wl` task containing a colon with substring matching
 - [ ] **Test 1.3.0 –** Simple `wl` task by selecting the list
 - [ ] **Test 1.3.1 –** Simple `wl` task in most recently used list
 - [ ] **Test 1.3.2 –** `wl` task prefixed by a colon
