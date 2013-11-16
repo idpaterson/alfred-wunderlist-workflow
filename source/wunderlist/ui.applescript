@@ -87,16 +87,33 @@ on launchWunderlistIfNecessary()
 	end if
 
 	try 
-		tell application "System Events" to get window appName of process appName
+		tell application "System Events" 
+			set mainWindow to window appName of process appName
+
+			# If the window is minimized, give it time to reappear
+			if miniaturized of mainWindow is true then
+				set miniaturized of mainWindow to false
+				delay 1
+			end if
+		end tell
 	on error
-		# Wunderlist is not on the current desktop, so switch to it.
+		# Wunderlist may not be on the current desktop, so switch to it.
 		tell application appName to activate
+
+		# Wunderlist may not be launching; if the user closed the window, such
+		# as with Cmd+W, or minimized the window, use the new task command to 
+		# bring the window back.
+		focusTaskInput()
 
 		# Wait for the window to become available
 		tell application "System Events"
 			repeat until count of windows of process appName > 0
 				delay 0.05
 			end repeat
+
+			# The window is programmatically available, let's make sure it is
+			# also initialized and ready for input
+			delay 0.25
 		end tell
 	end try
 
@@ -162,6 +179,8 @@ on focusListAtIndex(listIndex)
 	focusInbox()
 	
 	repeat listIndex - 1 times
+
+		delay 0.1
 	
 		# Down arrow to go to the next list
 		tell application "System Events" to key code 125
@@ -283,7 +302,7 @@ on getListInfo()
 	set lastUpdatedDate to wf's get_value("listsUpdatedDate", "")
 
 	# Reload the list info if the cached data is missing or expired
-	if lastUpdatedDate is not missing value and current date - lastUpdatedDate ² listCacheInSeconds then
+	if lastUpdatedDate is not missing value and listInfo is not missing value and current date - lastUpdatedDate ² listCacheInSeconds then
 		if (class of listInfo) is record then
 			return listInfo's theList
 		else

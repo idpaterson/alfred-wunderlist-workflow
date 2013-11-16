@@ -1,5 +1,5 @@
 {
-    "version": 0.201,
+    "version": 0.202,
     "download_url": "https://raw.github.com/idpaterson/alfred-wunderlist-workflow/master/Wunderlist.alfredworkflow",
-    "description": "Workaround for critical Mavericks OS bug that corrupted the workflow settings and prevented the wl command from loading your lists."
+    "description": "Workaround for critical Mavericks OS bug that corrupted the workflow settings and prevented the wl command from loading your lists. 0.202 fixes a few additional bugs in 0.201."
 }

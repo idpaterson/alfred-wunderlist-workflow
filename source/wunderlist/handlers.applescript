@@ -65,24 +65,10 @@ on addTask(task)
 			return
 		end if
 
-		set components to q_split(task, ":")
-
-		# If a list name is specified, add the task to that list
-		if count of components is 2 then
-			set {listName, task} to components
-
-			set listIndex to getIndexOfListNamed(listName)
-
-			if listIndex > 0 then
-				addTaskToList(listIndex as integer, task)
-				return
-			end if
-		end if
-
 		launchWunderlistIfNecessary()
 		
 		activateWunderlist()
-		
+
 		focusTaskInput()
 		
 		tell application "System Events"
@@ -449,6 +435,9 @@ on run(argv)
 				set status to 1
 			end if
 		else if theCommand is "forceUpdateListInfo" then
+			# Wunderlist has to be running in order to get the list info
+			launchWunderlistIfNecessary()
+
 			invalidateListInfoCache()
 			if count of getListInfo() > 0 then
 				set status to 1

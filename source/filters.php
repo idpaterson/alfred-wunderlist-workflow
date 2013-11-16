@@ -83,12 +83,6 @@ function getListInfo($attempts = 0)
 	$lists = $settings['lists'];
 	$listsUpdatedTimestamp = $settings['listsUpdatedDate'];
 
-	# Workaround for an AppleScript bug in Mavericks that broke list values
-	if ($lists['theList'])
-	{
-		$lists = $lists['theList'];
-	}
-
 	if ($attempts < 2 && (empty($lists) || time() - $listsUpdatedTimestamp > 30))
 	{
 		$status = 0;
@@ -112,6 +106,12 @@ function getListInfo($attempts = 0)
 		{
 			return getListInfo($attempts + 1);
 		}
+	}
+
+	# Workaround for an AppleScript bug in Mavericks that broke list values
+	if ($lists['theList'])
+	{
+		$lists = $lists['theList'];
 	}
 
 	return $lists;
@@ -242,10 +242,15 @@ function filterListsToAddTask($query)
 			}
 		}
 
+		# If the user did not type a colon the listFilter will
+		# contain the text of the task. We know it doesn't match
+		# any of the lists so now we can just reassign this.
+		$task = $query;
+
 		# Since autocomplete is disabled, set the first item to
 		# the active list.
 		$uid = null;
-		$arg = $listIndex . '::' . $task;
+		$arg = $task;
 		$title = 'Most recently used';
 		$subtitle = 'Add a task to the most recently used list';
 		$icon = 'icon.png';
@@ -253,14 +258,6 @@ function filterListsToAddTask($query)
 		$autocompletion = null;
 
 		$workflow->result($uid, $arg, $title, $subtitle, $icon, $valid, $autocompletion);
-
-		# If the user did not type a colon the listFilter will
-		# contain the text of the task. We know it doesn't match
-		# any of the lists so now we can just reassign this.
-		if ($task === '')
-		{
-			$task = $queryComponents[0];
-		}
 	}
 
 	# Display all matching lists
