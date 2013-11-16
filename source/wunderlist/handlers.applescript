@@ -419,8 +419,6 @@ end showListOptions
 on run(argv)
 	set status to 0
 
-	launchWunderlistIfNecessary()
-
 	if count of argv ³ 2 then
 		set theCommand to item 1 of argv
 		set theQuery to item 2 of argv
@@ -437,6 +435,9 @@ on run(argv)
 				set status to 1
 			end if
 		else if theCommand is "forceUpdateListInfo" then
+			# Wunderlist has to be running in order to get the list info
+			launchWunderlistIfNecessary()
+
 			invalidateListInfoCache()
 			if count of getListInfo() > 0 then
 				set status to 1
