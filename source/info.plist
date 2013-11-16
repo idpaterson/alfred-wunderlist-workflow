@@ -147,23 +147,12 @@ end tell</string>
 				<integer>68</integer>
 				<key>script</key>
 				<string>set workflowFolder to do shell script "pwd"
-set wllib to load script POSIX file (workflowFolder &amp; "/wunderlist.scpt")
+set wunderlistlib to load script POSIX file (workflowFolder &amp; "/wunderlist.scpt")
 
-### From qWorkflow
-on q_split(s, delim)
-	set oldDelims to AppleScript's text item delimiters
-	set AppleScript's text item delimiters to delim
-	set output to text items of s
-	set AppleScript's text item delimiters to oldDelims
-	return output
-end q_split
+set task to "{query}" as text
 
-set listIndexAndTask to "{query}" as text
-
-set {listIndex, task} to q_split(listIndexAndTask, "::")
-
-tell wllib
-	addTaskToList(listIndex, task)
+tell wunderlistlib
+	addTask(task)
 end tell</string>
 				<key>type</key>
 				<integer>6</integer>

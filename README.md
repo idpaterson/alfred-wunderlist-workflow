@@ -17,12 +17,6 @@ The workflow can also be built from source. After cloning the repository, just c
 ### Enable *Access for Assistive Devices*
 In order to interact with Wunderlist, your computer must allow scripts like this workflow to communicate with other apps.
 
-In OS X Mountain Lion:
-
-1. Open *System Preferences*
-2. *Accessibility*
-3. In the lower left, check the box next to *Enable access for assistive devices*
-
 In OS X Mavericks:
 
 1. Install and use any of the commands in this workflow
@@ -32,6 +26,12 @@ In OS X Mavericks:
 5. *Accessibility*
 6. Click the lock in the lower left corner to make changes
 7. Check the checkbox beside *Alfred.app* 
+
+In OS X Mountain Lion:
+
+1. Open *System Preferences*
+2. *Accessibility*
+3. In the lower left, check the box next to *Enable access for assistive devices*
 
 Features
 --------
