@@ -182,12 +182,6 @@ on addList(listName)
 		
 		# There is some delay before the new list is added
 		delay 0.75
-		
-		# Use Up arrow to focus on the new list at the bottom
-		key code 126
-		
-		# Use Option-R to rename the new list
-		keystroke "r" using option down
 
 		# Insert the name of the list
 		keystroke listName
