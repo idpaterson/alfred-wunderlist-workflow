@@ -12,6 +12,9 @@
 # Keep track of the current app
 property originalApp : missing value
 
+# Keep track of the currently selected list
+property originalListInfo : missing value
+
 (*! 
 	@abstract Causes Wunderlist to become the active application.
 *)
@@ -124,106 +127,67 @@ end launchWunderlistIfNecessary
 *)
 
 (*!
-	@abstract   Moves focus within the app to the Inbox list.
-	@discussion Uses the keyboard to move focus within the app to the Inbox list. 
-	The Inbox list is a good reference point because it is always at the top of the 
-	lists table.
+	@abstract Performs a mouse click at the specified position on the screen,
+	then resets the mouse to its original position.
 
-	The procedure for accessing the Inbox from any point in the app is as follows:
-	1. <code>&#x2318;+f</code> Begin a search
-	2. Perform a search that will probably not return results and will not be too 
-	distracting. 3 space characters works fine.
-	3. <code>&#x2318;+n</code> Navigate to the Inbox, focused on the Inbox list
+	@param aPoint The {x,y} coordinate point to click, relative to the screen
 *)
-on focusInbox()
-	
-	tell application "System Events"
-		
-		# Begin a search, simply because it's the easiest 
-		# programmatic avenue to the Inbox
-		keystroke "f" using command down
-		
-		delay 0.1
-		
-		# Search for an arbitrary string. 
-		# Wunderlist will not return any results, so visually this
-		# just looks like a transition between lists
-		keystroke "   "
-		
-		# Search takes a moment
-		delay 0.5
-		
-		# Once in a search, Command-N activates the Inbox
-		keystroke "n" using command down
-		
-		delay 0.1
-		
-	end tell
+on clickAt(aPoint)
 
-end focusInbox
+	set x to (item 1 of aPoint)
+	set y to (item 2 of aPoint)
+
+	do shell script "bin/cliclick -r c:" & x & "," & y & " p"
+	
+end clickAt
 
 
 (*!
 	@abstract   Moves focus within the app to the specified list.
-	@discussion After calling focusInbox as a reference, simply use the 
-	arrow keys to move focus to the desired list.
-
-	The procedure for focusing a specific list is as follows:
-	1. Focus the Inbox list
-	2. Press the down arrow as necessary until the list is focused
+	@discussion A mouse click is used to quickly navigate to the desired list.
 
 	@param listIndex The numerical one-based index of the desired list.
 *)
 on focusListAtIndex(listIndex)
-	
-	focusInbox()
-	
-	repeat listIndex - 1 times
 
-		delay 0.1
-	
-		# Down arrow to go to the next list
-		tell application "System Events" to key code 125
-			
-	end repeat
+	set listInfo to item listIndex of getListInfo()
+
+	clickAt(listInfo's listPosition)
 	
 end focusListAtIndex
 
 
 (*!
 	@abstract   Returns focus to the last list viewed prior to navigating lists.
-	@discussion Conveniently, Wunderlist goes back to the previously viewed task when the
-	search term is cleared. This means that we can call @link focusInbox @/link
-	or even @link focusListAtIndex @/link, add tasks, and then go return 
-	Wunderlist to its original view state.
+	@discussion @link recordPreviousList @/link must be called prior to navigating
+	lists, otherwise it will not be possible to return to the previous list.
 
-	The procedure for returning to the previous list is as follows:
-	1. <code>&#x2318;+f</code> Return to the search input
-	2. Press the delete key to clear the search, Wunderlist will switch back to the previously viewed list
-	3. <code>&#x2318;+n</code> Move focus out of the search box into the task list
-	4. <code>&#x21E7;+tab</code> Return focus to the list table
+	@see focusListAtIndex
 *)
 on focusPreviousList()
 	
-	tell application "System Events"
-		
-		# Back to the search box, which will highlight the existing text
-		keystroke "f" using command down
-		
-		# Delete key to clear the search query
-		# Best thing is, this sends Wunderlist back to whichever list 
-		# was focused before the original search
-		key code 51
-		
-		# Move focus from the search field to the task input
-		keystroke "n" using command down
-		
-		# Focus on the list for easy keyboard navigation
-		keystroke tab using shift down
-		
-	end tell
+	if originalListInfo is not missing value then
+		clickAt(originalListInfo's listPosition)
+	end if
 	
 end focusPreviousList
+
+
+(*!
+	@abstract   Records the ListInfo for the currently selected list so that it
+	can be reselected later.
+	@discussion This must be called before switching to a different list in order
+	to make use of @link focusPreviousList @/link. 
+
+	@see getListInfoForActiveList
+*)
+on recordPreviousList()
+
+	if originalListInfo is missing value then
+		set originalListInfo to getListInfoForActiveList()
+	end if
+
+end recordPreviousList
 
 
 (*!

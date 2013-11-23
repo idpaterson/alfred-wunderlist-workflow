@@ -16,7 +16,7 @@ all: Wunderlist.alfredworkflow
 # Prepares the workflow for a release
 # Requires a value for the RELEASE_NOTES macro
 #   make release RELEASE_NOTES="Foo"
-release: update-version-numbers clean Wunderlist.json Wunderlist.alfredworkflow
+release: update-version-numbers clean Wunderlist.json build/licenses Wunderlist.alfredworkflow
 
 # The installable workflow
 Wunderlist.alfredworkflow: build build/info.plist build/wunderlist.scpt build/filters.php build/icons build/localization build/update.json
@@ -36,7 +36,7 @@ build/wunderlist.applescript: build source/*.applescript source/*/*.applescript
 	# not compiled out.
 	perl -i -e '$$/=undef;$$_=<>;s/^\s*(#.*|--.*|\(\*![\s\S]*?\*\))\s?//gm;print' build/wunderlist.applescript 
 
-build/wunderlist.scpt: build build/wunderlist.applescript build/bin/q_notifier.helper lib/qWorkflow/compiled\ source/q_workflow.scpt
+build/wunderlist.scpt: build build/wunderlist.applescript build/bin/q_notifier.helper build/bin/cliclick lib/qWorkflow/compiled\ source/q_workflow.scpt
 	osacompile -x -o build/wunderlist.scpt build/wunderlist.applescript
 	rm build/wunderlist.applescript
 
@@ -54,6 +54,24 @@ build/bin:
 
 build/bin/q_notifier.helper: build build/bin
 	cp -r lib/qWorkflow/compiled\ source/bin/q_notifier.helper build/bin/
+
+build/bin/cliclick: build build/bin lib/cliclick
+	cd lib/cliclick && make 
+	cp lib/cliclick/cliclick build/bin/cliclick
+
+build/licenses: build/licenses/alfred-wunderlist-workflow build/licenses/cliclick build/licenses/CFPropertyList
+
+build/licenses/alfred-wunderlist-workflow: LICENSE
+	mkdir -p build/licenses/alfred-wunderlist-workflow
+	cp LICENSE build/licenses/alfred-wunderlist-workflow/
+
+build/licenses/cliclick: lib/cliclick/LICENSE
+	mkdir -p build/licenses/cliclick
+	cp lib/cliclick/LICENSE build/licenses/cliclick/
+
+build/licenses/CFPropertyList: lib/CFPropertyList/LICENSE
+	mkdir -p build/licenses/CFPropertyList
+	cp lib/CFPropertyList/LICENSE build/licenses/CFPropertyList/
 
 build/localization: build source/localization
 	cp -r source/localization/* build/
