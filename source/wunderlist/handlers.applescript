@@ -122,6 +122,14 @@ on addTaskToList(listIndex, task)
 	
 	activateWunderlist()
 
+	# Make sure that the list info is accurate
+	invalidateListInfoCache()
+
+	# Required for focusPreviousList()
+	if task is not "" then
+		recordPreviousList()
+	end if
+
 	if listIndex >= 0 then
 		focusListAtIndex(listIndex)
 	end if
@@ -149,7 +157,7 @@ on addTaskToList(listIndex, task)
 		activatePreviousApplication()
 	end if
 	
-end addTask
+end addTaskToList
 
 (*!
 	@abstract   Adds a task to the Inbox list in Wunderlist
