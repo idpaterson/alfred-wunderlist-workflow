@@ -143,18 +143,6 @@ end clickAt
 
 
 (*!
-	@abstract Moves focus within the app to the Inbox list.
-
-	@see focusListAtIndex
-*)
-on focusInbox()
-	
-	focusListAtIndex(1)
-
-end focusInbox
-
-
-(*!
 	@abstract   Moves focus within the app to the specified list.
 	@discussion A mouse click is used to quickly navigate to the desired list.
 

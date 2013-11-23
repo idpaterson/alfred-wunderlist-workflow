@@ -156,54 +156,8 @@ on addTaskToList(listIndex, task)
 		
 		activatePreviousApplication()
 	end if
-	
+
 end addTaskToList
-
-(*!
-	@abstract   Adds a task to the Inbox list in Wunderlist
-	@discussion Provides a shortcut for entering tasks directly in the Inbox.
-
-	After calling this handler, the previous application is reactivated. However, if 
-	<code>task</code> is not specified, Wunderlist will remain active with the 
-	keyboard focus on the task input for the Inbox.
-
-	@param task The text of the task
-*)
-on addTaskToInbox(task)
-
-	launchWunderlistIfNecessary()
-	
-	activateWunderlist()
-	
-	focusInbox()
-	
-	focusTaskInput()
-	
-	# If a task is specified, add it then return to the previous application
-	if task is not "" then
-		
-		tell application "System Events"
-
-			# Populate the task input field with the text of the task
-			keystroke task
-			
-			# Return key to add the task
-			keystroke return
-			
-		end tell
-		
-		# Since we can't do this entire process in the background, at least
-		# allow the user a moment to see what happened.
-		delay 1.5
-		
-		# Return the user to whichever list was previously visible
-		focusPreviousList()
-		
-		activatePreviousApplication()
-		
-	end if
-	
-end addTaskToInbox
 
 (*!
 	@abstract   Adds a new list to Wunderlist
@@ -220,9 +174,6 @@ on addList(listName)
 	
 	# Show the lists pane
 	setWindowViewNormal()
-	
-	# Always the top item in the task list
-	focusInbox()
 	
 	tell application "System Events"
 		
