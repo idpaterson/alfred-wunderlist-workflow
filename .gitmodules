@@ -10,3 +10,6 @@
 [submodule "lib/CFPropertyList"]
 	path = lib/CFPropertyList
 	url = https://github.com/rodneyrehm/CFPropertyList.git
+[submodule "lib/cliclick"]
+	path = lib/cliclick
+	url = git@github.com:BlueM/cliclick.git

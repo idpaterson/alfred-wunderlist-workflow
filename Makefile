@@ -36,7 +36,7 @@ build/wunderlist.applescript: build source/*.applescript source/*/*.applescript
 	# not compiled out.
 	perl -i -e '$$/=undef;$$_=<>;s/^\s*(#.*|--.*|\(\*![\s\S]*?\*\))\s?//gm;print' build/wunderlist.applescript 
 
-build/wunderlist.scpt: build build/wunderlist.applescript build/bin/q_notifier.helper lib/qWorkflow/compiled\ source/q_workflow.scpt
+build/wunderlist.scpt: build build/wunderlist.applescript build/bin/q_notifier.helper build/bin/cliclick lib/qWorkflow/compiled\ source/q_workflow.scpt
 	osacompile -x -o build/wunderlist.scpt build/wunderlist.applescript
 	rm build/wunderlist.applescript
 
@@ -54,6 +54,10 @@ build/bin:
 
 build/bin/q_notifier.helper: build build/bin
 	cp -r lib/qWorkflow/compiled\ source/bin/q_notifier.helper build/bin/
+
+build/bin/cliclick: build build/bin lib/cliclick
+	cd lib/cliclick && make 
+	cp lib/cliclick/cliclick build/bin/cliclick
 
 build/localization: build source/localization
 	cp -r source/localization/* build/
