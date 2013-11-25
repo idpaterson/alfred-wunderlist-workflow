@@ -355,16 +355,14 @@ on getListInfoForActiveList()
 
 	tell application "System Events"
 		tell process "Wunderlist"
-			# Rename the currently selected list. Unfortunately despite being
-			# focused, the UI element for the list is not actually marked as
-			# focused, so we have to use a workaround
-			click menu item 1 of menu 1 of menu bar item 4 of menu bar 1
+			# Switch to Collapsed View 
+			click menu item 9 of menu 1 of menu bar item 6 of menu bar 1
 
-			# Get the list name from the text input
-			set theListName to value of static text 1 of button 1 of UI element 1 of UI element 1 of UI element 1 of splitter group 1 of window "Wunderlist" 
+			# Get the list name from the window title label
+			set theListName to value of static text 1 of window "Wunderlist" 
 
-			# New task to focus the task input and cancel the list rename
-			click menu item 1 of menu 1 of menu bar item 3 of menu bar 1
+			# Return to Normal View
+			click menu item 8 of menu 1 of menu bar item 6 of menu bar 1
 
 		end tell
 	end tell
