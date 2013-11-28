@@ -206,24 +206,43 @@ on focusTaskInput()
 		# Focus task input to create a new task
 		# If searching, Command-N is required twice to create a task
 		keystroke "n" using command down
+		delay 0.05
 		keystroke "n" using command down
+		delay 0.05
 		
 	end tell
 	
 end focusTaskInput
 
 (*!
+	@abstract   Sends the specified text to the first receiver of the frontmost application.
+	@discussion Text is sent to the application via the clipboard, ensuring that any special
+	characters are retained.
+
+	@param theText The text to insert
+*)
+on insertText(theText)
+	
+	set originalContents to the clipboard
+	set the clipboard to theText as text
+
+	# Cmd+V to paste
+	tell application "System Events" to keystroke "v" using command down
+	delay 0.05
+
+	set the clipboard to originalContents
+
+end insertText
+
+(*!
 	@abstract Switches to the "Normal" view in Wunderlist where both the list and 
 	tasks are visible.
 *)
 on setWindowViewNormal()
-	
-	tell application "System Events"
 		
-		# Make sure Wunderlist is in Normal View
-		keystroke "1" using command down
-		
-	end tell
+	# Make sure Wunderlist is in Normal View
+	tell application "System Events" to keystroke "1" using command down
+	delay 0.05
 	
 end setWindowViewNormal
 

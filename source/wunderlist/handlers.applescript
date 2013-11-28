@@ -69,17 +69,12 @@ on addTask(task)
 		
 		activateWunderlist()
 
+		# Populate the field with the text of the task
 		focusTaskInput()
+		insertText(task)
 		
-		tell application "System Events"
-
-			# Populate the field with the text of the task
-			keystroke task
-			
-			# Return key to add the task
-			keystroke return
-			
-		end tell
+		# Return key to add the task
+		tell application "System Events" to keystroke return
 
 		# Show that the task was added
 		delay 1
@@ -138,15 +133,11 @@ on addTaskToList(listIndex, task)
 	
 	# If a task is specified, add it then return to the previous application
 	if task is not "" then
-		tell application "System Events"
-
-			# Populate the field with the text of the task
-			keystroke task
+		# Populate the field with the text of the task
+		insertText(task)
 			
-			# Return key to add the task
-			keystroke return
-			
-		end tell
+		# Return key to add the task
+		tell application "System Events" to keystroke return
 
 		# Show that the task was added
 		delay 1
@@ -175,21 +166,17 @@ on addList(listName)
 	# Show the lists pane
 	setWindowViewNormal()
 	
-	tell application "System Events"
+	# Use Command-L to create a new list
+	tell application "System Events" to keystroke "l" using command down
 		
-		# Use Command-L to create a new list
-		keystroke "l" using command down
-		
-		# There is some delay before the new list is added
-		delay 0.75
+	# There is some delay before the new list is added
+	delay 0.75
 
-		# Insert the name of the list
-		keystroke listName
-		
-		# Return key to rename the list
-		keystroke return
-		
-	end tell
+	# Insert the name of the list
+	insertText(listName)
+	
+	# Return key to rename the list
+	tell application "System Events" to keystroke return
 
 	focusTaskInput()
 
