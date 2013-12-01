@@ -214,21 +214,25 @@ on focusTaskInput()
 	
 end focusTaskInput
 
+(*!
+	@abstract Emulates a click on the star button in the task input field, toggling its
+	value between starred and not starred.
+	@discussion The star button only appears after the task input has been focused. In order
+	to have any effect, this must be called after the task input is focused and before the
+	task is entered.
+*)
 on toggleStarInTaskInput()
+
+	set listsPanel to getListsPanelElement()
+	set starButton to getStarButtonInTaskInputElement()
 
 	tell application "System Events"
 		tell process "Wunderlist"
 	
-			set tasksContainer to UI element 1 of UI element 2 of last UI element of splitter group 1 of window 1
-			set starPosition to position of item 3 of buttons of (first UI element of tasksContainer whose position of item 3 of buttons is not missing value)
+			set starPosition to positionWithinTasksPanelAdjustedForListsPanel(position of starButton)
 
-			if (count of UI elements of splitter group 1 of window 1) is 2 then
-				set {listsPanelWidth} to size of UI element 1 of splitter group 1 of window 1
-				set item 1 of starPosition to (item 1 of starPosition) + 10 + listsPanelWidth
-			else
-				set item 1 of starPosition to (item 1 of starPosition) + 10
-			end if
-			
+			# Clicking at the position does not work, offset by 10px in each direction
+			set item 1 of starPosition to (item 1 of starPosition) + 10
 			set item 2 of starPosition to (item 2 of starPosition) + 10
 
 		end tell
@@ -269,6 +273,109 @@ on setWindowViewNormal()
 	delay 0.05
 	
 end setWindowViewNormal
+
+(*!
+	@functiongroup Finding Wunderlist UI Elements
+*)
+
+(*!
+	@abstract Returns the <code>UI element</code> containing the tasks and other 
+	associated elements in the current list.
+*)
+on getTasksContainerElement()
+
+	tell application "System Events"
+		tell process "Wunderlist"
+
+			return UI element 1 of UI element 2 of last UI element of splitter group 1 of window 1
+			
+		end tell
+	end tell
+
+end getTasksContainerElement
+
+(*!
+	@abstract   Returns the <code>UI element</code> representing the task input field.
+*)
+on getTaskInputElement()
+
+	set tasksContainer to getTasksContainerElement()
+
+	tell application "System Events"
+		tell process "Wunderlist"
+
+			return first UI element of tasksContainer whose position of item 3 of buttons is not missing value
+			
+		end tell
+	end tell
+
+end getTaskInputElement
+
+(*!
+	@abstract   Returns the star <code>button</code> in the task input field.
+	@discussion The element will be returned regardless of whether it is currently visible
+	or not. It is necessary to focus the task input to ensure that the star button is
+	visible and clickable.
+*)
+on getStarButtonInTaskInputElement()
+
+	set taskInput to getTaskInputElement()
+
+	tell application "System Events"
+		tell process "Wunderlist"
+
+			return item 3 of buttons of taskInput
+			
+		end tell
+	end tell
+
+end getStarButtonInTaskInputElement
+
+(*!
+	@abstract Returns the <code>UI element</code> that holds everything in the lists 
+	panel, or <code>missing value</code> if the lists panel is not visible, such as in 
+	collapsed or minified view.
+*)
+on getListsPanelElement()
+
+	tell application "System Events"
+		tell process "Wunderlist"
+
+			if (count of UI elements of splitter group 1 of window 1) is 2 then
+				return UI element 1 of splitter group 1 of window 1
+			else
+				return missing value
+			end if
+			
+		end tell
+	end tell
+
+end getListsPanelElement
+
+(*!
+	@abstract Adjusts the specified position of any element in the tasks panel
+	as necessary if the lists panel is visible.
+	@discussion The position of any UI element within the tasks panel is incorrect if
+	the lists panel is visible; both lists report their position as if they are aligned
+	to the upper left corner of the Wunderlist window. If the lists panel is visible,
+	the returned position will be offset on the x coordinate by the width of the panel.
+*)
+on positionWithinTasksPanelAdjustedForListsPanel(thePosition)
+
+	set listsPanel to getListsPanelElement()
+
+	if listsPanel is not missing value then
+		tell application "System Events"
+			tell process "Wunderlist"
+				set {listsPanelWidth} to size of listsPanel
+				set item 1 of thePosition to (item 1 of thePosition) + listsPanelWidth
+			end tell
+		end tell
+	end if
+
+	return thePosition
+
+end positionWithinTasksPanelAdjustedForListsPanel
 
 (*! 
 	@functiongroup Accessing Data in Wunderlist
