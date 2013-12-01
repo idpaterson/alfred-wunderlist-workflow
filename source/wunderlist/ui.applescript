@@ -228,7 +228,7 @@ on insertText(theText)
 
 	# Cmd+V to paste
 	tell application "System Events" to keystroke "v" using command down
-	delay 0.05
+	delay 0.25
 
 	set the clipboard to originalContents
 
