@@ -214,6 +214,30 @@ on focusTaskInput()
 	
 end focusTaskInput
 
+on toggleStarInTaskInput()
+
+	tell application "System Events"
+		tell process "Wunderlist"
+	
+			set tasksContainer to UI element 1 of UI element 2 of last UI element of splitter group 1 of window 1
+			set starPosition to position of item 3 of buttons of (first UI element of tasksContainer whose position of item 3 of buttons is not missing value)
+
+			if (count of UI elements of splitter group 1 of window 1) is 2 then
+				set {listsPanelWidth} to size of UI element 1 of splitter group 1 of window 1
+				set item 1 of starPosition to (item 1 of starPosition) + 10 + listsPanelWidth
+			else
+				set item 1 of starPosition to (item 1 of starPosition) + 10
+			end if
+			
+			set item 2 of starPosition to (item 2 of starPosition) + 10
+
+		end tell
+	end tell
+
+	clickAt(starPosition)
+
+end toggleStarInTaskInput
+
 (*!
 	@abstract   Sends the specified text to the first receiver of the frontmost application.
 	@discussion Text is sent to the application via the clipboard, ensuring that any special
@@ -441,7 +465,7 @@ on getTaskInfoForFocusedList()
 			
 			# Find the N Completed Item(s) label (it is the only element with
 			# exactly one button) and get its position
-			set completedElement to (first UI element whose item 1 of buttons is not missing value and item 2 of buttons is missing value) of tasksContainer
+			set completedElement to (first UI element whose position of item 1 of buttons is not missing value and position of item 2 of buttons is missing value) of tasksContainer
 			set completedPosition to position of completedElement
 			set completedMinY to missing value
 			
