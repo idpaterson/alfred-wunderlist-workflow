@@ -287,7 +287,7 @@ on getTasksContainerElement()
 	tell application "System Events"
 		tell process "Wunderlist"
 
-			return UI element 1 of UI element 2 of last UI element of splitter group 1 of window 1
+			return UI element 1 of UI element 2 of last UI element of splitter group 1 of window "Wunderlist"
 			
 		end tell
 	end tell
@@ -341,8 +341,8 @@ on getListsPanelElement()
 	tell application "System Events"
 		tell process "Wunderlist"
 
-			if (count of UI elements of splitter group 1 of window 1) is 2 then
-				return UI element 1 of splitter group 1 of window 1
+			if (count of UI elements of splitter group 1 of window "Wunderlist") is 2 then
+				return UI element 1 of splitter group 1 of window "Wunderlist"
 			else
 				return missing value
 			end if
