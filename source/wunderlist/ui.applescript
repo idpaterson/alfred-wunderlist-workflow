@@ -229,7 +229,7 @@ on toggleStarInTaskInput()
 	tell application "System Events"
 		tell process "Wunderlist"
 	
-			set starPosition to positionWithinTasksPanelAdjustedForListsPanel(position of starButton)
+			set starPosition to my positionWithinTasksPanelAdjustedForListsPanel(position of starButton)
 
 			# Clicking at the position does not work, offset by 10px in each direction
 			set item 1 of starPosition to (item 1 of starPosition) + 10
