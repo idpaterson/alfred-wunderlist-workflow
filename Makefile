@@ -28,7 +28,7 @@ build:
 build/info.plist: source/info.plist
 	cp source/info.plist build/
 
-build/wunderlist.applescript: build source/*.applescript source/*/*.applescript
+build/wunderlist.applescript: build source/*.applescript source/*/*.applescript source/*/*/*.applescript
 	cp source/wunderlist.applescript build/wunderlist.applescript
 	# Replace all #includes with the file contents
 	perl -i -e '$$/=undef;$$_=<>;s@#include "(.*?)"@open F, "source/$$1.applescript";<F>@ge;print' build/wunderlist.applescript
@@ -103,7 +103,7 @@ require-release-notes:
     endif
 
 update-version-numbers:
-	perl -p -i -e "s/(\@version\s*)\S.*/\$${1}${FULL_VERSION}/" source/*.applescript source/*/*.applescript source/*.php
+	perl -p -i -e "s/(\@version\s*)\S.*/\$${1}${FULL_VERSION}/" source/*.applescript source/*/*.applescript source/*/*/*.applescript source/*.php
 
 deps:
 	brew install gettext
@@ -115,11 +115,11 @@ clean:
 	rm -rf Wunderlist.alfredworkflow Wunderlist.json
 
 # Generates documentation in gh-pages branch submodule at docs/
-docs: source/*.applescript source/*/*.applescript source/*.php
+docs: source/*.applescript source/*/*.applescript source/*/*/*.applescript source/*.php
 	# Delete old docs without removing the .git directory
 	find docs/* -type d -not -name '.git' | xargs rm -rf
 	rm -rf docs/*.html
-	headerdoc2html -o docs source/*.applescript source/*/*.applescript source/*.php
+	headerdoc2html -o docs source/*.applescript source/*/*.applescript source/*/*/*.applescript source/*.php
 	gatherheaderdoc docs
 
 .PHONY: all clean build/localization build/icons build/update.json Wunderlist.json require-release-notes update-version-numbers

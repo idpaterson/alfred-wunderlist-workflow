@@ -12,5 +12,7 @@
 #include "wunderlist/config"
 #include "wunderlist/utilities"
 #include "wunderlist/ui"
+#include "wunderlist/ui/lists"
+#include "wunderlist/ui/tasks"
 #include "wunderlist/results"
 #include "wunderlist/handlers"
