@@ -5,8 +5,29 @@
 	@version    0.2
 *)
 
+(*! 
+	@abstract Designates that items in the list should be sorted alphabetically by name.
+*)
+property sortTypeAlphabetical : 3
+
+(*! 
+	@abstract Designates that items in the list should be sorted chronologically by due date.
+*)
+property sortTypeDueDate : 2
+
+(*! 
+	@abstract Designates that items in the list should be sorted alphabetically by assignee.
+*)
+property sortTypeAssignee : 1
+
 # Keep track of the currently selected list
 property originalListInfo : missing value
+
+# Toolbar Constants
+# 
+# The toolbar on Wunderlist is not available by UI traversal, leaving no way for 
+# AppleScript to navigate or inspect it. All of the values below are subject to
+# change in future versions of Wunderlist.
 
 # The button in the floating lists toolbar that allows people to be invited to a list
 property inviteToolbarButtonIndex : 1
@@ -22,6 +43,9 @@ property sortToolbarButtonIndex : 4
 
 # The height of buttons that appear over the toolbar
 property toolbarMenuButtonHeight : 35
+
+# The number of buttons in the toolbar
+property toolbarButtonCount : 4
 
 (*! 
 	@functiongroup Navigating Wunderlist
@@ -73,6 +97,50 @@ on recordPreviousList()
 	end if
 
 end recordPreviousList
+
+
+(*!
+	@abstract   Reorders the current list based on the specified sort type.
+	@discussion Some lists do not support all sort types. In general, the following
+	should hold true:
+	<dl>
+	<dt>Sort Alphabetically</dt>
+	<dd>Supported in any list, except Today and Week, that has two or more tasks.</dd>
+	<dt>Sort by Due Date</dt>
+	<dd>Supported in any list, except Today and Week, that has two or more tasks at 
+	least one of which having a due date.</dd>
+	<dt>Sort by Assignee</dt>
+	<dd>Supported in any list, except Today and Week, that has two or more tasks at
+	least one of which having an assignee.</dd>
+	</dl>
+
+	The only way to sort lists in Wunderlist is by using the pointer to
+	click the toolbar that floats at the bottom of the task list. Therefore, this 
+	feature is very dependent on the calculations used to determine the position
+	of the sorting buttons.
+
+	@param sortType any of the predefined sort type globals.
+*)
+on sortCurrentList(sortType)
+
+	set tasksContainer to getTasksContainerElement()
+	set sortButtonCenter to getCenterOfTasksContainerToolbarButton(sortToolbarButtonIndex)
+
+	delay 0.1
+
+	clickAt(sortButtonCenter)
+
+	delay 0.5
+
+	# The sortType is reverse indexed based on the menu order so that the height 
+	# of the toolbar menu button can be subtracted the number of times specified
+	# by the sortType in order to click the button for that type.
+	set {xPos, yPos} to sortButtonCenter
+	set yPos to yPos - sortType * toolbarMenuButtonHeight
+
+	clickAt({xPos, yPos})
+
+end sortCurrentList
 
 
 (*! 

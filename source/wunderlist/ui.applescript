@@ -235,29 +235,3 @@ on getListsContainerElement()
 	end tell
 
 end getListsContainerElement
-
-
-(*!
-	@abstract Adjusts the specified position of any element in the tasks panel
-	as necessary if the lists panel is visible.
-	@discussion The position of any UI element within the tasks panel is incorrect if
-	the lists panel is visible; both lists report their position as if they are aligned
-	to the upper left corner of the Wunderlist window. If the lists panel is visible,
-	the returned position will be offset on the x coordinate by the width of the panel.
-*)
-on positionWithinTasksPanelAdjustedForListsPanel(thePosition)
-
-	set listsPanel to getListsContainerElement()
-
-	if listsPanel is not missing value then
-		tell application "System Events"
-			tell process "Wunderlist"
-				set {listsPanelWidth} to size of listsPanel
-				set item 1 of thePosition to (item 1 of thePosition) + listsPanelWidth
-			end tell
-		end tell
-	end if
-
-	return thePosition
-
-end positionWithinTasksPanelAdjustedForListsPanel

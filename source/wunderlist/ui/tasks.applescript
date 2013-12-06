@@ -39,13 +39,13 @@ end focusTaskInput
 *)
 on toggleStarInTaskInput()
 
-	set listsPanel to getListsContainerElement()
+	set listsContainer to getListsContainerElement()
 	set starButton to getStarButtonInTaskInputElement()
 
 	tell application "System Events"
 		tell process "Wunderlist"
 	
-			set starPosition to my positionWithinTasksPanelAdjustedForListsPanel(position of starButton)
+			set starPosition to my positionWithinTasksContainerAdjustedForListsContainer(position of starButton)
 
 			# Clicking at the position does not work, offset by 10px in each direction
 			set item 1 of starPosition to (item 1 of starPosition) + 10
@@ -138,6 +138,132 @@ end getTaskInfoForFocusedList
 (*!
 	@functiongroup Finding Wunderlist UI Elements
 *)
+
+(*!
+	@abstract Returns the position of the tasks panel, offset for the lists panel
+	if necessary.
+	@return an <code>{x, y}</code> position
+	@see positionWithinTasksContainerAdjustedForListsContainer
+*)
+on getPositionOfTasksContainer()
+
+	set tasksContainer to getTasksContainerElement()
+
+	tell application "System Events"
+		tell process "Wunderlist"
+
+			return my positionWithinTasksContainerAdjustedForListsContainer(position of tasksContainer)
+
+		end tell
+	end tell
+
+end getPositionOfTasksContainer
+
+
+(*!
+	@abstract Returns the position of the tasks panel, offset for the lists panel
+	if necessary.
+	@return an <code>{x, y}</code> position
+	@see positionWithinTasksContainerAdjustedForListsContainer
+*)
+on getSizeOfTasksContainer()
+
+	set tasksContainer to getTasksContainerElement()
+
+	tell application "System Events"
+		tell process "Wunderlist"
+
+			return size of tasksContainer
+
+		end tell
+	end tell
+
+end getSizeOfTasksContainer
+
+(*!
+	@abstract   Returns the position of the toolbar at the bottom of the tasks panel.
+	@discussion This value must be calculated based on predefined metrics due to the
+	inability to access to tasks panel toolbar by traversing the Wunderlist UI. As
+	such, it is subject to break if the Wunderlist UI changes.
+
+	@return an <code>{x, y}</code> position
+*)
+on getPositionOfTasksContainerToolbar()
+
+	set {tasksContainerXPos, tasksContainerYPos} to getPositionOfTasksContainer()
+	set {toolbarWidth, toolbarHeight} to getSizeOfTasksContainerToolbar()
+	set {tasksContainerWidth, tasksContainerHeight} to getSizeOfTasksContainer()
+	set xPos to tasksContainerXPos + tasksContainerWidth / 2 - toolbarWidth / 2
+	set yPos to tasksContainerYPos + tasksContainerHeight - 16 - toolbarHeight
+
+	return {xPos, yPos}
+
+end getPositionOfTasksContainerToolbar
+
+
+(*!
+	@abstract Returns the size of the toolbar at the bottom of the tasks panel.
+	@return a <code>{width, height}</code> size
+*)
+on getSizeOfTasksContainerToolbar()
+
+	# It is not currently possible to determine this from the UI; the tasks
+	# panel toolbar may be drawn manually rather than represented by views
+	return {184, 40}
+
+end getSizeOfTasksContainerToolbar
+
+
+(*!
+	@abstract Calculates the current center point of the specified button in
+	the tasks panel toolbar.
+	@discussion Given the index of a button in the tasks panel toolbar,
+	determine the approximate center point of the button. No validation is done
+	to ensure that there is actually a button at the specified index due to the
+	inability to traverse the toolbar UI.
+
+	@param buttonIndex the 1-based index corresponding to a specific toolbar button
+	@return an <code>{x, y}</code> position
+*)
+on getCenterOfTasksContainerToolbarButton(buttonIndex)
+
+	set {toolbarXPos, toolbarYPos} to getPositionOfTasksContainerToolbar()
+	set {toolbarWidth, toolbarHeight} to getSizeOfTasksContainerToolbar()
+	set buttonWidth to toolbarWidth / toolbarButtonCount
+	set xPos to toolbarXPos + buttonWidth * (buttonIndex - 0.5)
+	set yPos to toolbarYPos + toolbarHeight / 2
+
+	return {round(xPos), round(yPos)}
+
+end getCenterOfTasksContainerToolbarButton
+
+
+
+(*!
+	@abstract Adjusts the specified position of any element in the tasks panel
+	as necessary if the lists panel is visible.
+	@discussion The position of any UI element within the tasks panel is incorrect if
+	the lists panel is visible; both lists report their position as if they are aligned
+	to the upper left corner of the Wunderlist window. If the lists panel is visible,
+	the returned position will be offset on the x coordinate by the width of the panel.
+*)
+on positionWithinTasksContainerAdjustedForListsContainer(thePosition)
+
+	set listsContainer to getListsContainerElement()
+
+	if listsContainer is not missing value then
+		tell application "System Events"
+			tell process "Wunderlist"
+				set {listsContainerWidth} to size of listsContainer
+				set item 1 of thePosition to (item 1 of thePosition) + listsContainerWidth
+			end tell
+		end tell
+	end if
+
+	return thePosition
+
+end positionWithinTasksContainerAdjustedForListsContainer
+
 
 (*!
 	@abstract   Returns the <code>UI element</code> representing the task input field.
