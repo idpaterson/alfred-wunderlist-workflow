@@ -330,3 +330,29 @@ on getIndexOfListNamed(theListName)
 	return missing value
 
 end getIndexOfListNamed
+
+
+(*!
+	@functiongroup Finding Wunderlist UI Elements
+*)
+
+(*!
+	@abstract Returns the <code>UI element</code> that holds everything in the lists 
+	panel, or <code>missing value</code> if the lists panel is not visible, such as in 
+	collapsed or minified view.
+*)
+on getListsContainerElement()
+
+	tell application "System Events"
+		tell process "Wunderlist"
+
+			if (count of UI elements of splitter group 1 of window "Wunderlist") is 2 then
+				return UI element 1 of splitter group 1 of window "Wunderlist"
+			else
+				return missing value
+			end if
+			
+		end tell
+	end tell
+
+end getListsContainerElement

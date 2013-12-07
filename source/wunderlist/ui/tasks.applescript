@@ -140,6 +140,62 @@ end getTaskInfoForFocusedList
 *)
 
 (*!
+	@abstract Returns the <code>UI element</code> containing the tasks and other 
+	associated elements in the current list.
+*)
+on getTasksContainerElement()
+
+	tell application "System Events"
+		tell process "Wunderlist"
+
+			return UI element 1 of UI element 2 of last UI element of splitter group 1 of window "Wunderlist"
+			
+		end tell
+	end tell
+
+end getTasksContainerElement
+
+
+(*!
+	@abstract   Returns the <code>UI element</code> representing the task input field.
+*)
+on getTaskInputElement()
+
+	set tasksContainer to getTasksContainerElement()
+
+	tell application "System Events"
+		tell process "Wunderlist"
+
+			return first UI element of tasksContainer whose position of item 3 of buttons is not missing value
+			
+		end tell
+	end tell
+
+end getTaskInputElement
+
+
+(*!
+	@abstract   Returns the star <code>button</code> in the task input field.
+	@discussion The element will be returned regardless of whether it is currently visible
+	or not. It is necessary to focus the task input to ensure that the star button is
+	visible and clickable.
+*)
+on getStarButtonInTaskInputElement()
+
+	set taskInput to getTaskInputElement()
+
+	tell application "System Events"
+		tell process "Wunderlist"
+
+			return item 3 of buttons of taskInput
+			
+		end tell
+	end tell
+
+end getStarButtonInTaskInputElement
+
+
+(*!
 	@abstract Returns the position of the tasks panel, offset for the lists panel
 	if necessary.
 	@return an <code>{x, y}</code> position
@@ -263,42 +319,3 @@ on positionWithinTasksContainerAdjustedForListsContainer(thePosition)
 	return thePosition
 
 end positionWithinTasksContainerAdjustedForListsContainer
-
-
-(*!
-	@abstract   Returns the <code>UI element</code> representing the task input field.
-*)
-on getTaskInputElement()
-
-	set tasksContainer to getTasksContainerElement()
-
-	tell application "System Events"
-		tell process "Wunderlist"
-
-			return first UI element of tasksContainer whose position of item 3 of buttons is not missing value
-			
-		end tell
-	end tell
-
-end getTaskInputElement
-
-
-(*!
-	@abstract   Returns the star <code>button</code> in the task input field.
-	@discussion The element will be returned regardless of whether it is currently visible
-	or not. It is necessary to focus the task input to ensure that the star button is
-	visible and clickable.
-*)
-on getStarButtonInTaskInputElement()
-
-	set taskInput to getTaskInputElement()
-
-	tell application "System Events"
-		tell process "Wunderlist"
-
-			return item 3 of buttons of taskInput
-			
-		end tell
-	end tell
-
-end getStarButtonInTaskInputElement
