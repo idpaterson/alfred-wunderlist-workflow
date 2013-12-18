@@ -5,12 +5,15 @@
 	@version    0.2
 *)
 
-# Keep track of the current app
-property originalApp : missing value
-
 (*! 
 	@functiongroup Application Interactions
 *)
+
+# Keep track of the current app
+property originalApp : missing value
+
+# Keep track of the original clipboard
+property originalClipboard : missing value
 
 (*! 
 	@abstract Causes Wunderlist to become the active application.
@@ -152,14 +155,21 @@ end clickAt
 *)
 on insertText(theText)
 	
-	set originalContents to the clipboard
+	if originalClipboard is missing value then
+		set originalClipboard to the clipboard
+
+		# Make sure that the text used internally is not added as the original clipboard
+		# contents on future invocations of insertText
+		if originalClipboard is missing value then
+			set originalClipboard to ""
+		end if
+	end if
+
 	set the clipboard to theText as text
 
 	# Cmd+V to paste
 	tell application "System Events" to keystroke "v" using command down
-	delay 0.25
-
-	set the clipboard to originalContents
+	delay 0.2
 
 end insertText
 

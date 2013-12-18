@@ -92,6 +92,8 @@ on addTask(task)
 		focusTaskInput()
 
 	end if
+
+	cleanup()
 	
 end addTask
 
@@ -148,6 +150,8 @@ on addTaskToList(listIndex, task)
 		activatePreviousApplication()
 	end if
 
+	cleanup()
+	
 end addTaskToList
 
 (*!
@@ -183,6 +187,8 @@ on addList(listName)
 	# Make sure that the new list is picked up the next time
 	# the list info is displayed
 	invalidateListInfoCache()
+
+	cleanup()
 	
 end addList
 
@@ -346,6 +352,18 @@ on showListOptions(task)
 	return wf's to_xml("")
 	
 end showListOptions
+
+(*!
+	@abstract Ensures that any state modified during execution of a handler,
+	such as the clipboard contents, is cleaned up.
+*)
+on cleanup()
+	
+	if originalClipboard is not missing value then
+		set the clipboard to originalClipboard
+	end if
+
+end cleanup
 
 (*!
 	@abstract Provides support for command line operations
