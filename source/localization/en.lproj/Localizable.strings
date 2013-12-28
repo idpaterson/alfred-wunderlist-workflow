@@ -6,7 +6,8 @@
 */
 
 "Messages/Wunderlist is now on all desktops/Title" = "Wunderlist now on all desktops";
-"Messages/Wunderlist is now on all desktops/Message" = "The workflow has made Wunderlist visible on all desktops to improve reliability.";
-
-"Results/Add task to active list/Title" = "Most recently used";
-"Results/Add task to active list/Details" = "Add a task to the most recently used list";
+"Messages/Wunderlist is now on all desktops/Details" = "The workflow has made Wunderlist visible on all desktops to improve reliability.";
+"Messages/Accessibility is disabled (per-app privacy setting)/Title" = "Cannot access Wunderlist";
+"Messages/Accessibility is disabled (per-app privacy setting)/Details" = "Please enable the checkbox allowing Alfred to control your computer";
+"Messages/Accessibility is disabled (global checkbox)/Title" = "Cannot access Wunderlist";
+"Messages/Accessibility is disabled (global checkbox)/Details" = "Please enable \"Access for assistive devices\".";

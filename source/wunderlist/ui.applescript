@@ -125,6 +125,56 @@ on launchWunderlistIfNecessary()
 
 end launchWunderlistIfNecessary
 
+(*!
+	@abstract Determines whether the user has enabled accessibility control for
+	Alfred, a necessary step to allow the workflow to function properly, and
+	prompts them to update the setting if necessary.
+	@discussion The accessibility control setting allows this and other Alfred
+	workflows to access the UI of running applications. This is necessary for 
+	access to and interaction with the Wunderlist UI.
+
+	The instructions for enabling this setting vary depending on the current
+	operating system version. In OS X Mavericks the setting is specific to each
+	app, while previously it was controlled by a global checkbox.
+	@throws The error <em>UI control is not enabled</em> is thrown if the user 
+	must update the accessibility setting. In most cases you should not catch 
+	the error; the workflow should abort if it does not have access to Wunderlist.
+*)
+on requireAccessibilityControl()
+
+	tell application "System Events" to set controlEnabled to UI elements enabled
+
+	if not controlEnabled then
+		set osVersion to system version of (system info)
+
+		# Compare version numbers such that 1.10 > 1.9
+		considering numeric strings
+			# Show the Privacy pane on Mavericks
+			if osVersion >= "10.9" then
+				sendNotification("Messages/Accessibility is disabled (per-app privacy setting)")
+
+				tell application "System Preferences"
+					set securityPane to pane id "com.apple.preference.security"
+					tell securityPane to reveal anchor "Privacy_Accessibility"
+				activate
+				end tell
+
+			# Show the Accessibility pane on earlier OS X
+			else
+				sendNotification("Messages/Accessibility is disabled (global checkbox)")
+
+				tell application "System Preferences"
+					set current pane to pane id "com.apple.preference.universalaccess"
+					activate
+				end tell
+			end if
+		end considering
+
+		error "UI control is not enabled"
+	end if
+
+end requireAccessibilityControl
+
 
 (*! 
 	@functiongroup UI Interaction

@@ -53,6 +53,8 @@
 *)
 on addTask(task)
 
+	requireAccessibilityControl()
+
 	if task is not "" then
 		# The format used to add a task to a specific list, e.g. 5::2% milk
 		set components to q_split(task, "::")
@@ -115,6 +117,8 @@ end addTask
 *)
 on addTaskToList(listIndex, task)
 
+	requireAccessibilityControl()
+
 	launchWunderlistIfNecessary()
 	
 	activateWunderlist()
@@ -162,6 +166,8 @@ end addTaskToList
 	@param listName The name of the new list
 *)
 on addList(listName)
+
+	requireAccessibilityControl()
 
 	launchWunderlistIfNecessary()
 	
@@ -393,18 +399,27 @@ on run(argv)
 				set status to 1
 			end if
 		else if theCommand is "forceUpdateListInfo" then
+			set theQuery to getAlfredQuery()
+			requireAccessibilityControl()
+
 			# Wunderlist has to be running in order to get the list info
 			launchWunderlistIfNecessary()
 
 			invalidateListInfoCache()
+
+			# List info was able to be loaded; restore the previous Alfred query
 			if count of getListInfo() > 0 then
+				activatePreviousApplication()
+				setAlfredQuery(theQuery)
 				set status to 1
 			else
 				# Switch to the desktop containing Wunderlist if necessary
-				tell application "Wunderlist" to activate
+				activateWunderlist()
 				delay 0.5
 				
 				if count of getListInfo() > 0 then
+					activatePreviousApplication()
+					setAlfredQuery(theQuery)
 					set status to 1
 				end if
 			end if

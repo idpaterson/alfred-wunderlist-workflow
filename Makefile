@@ -75,6 +75,7 @@ build/licenses/CFPropertyList: lib/CFPropertyList/LICENSE
 
 build/localization: build source/localization
 	cp -r source/localization/* build/
+	plutil -convert binary1 build/*.lproj/*.strings
 
 build/icons: build
 	cp source/icons/icon.png build/
