@@ -118,31 +118,6 @@ Adding Tasks
 |                                              |                   |                                   |                                         |
 
 
-#### Switching back to the previous list
-
-**Test 1.4.0 –** Simple `wl` task switches back to the previous list <a name="1.4.0"></a>
-
-|                 Action                |      Alfred Query      | Alfred Results |                    Wunderlist                    |
-| ------------------------------------- | ---------------------- | -------------- | ------------------------------------------------ |
-| Select *Week* list in Wunderlist      | —                      | —              | Tasks in the *Week* lists are visible            |
-| Type `wl today:Sample task` in Alfred | `wl today:Sample task` | Today          | —                                                |
-| Press *return*                        | —                      | —              | New task "Sample task" added in the *Today* list |
-| Wait a few seconds                    | —                      | —              | Previous frontmost application is reactivated    |
-| Return to Wunderlist window           | —                      | —              | *Week* list is selected                          |
-
------
-
-**Test 1.4.1 –** Simple `wlin` task switches back to the previous list <a name="1.4.1"></a>
-
-|               Action              |    Alfred Query    | Alfred Results |                    Wunderlist                    |
-| --------------------------------- | ------------------ | -------------- | ------------------------------------------------ |
-| Select *Week* list in Wunderlist  | —                  | —              | Tasks in the *Week* lists are visible            |
-| Type `wlin Sample task` in Alfred | `wlin Sample task` | Inbox          | —                                                |
-| Press *return*                    | —                  | —              | New task "Sample task" added in the *Inbox* list |
-| Wait a few seconds                | —                  | —              | Previous frontmost application is reactivated    |
-| Return to Wunderlist window       | —                  | —              | *Week* list is selected                          |
-
-
 Go to a List
 ------------
 
@@ -299,8 +274,6 @@ Use this template for confirming test compliance on each release
 - [ ] **Test 1.3.0 –** Simple `wl` task by selecting the list
 - [ ] **Test 1.3.1 –** Simple `wl` task in most recently used list
 - [ ] **Test 1.3.2 –** `wl` task prefixed by a colon
-- [ ] **Test 1.4.0 –** Simple `wl` task switches back to the previous list
-- [ ] **Test 1.4.1 –** Simple `wlin` task switches back to the previous list
 - [ ] **Test 2.0.0 –** Go to list by autocompletion
 - [ ] **Test 2.1.0 –** Go to list by substring matching
 - [ ] **Test 2.2.0 –** Go to *Inbox* by `wlin`
