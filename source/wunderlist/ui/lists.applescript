@@ -20,9 +20,6 @@ property sortTypeDueDate : 2
 *)
 property sortTypeAssignee : 1
 
-# Keep track of the currently selected list
-property originalListInfo : missing value
-
 # Toolbar Constants
 # 
 # The toolbar on Wunderlist is not available by UI traversal, leaving no way for 
@@ -62,41 +59,10 @@ on focusListAtIndex(listIndex)
 	set listInfo to item listIndex of getListInfo()
 
 	clickAt(listInfo's listPosition)
+
+	delay 0.2
 	
 end focusListAtIndex
-
-
-(*!
-	@abstract   Returns focus to the last list viewed prior to navigating lists.
-	@discussion @link recordPreviousList @/link must be called prior to navigating
-	lists, otherwise it will not be possible to return to the previous list.
-
-	@see focusListAtIndex
-*)
-on focusPreviousList()
-	
-	if originalListInfo is not missing value then
-		clickAt(originalListInfo's listPosition)
-	end if
-	
-end focusPreviousList
-
-
-(*!
-	@abstract   Records the ListInfo for the currently selected list so that it
-	can be reselected later.
-	@discussion This must be called before switching to a different list in order
-	to make use of @link focusPreviousList @/link. 
-
-	@see getListInfoForActiveList
-*)
-on recordPreviousList()
-
-	if originalListInfo is missing value then
-		set originalListInfo to getListInfoForActiveList()
-	end if
-
-end recordPreviousList
 
 
 (*!

@@ -21,9 +21,9 @@ on focusTaskInput()
 		# Focus task input to create a new task
 		# If searching, Command-N is required twice to create a task
 		keystroke "n" using command down
-		delay 0.05
+		delay 0.1
 		keystroke "n" using command down
-		delay 0.05
+		delay 0.1
 		
 	end tell
 	
