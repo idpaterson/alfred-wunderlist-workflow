@@ -8,20 +8,22 @@ display dialog precondition buttons {"Go", "Cancel"} default button 1 cancel but
 
 tell application "Alfred 2" to search command
 
-delay 1
-
 tell application "System Events" 
-	tell process "Alfred 2" 
-		keystroke tab
-		
-		delay 0.5
+	delay 5
 
-		keystroke task
+	keystroke tab
+	
+	delay 1
 
-		delay 2
+	keystroke tab
+	
+	delay 1
 
-		keystroke return
-	end tell
+	keystroke task
+
+	delay 2
+
+	keystroke return
 
 	delay 4
 

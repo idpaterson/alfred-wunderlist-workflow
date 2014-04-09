@@ -7,7 +7,7 @@ display dialog precondition buttons {"Go", "Cancel"} default button 1 cancel but
 
 tell application "Alfred 2" to search command
 
-delay 1
+delay 2
 
 tell application "System Events" 
 	tell process "Alfred 2" 
