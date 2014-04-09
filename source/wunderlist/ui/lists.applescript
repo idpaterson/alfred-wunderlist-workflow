@@ -322,3 +322,30 @@ on getListsContainerElement()
 	end tell
 
 end getListsContainerElement
+
+
+(*!
+	@functiongroup Interacting with Wunderlist
+*)
+
+(*!
+	@abstract Creates a new list with the specified name.
+
+	@param listName The name of the list
+*)
+on addNewList(listName)
+
+	activateWunderlist()
+
+	clickMenuItem("File", "Add New List")
+
+	# There is some delay before the new list is added
+	delay 0.75
+
+	# Insert the name of the list
+	insertText(listName)
+	
+	# Return key to rename the list
+	tell application "System Events" to keystroke return
+
+end addNewList

@@ -225,6 +225,31 @@ end insertText
 
 
 (*!
+	@abstract   Clicks the specified item in the specified menu.
+	@discussion The menu items should be specified in English. The items will be localized to 
+	ensure compatibility with Wunderlist installs in other locales.
+
+	@param menu The name of the menu (e.g. File, Edit)
+	@param menuItem The name of the menu item (e.g. Copy, Page Setup...)
+*)
+on clickMenuItem(theMenu, theMenuItem)
+
+	set theMenu to wll10n(theMenu)
+	set theMenuItem to wll10n(theMenuItem)
+
+	tell application "System Events" 
+		tell process "Wunderlist"
+
+			click menu item theMenuItem Â
+			of menu 1 of menu bar item theMenu of menu bar 1
+			
+		end tell
+	end tell
+
+end clickMenuItem
+
+
+(*!
 	@functiongroup Wunderlist Layout Commands
 *)
 

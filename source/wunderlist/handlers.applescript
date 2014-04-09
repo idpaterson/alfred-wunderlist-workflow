@@ -168,17 +168,7 @@ on addList(listName)
 	# Show the lists pane
 	setWindowViewNormal()
 	
-	# Use Command-L to create a new list
-	tell application "System Events" to keystroke "l" using command down
-		
-	# There is some delay before the new list is added
-	delay 0.75
-
-	# Insert the name of the list
-	insertText(listName)
-	
-	# Return key to rename the list
-	tell application "System Events" to keystroke return
+	addNewList(listName)
 
 	focusTaskInput()
 
