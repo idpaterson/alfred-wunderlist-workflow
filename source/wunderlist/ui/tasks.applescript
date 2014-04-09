@@ -16,16 +16,9 @@
 *)
 on focusTaskInput()
 	
-	tell application "System Events"
-		
-		# Focus task input to create a new task
-		# If searching, Command-N is required twice to create a task
-		keystroke "n" using command down
-		delay 0.1
-		keystroke "n" using command down
-		delay 0.1
-		
-	end tell
+	# When searching, first Add New Item just switches to the Inbox, doesn't focus the input
+	clickMenuItem("File", "Add New Item")
+	clickMenuItem("File", "Add New Item")
 	
 end focusTaskInput
 
@@ -319,3 +312,27 @@ on positionWithinTasksContainerAdjustedForListsContainer(thePosition)
 	return thePosition
 
 end positionWithinTasksContainerAdjustedForListsContainer
+
+(*!
+	@functiongroup Interacting with Wunderlist
+*)
+
+(*!
+	@abstract Creates a new task in the currently selected list with the 
+	specified text.
+
+	@param task The text of the task
+*)
+on addNewTask(task)
+
+	activateWunderlist()
+
+	focusTaskInput()
+
+	# Insert the name of the list
+	insertText(task)
+	
+	# Return key to rename the list
+	tell application "System Events" to keystroke return
+
+end addNewTask

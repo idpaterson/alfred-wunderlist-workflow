@@ -71,12 +71,7 @@ on addTask(task)
 		
 		activateWunderlist()
 
-		# Populate the field with the text of the task
-		focusTaskInput()
-		insertText(task)
-		
-		# Return key to add the task
-		tell application "System Events" to keystroke return
+		addNewTask(task)
 
 		# Show that the task was added
 		delay 1
@@ -134,11 +129,7 @@ on addTaskToList(listIndex, task)
 	
 	# If a task is specified, add it then return to the previous application
 	if task is not "" then
-		# Populate the field with the text of the task
-		insertText(task)
-			
-		# Return key to add the task
-		tell application "System Events" to keystroke return
+		addNewTask(task)
 
 		# Show that the task was added
 		delay 1
