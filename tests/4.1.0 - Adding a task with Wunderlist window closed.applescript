@@ -1,8 +1,8 @@
 set testId to "4.1.0"
 set task to "Sample task #workflowtest " & testId
-set command to "wl star:" & task
+set command to "wl to:" & task
 set precondition to "Press Cmd+W in Wunderlist to close the main window, then activate a different app on the same desktop before pressing Go. Wunderlist should be running on the same desktop but with no visible windows."
-set postcondition to "New task " & task & " added in the \"Starred\" list and previous application reactivated"
+set postcondition to "New task " & task & " added in the \"Today\" list and previous application reactivated"
 
 display dialog precondition buttons {"Go", "Cancel"} default button 1 cancel button 2 with title "Test " & testId & " Preconditions"
 

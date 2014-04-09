@@ -220,42 +220,42 @@ Navigation Between Apps
 
 **Test 4.1.0 –** Adding a task with Wunderlist window closed <a name="4.1.0"></a>
 
-|                         Action                        |      Alfred Query     |             Alfred Results             |                     Wunderlist                     |
-| ----------------------------------------------------- | --------------------- | -------------------------------------- | -------------------------------------------------- |
-| Activate Wunderlist                                   | –                     | –                                      | Any Wunderlist window is visible                   |
-| Press *Cmd+W* to close the window                     | –                     | –                                      | Wunderlist has no visible window                   |
-| Activate an app on the **same** desktop as Wunderlist | —                     | —                                      | –                                                  |
-| Type `wl star:Sample task` in Alfred                  | `wl star:Sample task` | *Starred* and any other matching lists | –                                                  |
-| Press *return*                                        | –                     | –                                      | New task "Sample task" added in the *Starred* list |
-| Wait a few seconds                                    | —                     | —                                      | Previous frontmost application is reactivated      |
+|                         Action                        |     Alfred Query    |            Alfred Results            |                    Wunderlist                    |
+| ----------------------------------------------------- | ------------------- | ------------------------------------ | ------------------------------------------------ |
+| Activate Wunderlist                                   | –                   | –                                    | Any Wunderlist window is visible                 |
+| Press *Cmd+W* to close the window                     | –                   | –                                    | Wunderlist has no visible window                 |
+| Activate an app on the **same** desktop as Wunderlist | —                   | —                                    | –                                                |
+| Type `wl to:Sample task` in Alfred                    | `wl to:Sample task` | *Today* and any other matching lists | –                                                |
+| Press *return*                                        | –                   | –                                    | New task "Sample task" added in the *Today* list |
+| Wait a few seconds                                    | —                   | —                                    | Previous frontmost application is reactivated    |
 
 -----
 
 **Test 4.2.0 –** Adding a task with Wunderlist window minimized and built-in list selected <a name="4.2.0"></a>
 
-|                         Action                        |      Alfred Query     |             Alfred Results             |                     Wunderlist                     |
-| ----------------------------------------------------- | --------------------- | -------------------------------------- | -------------------------------------------------- |
-| Activate Wunderlist                                   | –                     | –                                      | Any Wunderlist window is visible                   |
-| Select the *Today* list                               | –                     | –                                      | *Today* list is selected                           |
-| Press *Cmd+M* to minimize the window                  | –                     | –                                      | Wunderlist window is minimized                     |
-| Activate an app on the **same** desktop as Wunderlist | —                     | —                                      | –                                                  |
-| Type `wl star:Sample task` in Alfred                  | `wl star:Sample task` | *Starred* and any other matching lists | –                                                  |
-| Press *return*                                        | –                     | –                                      | New task "Sample task" added in the *Starred* list |
-| Wait a few seconds                                    | —                     | —                                      | Previous frontmost application is reactivated      |
+|                         Action                        |     Alfred Query    |            Alfred Results            |                    Wunderlist                    |
+| ----------------------------------------------------- | ------------------- | ------------------------------------ | ------------------------------------------------ |
+| Activate Wunderlist                                   | –                   | –                                    | Any Wunderlist window is visible                 |
+| Select the *Today* list                               | –                   | –                                    | *Today* list is selected                         |
+| Press *Cmd+M* to minimize the window                  | –                   | –                                    | Wunderlist window is minimized                   |
+| Activate an app on the **same** desktop as Wunderlist | —                   | —                                    | –                                                |
+| Type `wl to:Sample task` in Alfred                    | `wl to:Sample task` | *Today* and any other matching lists | –                                                |
+| Press *return*                                        | –                   | –                                    | New task "Sample task" added in the *Today* list |
+| Wait a few seconds                                    | —                   | —                                    | Previous frontmost application is reactivated    |
 
 -----
 
 **Test 4.2.1 –** Adding a task with Wunderlist window minimized and custom list selected <a name="4.2.1"></a>
 
-|                         Action                        |      Alfred Query     |             Alfred Results             |                     Wunderlist                     |
-| ----------------------------------------------------- | --------------------- | -------------------------------------- | -------------------------------------------------- |
-| Activate Wunderlist                                   | –                     | –                                      | Any Wunderlist window is visible                   |
-| Select any custom list                                | –                     | –                                      | A custom list is selected                          |
-| Press *Cmd+M* to minimize the window                  | –                     | –                                      | Wunderlist window is minimized                     |
-| Activate an app on the **same** desktop as Wunderlist | —                     | —                                      | –                                                  |
-| Type `wl star:Sample task` in Alfred                  | `wl star:Sample task` | *Starred* and any other matching lists | –                                                  |
-| Press *return*                                        | –                     | –                                      | New task "Sample task" added in the *Starred* list |
-| Wait a few seconds                                    | —                     | —                                      | Previous frontmost application is reactivated      |
+|                         Action                        |     Alfred Query    |            Alfred Results            |                    Wunderlist                    |
+| ----------------------------------------------------- | ------------------- | ------------------------------------ | ------------------------------------------------ |
+| Activate Wunderlist                                   | –                   | –                                    | Any Wunderlist window is visible                 |
+| Select any custom list                                | –                   | –                                    | A custom list is selected                        |
+| Press *Cmd+M* to minimize the window                  | –                   | –                                    | Wunderlist window is minimized                   |
+| Activate an app on the **same** desktop as Wunderlist | —                   | —                                    | –                                                |
+| Type `wl to:Sample task` in Alfred                    | `wl to:Sample task` | *Today* and any other matching lists | –                                                |
+| Press *return*                                        | –                   | –                                    | New task "Sample task" added in the *Today* list |
+| Wait a few seconds                                    | —                   | —                                    | Previous frontmost application is reactivated    |
 
 
 Checklist Template
