@@ -15,7 +15,7 @@ def run_test_file(path):
 	function will return None.
 	"""
 	try:
-		output = subprocess.check_output('osascript "%s"' % path, shell=True)
+		output = subprocess.check_output(['osascript', path])
 	except:
 		return None
 

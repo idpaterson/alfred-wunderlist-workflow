@@ -6,21 +6,30 @@ set postcondition to "New list " & listName & " added to Wunderlist and the list
 
 display dialog precondition buttons {"Go", "Cancel"} default button 1 cancel button 2 with title "Test " & testId & " Preconditions"
 
-tell application "Alfred 2" to search command
+tell application "Alfred 2" 
+	search command
 
-delay 2
+	delay 1
+end tell
+
+delay 1
 
 tell application "System Events" 
-	tell process "Alfred 2" to keystroke return
+	keystroke return
 
 	delay 4
 
-	tell application "Alfred 2" to search "wl"
+end tell
+
+tell application "Alfred 2"
+	search "wl"
 
 	delay 6
+end tell
 
+tell application "System Events"
 	set result to button returned of (display dialog postcondition buttons {"Pass", "Fail"} default button 1 with title "Please verify")
-	if result is "Pass"
+	if result is "Pass" then
 		1
 	else
 		0
