@@ -218,7 +218,7 @@ on insertText(theText)
 	set the clipboard to theText as text
 
 	# Cmd+V to paste
-	tell application "System Events" to keystroke "v" using command down
+	clickMenuItem("Edit", "Paste")
 	delay 0.2
 
 end insertText
@@ -260,7 +260,7 @@ end clickMenuItem
 on setWindowViewNormal()
 		
 	# Make sure Wunderlist is in Normal View
-	tell application "System Events" to keystroke "1" using command down
+	clickMenuItem("Window", "Normal View")
 	delay 0.05
 	
 end setWindowViewNormal
@@ -273,7 +273,7 @@ end setWindowViewNormal
 on setWindowViewCollapsed()
 		
 	# Make sure Wunderlist is in Collapsed View
-	tell application "System Events" to keystroke "2" using command down
+	clickMenuItem("Window", "Collapsed View")
 	delay 0.05
 	
 end setWindowViewCollapsed
