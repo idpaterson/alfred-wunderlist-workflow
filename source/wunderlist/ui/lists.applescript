@@ -337,9 +337,16 @@ on addNewList(listName)
 
 	activateWunderlist()
 
-	clickMenuItem("File", "Add New List")
+	focusListAtIndex(1)
 
-	# There is some delay before the new list is added
+	clickMenuItem("File", "Add New List")
+	
+	delay 0.25
+
+	tell application "System Events" to key code 126 # up arrow
+
+	clickMenuItem("Edit", "Rename Selected List")
+
 	delay 0.75
 
 	# Insert the name of the list
@@ -347,5 +354,7 @@ on addNewList(listName)
 	
 	# Return key to rename the list
 	tell application "System Events" to keystroke return
+
+	invalidateListInfoCache()
 
 end addNewList

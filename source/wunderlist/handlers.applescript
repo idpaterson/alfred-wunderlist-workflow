@@ -163,10 +163,6 @@ on addList(listName)
 
 	focusTaskInput()
 
-	# Make sure that the new list is picked up the next time
-	# the list info is displayed
-	invalidateListInfoCache()
-
 	cleanup()
 	
 end addList
