@@ -22,6 +22,14 @@ release: update-version-numbers clean Wunderlist.json build/licenses Wunderlist.
 Wunderlist.alfredworkflow: build build/info.plist build/wunderlist.scpt build/filters.php build/icons build/localization build/update.json
 	cd build/ && zip -r ../Wunderlist.alfredworkflow *
 
+# An installable workflow that uses symlinks to continually
+# update from the build directory of this project.
+Wunderlist-symlinked.alfredworkflow: Wunderlist.alfredworkflow
+	mkdir -p build-symlinks
+	ln -s `pwd`/build/* build-symlinks/
+	cd build-symlinks/ && zip --symlinks -r ../Wunderlist-symlinked.alfredworkflow *
+	rm -rf build-symlinks
+
 build:
 	mkdir build/
 
@@ -96,6 +104,18 @@ Wunderlist.json: require-release-notes
 	# Escape release notes to avoid breaking the regex syntax
 	sed -i "" "s/{{ *release_notes *}}/`echo ${RELEASE_NOTES} | sed -e 's/[\/&]/\\\\&/g'`/" Wunderlist.json
 
+# Installs the workflow from build/ in Wunderlist using symlinks.
+# Subsequent make commands will update the workflow in Alfred.
+develop: Wunderlist-symlinked.alfredworkflow
+	open Wunderlist-symlinked.alfredworkflow
+
+# Installs the workflow from build/ in Wunderlist.
+# All files are copied, subsequent make commands will not update the 
+# workflow in Alfred.
+install: Wunderlist.alfredworkflow
+	open Wunderlist.alfredworkflow
+
+
 # If the make command did not specify RELEASE_NOTES="Foo" the release
 # cannot be built
 require-release-notes:
@@ -113,7 +133,7 @@ deps:
 # Removes intermediary build files
 clean:
 	rm -rf build/
-	rm -rf Wunderlist.alfredworkflow Wunderlist.json
+	rm -rf Wunderlist.alfredworkflow Wunderlist-symlinked.alfredworkflow Wunderlist.json
 
 # Generates documentation in gh-pages branch submodule at docs/
 docs: source/*.applescript source/*/*.applescript source/*/*/*.applescript source/*.php
