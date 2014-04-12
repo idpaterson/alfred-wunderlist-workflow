@@ -96,9 +96,12 @@ on launchWunderlistIfNecessary()
 		tell application "System Events" 
 			set mainWindow to window appName of process appName
 
-			# If the window is minimized, give it time to reappear
-			if miniaturized of mainWindow is true then
-				set miniaturized of mainWindow to false
+			# If the window is minimized, give it time to reappear.
+			# The subrole of the Wunderlist window changes from "AXStandardWindow" 
+			# to "AXDialog" when it is minimized. The miniaturized property does 
+			# not work.
+			if subrole of mainWindow is "AXDialog" then
+				clickMenuItem("Window", "Wunderlist")
 				delay 1
 			end if
 		end tell
