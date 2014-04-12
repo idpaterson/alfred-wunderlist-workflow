@@ -278,6 +278,19 @@ Adding Lists
 | Press *return*                                        | —                   | —              | Wunderlist window opens          |
 |                                                       |                     |                | New list *Sample list* added     |
 
+-----
+
+**Test 3.2.3 –** Adding a list with Wunderlist viewing search results <a name="3.2.3"></a>
+
+|                         Action                        |     Alfred Query    | Alfred Results |                   Wunderlist                  |
+| ----------------------------------------------------- | ------------------- | -------------- | --------------------------------------------- |
+| Activate Wunderlist                                   | –                   | –              | Any Wunderlist window is visible              |
+| Press *Cmd+F* to search, type "sample"                | –                   | –              | Wunderlist is showing tasks matching "sample" |
+| Activate an app on the **same** desktop as Wunderlist | —                   | —              | –                                             |
+| Type `wllist Sample list` in Alfred                   | `wllist Sample list | New list       | —                                             |
+| Press *return*                                        | —                   | —              | Wunderlist window opens                       |
+|                                                       |                     |                | New list *Sample list* added                  |
+
 
 Navigation Between Apps
 -----------------------
