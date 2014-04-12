@@ -1,0 +1,13 @@
+diff --git a/headerdoc/gatherHeaderDoc.pl b/headerdoc/gatherHeaderDoc.pl
+index 74a0ff5..a2b4a4f 100755
+--- a/headerdoc/gatherHeaderDoc.pl
++++ b/headerdoc/gatherHeaderDoc.pl
+@@ -496,7 +496,7 @@ foreach my $file (@filelist) {
+ 		my @templateFiles = ($devtoolsPreferencesPath.$pathSeparator.$file, $usrPreferencesPath, $systemPreferencesPath.$pathSeparator.$file, $usersPreferencesPath.$pathSeparator.$file, $Bin.$pathSeparator.$file, $file);
+ 
+ 		foreach my $filename (@templateFiles) {
+-			if (open(TOCFILE, "<$filename")) {
++			if (open(TOCFILE, "<$filename/$file")) {
+ 				$TOCTemplate = <TOCFILE>;
+ 				close(TOCFILE);
+ 				$found = 1;

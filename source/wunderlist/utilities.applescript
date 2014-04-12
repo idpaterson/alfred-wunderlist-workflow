@@ -40,7 +40,7 @@ end l10n
 *)
 on wll10n(key)
 	return appl10n(key, "Wunderlist", "Localizable")
-end l10n
+end wll10n
 
 (*!
 	@abstract   Returns the most appropriate translation of the specified string
@@ -58,7 +58,7 @@ on appl10n(key, appName, tableName)
 	tell application appName
 		return localized string key from table tableName
 	end tell
-end l10n
+end appl10n
 
 (*!
 	@functiongroup Alfred Helpers
@@ -231,5 +231,5 @@ on quickSortWithKeyHandler(theList, keyHandler)
 	if length of bs's alist > 1 then bs's Qsort(1, length of bs's alist)
 
 	return bs's alist
-end quickSort
+end quickSortWithKeyHandler
 

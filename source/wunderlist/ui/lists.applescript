@@ -44,9 +44,40 @@ property toolbarMenuButtonHeight : 35
 # The number of buttons in the toolbar
 property toolbarButtonCount : 4
 
-(*! 
-	@functiongroup Navigating Wunderlist
+(*!
+	@functiongroup Interacting with Wunderlist
 *)
+
+(*!
+	@abstract Creates a new list with the specified name.
+
+	@param theListName The name of the list
+*)
+on addNewList(theListName)
+
+	# Show the lists pane
+	setWindowViewNormal()
+
+	delay 0.5
+
+	# If the user was previously in a search, Wunderlist will not automatically
+	# select and prepare the list for renaming.
+	clearSearchField()
+
+	clickMenuItem("File", "Add New List")
+	
+	delay 0.25
+
+	# Insert the name of the list
+	insertText(theListName)
+	
+	# Return key to rename the list
+	tell application "System Events" to keystroke return
+
+	invalidateListInfoCache()
+
+end addNewList
+
 
 (*!
 	@abstract   Moves focus within the app to the specified list.
@@ -63,7 +94,7 @@ on focusListAtIndex(listIndex)
 
 	set listInfo to item listIndex of getListInfo()
 
-	clickAt(listInfo's listPosition)
+	clickAt(listPosition of listInfo)
 
 	delay 0.2
 	
@@ -149,13 +180,13 @@ on getListInfo()
 	set wf to getCurrentWorkflow()
 
 	# Load the list info and the cache date
-	set listInfo to wf's get_value("lists", "")
-	set lastUpdatedDate to wf's get_value("listsUpdatedDate", "")
+	set listInfo to get_value("lists", "") of wf
+	set lastUpdatedDate to get_value("listsUpdatedDate", "") of wf
 
 	# Reload the list info if the cached data is missing or expired
 	if lastUpdatedDate is not missing value and listInfo is not missing value and current date - lastUpdatedDate ² listCacheInSeconds then
 		if (class of listInfo) is record then
-			return listInfo's theList
+			return theList of listInfo
 		else
 			return listInfo
 		end if
@@ -195,7 +226,7 @@ on getListInfo()
 	script sorter
 		on getYPositionOfListInfo(listInfo)
 			# Grab the Y component of the position
-			return item 2 of listInfo's listPosition
+			return item 2 of listPosition of listInfo
 		end getYPositionOfListInfo
 	end script
 
@@ -203,7 +234,7 @@ on getListInfo()
 	# list is scrolled, cells are reused which places them at the end of the
 	# UI elements list. This ensures that we show the results in the order
 	# in which the user will see them in Wunderlist.
-	set listInfo to quickSortWithKeyHandler(listInfo, sorter's getYPositionOfListInfo)
+	set listInfo to quickSortWithKeyHandler(listInfo, getYPositionOfListInfo of sorter)
 
 	# Set the list index based on the order of the sorted list
 	repeat with i from 1 to count of listInfo
@@ -217,8 +248,8 @@ on getListInfo()
 		# list value is added to it. The property list is zeroed out and 
 		# becomes immediately unusable. To work around that we have to use
 		# a record instead of a list.
-		wf's set_value("lists", {theList: listInfo}, "")
-		wf's set_value("listsUpdatedDate", current date, "")
+		set_value("lists", {theList: listInfo}, "") of wf
+		set_value("listsUpdatedDate", current date, "") of wf
 	end if
 
 	return listInfo
@@ -233,7 +264,7 @@ end getListInfo
 on invalidateListInfoCache()
 	set wf to getCurrentWorkflow()
 
-	wf's set_value("listsUpdatedDate", date ("1/1/2000" as string) , "")
+	set_value("listsUpdatedDate", date ("1/1/2000" as string) , "") of wf
 end invalidateListInfoCache
 
 
@@ -271,7 +302,7 @@ on getListInfoForActiveList()
 	repeat with listInfo in listsInfo
 		if listName of listInfo is theListName then
 			return listInfo
-		end 
+		end if
 	end repeat
 
 end getListInfoForActiveList
@@ -294,7 +325,7 @@ on getIndexOfListNamed(theListName)
 	repeat with i from 1 to count of listInfo
 		if listName of item i of listInfo is theListName then
 			return i
-		end 
+		end if
 	end repeat
 
 	return missing value
@@ -316,48 +347,15 @@ on getListsContainerElement()
 	tell application "System Events"
 		tell process "Wunderlist"
 
-			if (count of UI elements of splitter group 1 of window "Wunderlist") is 2 then
-				return UI element 1 of splitter group 1 of window "Wunderlist"
-			else
-				return missing value
-			end if
+			set splitterElements to UI elements of splitter group 1 of window "Wunderlist"	
 			
 		end tell
 	end tell
 
+	if count of splitterElements is 2 then
+		return item 1 of splitterElements
+	else
+		return missing value
+	end if
+
 end getListsContainerElement
-
-
-(*!
-	@functiongroup Interacting with Wunderlist
-*)
-
-(*!
-	@abstract Creates a new list with the specified name.
-
-	@param theListName The name of the list
-*)
-on addNewList(theListName)
-
-	# Show the lists pane
-	setWindowViewNormal()
-
-	delay 0.5
-
-	# If the user was previously in a search, Wunderlist will not automatically
-	# select and prepare the list for renaming.
-	clearSearchField()
-
-	clickMenuItem("File", "Add New List")
-	
-	delay 0.25
-
-	# Insert the name of the list
-	insertText(theListName)
-	
-	# Return key to rename the list
-	tell application "System Events" to keystroke return
-
-	invalidateListInfoCache()
-
-end addNewList

@@ -24,7 +24,8 @@
 *)
 
 (*!
-	@abstract   Adds a task to Wunderlist
+	@abstract   Adds a task to Wunderlist with support for syntax determining to 
+	which list it will be added.
 	@discussion To support Script Filter inputs and keyboard entry, the task may
 	be prefixed by a list identifier to insert it into a specific list using
 	@link addTaskToList @/link. The prefix ensures that the task is added to a
@@ -216,16 +217,16 @@ on showListOptions(task)
 	# find lists matching the user's filter
 	repeat with listInfo in allLists
 		ignoring case and diacriticals
-			if listInfo's listName is not in readonlyLists then 
+			if listName of listInfo is not in readonlyLists then 
 				# If nothing matches the filter we need to have a 
 				# record of all the lists that accept tasks
-				set writableLists's end to listInfo
+				set end of writableLists to listInfo
 
-				if listInfo's listName contains listFilter then 
+				if listName of listInfo contains listFilter then 
 					# The list is an exact match and the user has typed
 					# (or autocompleted) the : following the list name, 
 					# look no further
-					if listInfo's listName is listFilter and count of taskComponents is 2 then
+					if listName of listInfo is listFilter and count of taskComponents is 2 then
 						# Show only the matching list and add the task 
 						# on return
 						set matchingLists to {listInfo}
@@ -233,7 +234,7 @@ on showListOptions(task)
 						exit repeat
 					# The list filter is a substring of this list name
 					else
-						set matchingLists's end to listInfo
+						set end of matchingLists to listInfo
 					end if 
 				end if
 			end if
@@ -321,7 +322,7 @@ on showListOptions(task)
 		tell wf to add_result given theUid:theUid, theArg:theArg, theTitle:listName, theSubtitle:theSubtitle, theAutocomplete:theAutocomplete, isValid:isValid, theIcon:theIcon, theType:missing value
 	end repeat
 	
-	return wf's to_xml("")
+	return to_xml("") of wf
 	
 end showListOptions
 

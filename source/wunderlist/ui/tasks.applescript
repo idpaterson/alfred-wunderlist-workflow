@@ -6,6 +6,32 @@
 *)
 
 (*!
+	@functiongroup Interacting with Wunderlist
+*)
+
+(*!
+	@abstract Creates a new task in the currently selected list with the 
+	specified text.
+
+	@param theTask The text of the task
+*)
+on addNewTask(theTask)
+
+	activateWunderlist()
+
+	focusTaskInput()
+
+	insertText(theTask)
+	
+	# Return key to insert the task
+	tell application "System Events"
+		keystroke return
+	end tell
+
+end addNewTask
+
+
+(*!
 	@abstract   Switches keyboard focus to the task input field.
 	@discussion In certain views it is necessary to use the New Task shortcut twice
 	because the first time switches the UI to the Inbox list.
@@ -312,26 +338,3 @@ on positionWithinTasksContainerAdjustedForListsContainer(thePosition)
 	return thePosition
 
 end positionWithinTasksContainerAdjustedForListsContainer
-
-(*!
-	@functiongroup Interacting with Wunderlist
-*)
-
-(*!
-	@abstract Creates a new task in the currently selected list with the 
-	specified text.
-
-	@param theTask The text of the task
-*)
-on addNewTask(theTask)
-
-	activateWunderlist()
-
-	focusTaskInput()
-
-	insertText(theTask)
-	
-	# Return key to insert the task
-	tell application "System Events" to keystroke return
-
-end addNewTask

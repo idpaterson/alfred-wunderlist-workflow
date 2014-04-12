@@ -130,17 +130,28 @@ deps:
 	brew install gettext
 	brew link gettext
 
+headerdoc/headerDoc2HTML.pl:
+	wget http://opensource.apple.com/tarballs/headerdoc/headerdoc-8.9.14.tar.gz
+	tar xvf headerdoc-8.9.14.tar.gz
+	rm headerdoc-8.9.14.tar.gz
+	mv headerdoc-8.9.14 headerdoc
+	patch -p1 < source/headerdoc-patch.diff
+	#cd headerdoc && wget http://www.darwin-development.org/headerdoc_patches/Xcode_5/headerdoc-8.9.24-8.9.25.diff && patch -p1 < headerdoc-8.9.24-8.9.25.diff
+	#cd headerdoc && wget http://www.darwin-development.org/headerdoc_patches/Xcode_5/headerdoc-8.9.25-8.9.26.diff && patch -p1 < headerdoc-8.9.25-8.9.26.diff
+	cd headerdoc && make all_internal -i
+	# Install a patched version of HeaderDoc that works with AppleScript
+	#cd headerdoc && sudo make realinstall
+
 # Removes intermediary build files
 clean:
 	rm -rf build/
 	rm -rf Wunderlist.alfredworkflow Wunderlist-symlinked.alfredworkflow Wunderlist.json
 
 # Generates documentation in gh-pages branch submodule at docs/
-docs: source/*.applescript source/*/*.applescript source/*/*/*.applescript source/*.php
+docs: headerdoc/headerDoc2HTML.pl source/*.applescript source/*/*.applescript source/*/*/*.applescript source/*.php
 	# Delete old docs without removing the .git directory
 	find docs/* -type d -not -name '.git' | xargs rm -rf
-	rm -rf docs/*.html
-	headerdoc2html -o docs source/*.applescript source/*/*.applescript source/*/*/*.applescript source/*.php
-	gatherheaderdoc docs
+	headerdoc/headerDoc2HTML.pl -o docs source/*/*/*.applescript source/*.applescript source/*/*.applescript source/*.php
+	headerdoc/gatherHeaderDoc.pl docs
 
-.PHONY: all clean build/localization build/icons build/update.json Wunderlist.json require-release-notes update-version-numbers
+.PHONY: all clean docs build/localization build/icons build/update.json Wunderlist.json require-release-notes update-version-numbers
