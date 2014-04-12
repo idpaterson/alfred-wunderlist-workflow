@@ -232,8 +232,8 @@ end insertText
 	@discussion The menu items should be specified in English. The items will be localized to 
 	ensure compatibility with Wunderlist installs in other locales.
 
-	@param menu The name of the menu (e.g. File, Edit)
-	@param menuItem The name of the menu item (e.g. Copy, Page Setup...)
+	@param theMenu The name of the menu (e.g. File, Edit)
+	@param theMenuItem The name of the menu item (e.g. Copy, Page Setup...)
 *)
 on clickMenuItem(theMenu, theMenuItem)
 
@@ -251,6 +251,56 @@ on clickMenuItem(theMenu, theMenuItem)
 
 end clickMenuItem
 
+
+(*!
+	@abstract   Determines whether the specified menu item is currently enabled.
+	@discussion The menu items should be specified in English. The items will be localized to 
+	ensure compatibility with Wunderlist installs in other locales.
+
+	@param theMenu The name of the menu (e.g. File, Edit)
+	@param theMenuItem The name of the menu item (e.g. Copy, Page Setup...)
+
+	@return A boolean indicating whether the specified menu item is enabled.
+*)
+on isMenuItemEnabled(theMenu, theMenuItem)
+
+	set theMenu to wll10n(theMenu)
+	set theMenuItem to wll10n(theMenuItem)
+
+	tell application "System Events" 
+		tell process "Wunderlist"
+
+			return enabled of menu item theMenuItem Â
+			of menu 1 of menu bar item theMenu of menu bar 1
+			
+		end tell
+	end tell
+
+end isMenuItemEnabled
+
+
+(*!
+	@abstract   Presses the X button to clear any search field text.
+	@discussion If there is no text in the search field this will return immediately;
+	otherwise there is a short delay to allow time for the UI to reset from the search.
+*)
+on clearSearchField()
+
+	tell application "System Events" 
+		tell process "Wunderlist"
+
+			set searchButtons to buttons of text field 1 of window "Wunderlist"
+
+			if count of searchButtons = 2 then
+				# The X button that clears results
+				click item 2 of searchButtons
+				delay 1
+			end if
+			
+		end tell
+	end tell
+
+end clearSearchField
 
 (*!
 	@functiongroup Wunderlist Layout Commands

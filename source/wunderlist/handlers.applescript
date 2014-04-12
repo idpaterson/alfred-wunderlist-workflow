@@ -154,11 +154,6 @@ on addList(listName)
 
 	launchWunderlistIfNecessary()
 	
-	activateWunderlist()
-	
-	# Show the lists pane
-	setWindowViewNormal()
-	
 	addNewList(listName)
 
 	focusTaskInput()

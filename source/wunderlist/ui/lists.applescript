@@ -334,26 +334,25 @@ end getListsContainerElement
 (*!
 	@abstract Creates a new list with the specified name.
 
-	@param listName The name of the list
+	@param theListName The name of the list
 *)
-on addNewList(listName)
+on addNewList(theListName)
 
-	activateWunderlist()
+	# If the user was previously in a search, Wunderlist will not automatically
+	# select and prepare the list for renaming.
+	clearSearchField()
 
-	focusListAtIndex(1)
+	# Show the lists pane
+	setWindowViewNormal()
+
+	delay 1
 
 	clickMenuItem("File", "Add New List")
 	
 	delay 0.25
 
-	tell application "System Events" to key code 126 # up arrow
-
-	clickMenuItem("Edit", "Rename Selected List")
-
-	delay 0.75
-
 	# Insert the name of the list
-	insertText(listName)
+	insertText(theListName)
 	
 	# Return key to rename the list
 	tell application "System Events" to keystroke return
