@@ -218,10 +218,35 @@ on insertText(theText)
 	set the clipboard to theText as text
 
 	# Cmd+V to paste
-	tell application "System Events" to keystroke "v" using command down
+	clickMenuItem("Edit", "Paste")
 	delay 0.2
 
 end insertText
+
+
+(*!
+	@abstract   Clicks the specified item in the specified menu.
+	@discussion The menu items should be specified in English. The items will be localized to 
+	ensure compatibility with Wunderlist installs in other locales.
+
+	@param menu The name of the menu (e.g. File, Edit)
+	@param menuItem The name of the menu item (e.g. Copy, Page Setup...)
+*)
+on clickMenuItem(theMenu, theMenuItem)
+
+	set theMenu to wll10n(theMenu)
+	set theMenuItem to wll10n(theMenuItem)
+
+	tell application "System Events" 
+		tell process "Wunderlist"
+
+			click menu item theMenuItem Â
+			of menu 1 of menu bar item theMenu of menu bar 1
+			
+		end tell
+	end tell
+
+end clickMenuItem
 
 
 (*!
@@ -235,7 +260,7 @@ end insertText
 on setWindowViewNormal()
 		
 	# Make sure Wunderlist is in Normal View
-	tell application "System Events" to keystroke "1" using command down
+	clickMenuItem("Window", "Normal View")
 	delay 0.05
 	
 end setWindowViewNormal
@@ -248,7 +273,7 @@ end setWindowViewNormal
 on setWindowViewCollapsed()
 		
 	# Make sure Wunderlist is in Collapsed View
-	tell application "System Events" to keystroke "2" using command down
+	clickMenuItem("Window", "Collapsed View")
 	delay 0.05
 	
 end setWindowViewCollapsed
