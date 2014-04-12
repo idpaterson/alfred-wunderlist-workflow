@@ -1,7 +1,7 @@
-set testId to "4.2.0"
+set testId to "1.4.1"
 set task to "Sample task #workflowtest " & testId
 set command to "wl to:" & task
-set precondition to "Select the \"Today\" list in Wunderlist then press Cmd+M to minimize the main window. Activate a different app on the same desktop before pressing Go. Wunderlist should be running on the same desktop but with no visible windows."
+set precondition to "Press Cmd+W in Wunderlist to close the main window, then activate a different app on the same desktop before pressing Go. Wunderlist should be running on the same desktop but with no visible windows."
 set postcondition to "New task " & task & " added in the \"Today\" list and previous application reactivated"
 
 display dialog precondition buttons {"Go", "Cancel"} default button 1 cancel button 2 with title "Test " & testId & " Preconditions"
@@ -14,7 +14,7 @@ end tell
 
 delay 1
 
-tell application "System Events" 
+tell application "System Events"
 	keystroke return
 
 	delay 4

@@ -59,6 +59,8 @@ on focusListAtIndex(listIndex)
 	# Show the lists pane
 	setWindowViewNormal()
 
+	delay 0.2
+
 	set listInfo to item listIndex of getListInfo()
 
 	clickAt(listInfo's listPosition)
@@ -337,14 +339,14 @@ end getListsContainerElement
 *)
 on addNewList(theListName)
 
-	# If the user was previously in a search, Wunderlist will not automatically
-	# select and prepare the list for renaming.
-	clearSearchField()
-
 	# Show the lists pane
 	setWindowViewNormal()
 
-	delay 1
+	delay 0.5
+
+	# If the user was previously in a search, Wunderlist will not automatically
+	# select and prepare the list for renaming.
+	clearSearchField()
 
 	clickMenuItem("File", "Add New List")
 	

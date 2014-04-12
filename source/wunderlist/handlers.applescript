@@ -153,6 +153,8 @@ on addList(listName)
 	requireAccessibilityControl()
 
 	launchWunderlistIfNecessary()
+
+	activateWunderlist()
 	
 	addNewList(listName)
 
