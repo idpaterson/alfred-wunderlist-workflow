@@ -12,26 +12,10 @@ Setup
 
 Download the latest stable version of this workflow [here](https://raw.github.com/idpaterson/alfred-wunderlist-workflow/master/Wunderlist.alfredworkflow). After downloading, simply double-click to install the workflow in Alfred. 
 
-The workflow can also be built from source. After cloning the repository, just call `make` from the project directory to build `Wunderlist.alfredworkflow` locally, then double-click to install. [The documentation](http://idpaterson.github.io/alfred-wunderlist-workflow/) and [test cases](https://github.com/idpaterson/alfred-wunderlist-workflow/blob/master/TESTING.md) should be helpful for anyone wishing to work on this project; please submit a pull request if you add anything that others might appreciate!
+The workflow can also be built from source. After cloning the repository, just call `make install` from the project directory to build and install `Wunderlist.alfredworkflow`. 
 
 ### Enable *Access for Assistive Devices*
-In order to interact with Wunderlist, your computer must allow scripts like this workflow to communicate with other apps.
-
-In OS X Mavericks:
-
-1. Install and use any of the commands in this workflow
-2. Open *System Preferences*
-3. *Security & Privacy*
-4. *Privacy*
-5. *Accessibility*
-6. Click the lock in the lower left corner to make changes
-7. Check the checkbox beside *Alfred.app* 
-
-In OS X Mountain Lion:
-
-1. Open *System Preferences*
-2. *Accessibility*
-3. In the lower left, check the box next to *Enable access for assistive devices*
+In order to interact with Wunderlist, your computer must allow scripts like this workflow to communicate with other apps. If accessibility is not enabled, the workflow will pop up a notification and take you to a settings page. Simply enable the checkbox beside `Alfred 2.app`. [More details here.](http://support.apple.com/kb/HT6026)
 
 Features
 --------
@@ -73,31 +57,26 @@ To add a new list, use the Alfred shortcut `wllist`, followed by the name of the
 Limitations
 -----------
 
-The current implementation relies heavily on keyboard navigation and shortcuts in Wunderlist 2 because it does [not yet](http://www.alfredforum.com/topic/1302-workflow-for-wunderlist-2/?p=8074) provide bindings for AppleScript. Improvements in this direction could make it possible to create and manage tasks with more fine-grained control over attributes such as due dates and Pro features. Please submit feature requests so that the workflow can be updated once Wunderlist 2 becomes more accessible via a public API or AppleScript bindings.
+The current implementation relies heavily on keyboard navigation and mouse clicks in Wunderlist 2, which does [not yet](http://www.alfredforum.com/topic/1302-workflow-for-wunderlist-2/?p=8074) provide bindings for AppleScript. Improvements in this direction could make it possible to create and manage tasks with more fine-grained control over attributes such as due dates and Pro features. Please submit feature requests so that the workflow can be updated once Wunderlist 2 becomes more accessible via a public API or AppleScript bindings!
 
-Currently it does not seem possible to reliably control the following features. A click emulator such as [cliclick](http://www.bluem.net/en/mac/cliclick/) may be necessary in order to interact with some of the buttons that are not keyboard accessible:
+Testing
+-------
 
-* Starred tasks (workaround: add tasks to the Starred list)
-* Due dates
-* Reminders
-* Subtasks
-* Notes
-* Completing tasks
-* Moving tasks
-* Sorting lists
-* Pro features
+Simply run `./run_tests.sh` to be guided through all of the tests in a semi-automated process that puts you in control of setting up the correct preconditions and passing or failing each test. [The manual test plan](https://github.com/idpaterson/alfred-wunderlist-workflow/blob/master/TESTING.md) is available for those wishing to follow the steps manually.
 
-The following may be possible but would require significant effort.
+Contributing
+------------
 
-* Displaying tasks in Alfred (see discussion in [getTaskInfoForFocusedList()](http://idpaterson.github.io/alfred-wunderlist-workflow/index.html#//apple_ref/applescript/func/getTaskInfoForFocusedList))
-* Deleting specific tasks
-* Editing specific tasks
-* Displaying the number of tasks in a list (see discussion in [getListInfo()](http://idpaterson.github.io/alfred-wunderlist-workflow/index.html#//apple_ref/applescript/func/getListInfo))
+So you want to help make this workflow better? That's great! Please see [the documentation](http://idpaterson.github.io/alfred-wunderlist-workflow/) for an introduction to the structure of this workflow. After cloning the repository, run `make develop` to build the workflow and install a copy in Alfred containing symlinks to your repository. After making a change, simply run `make` to rebuild the workflow then use Alfred to test. Using this process, the workflow is kept up-to-date while you work.
+
+Always run through the semi-automated tests to ensure that your change does not cause issues elsewhere. When possible, add correpsonding tests for your contributions. Be sure to add human-readable steps to `TESTING.md` as well as corresponding `tests/x.x.x - Test name.applescript` files. You can run individual tests with `./run_tests.sh 1.2.3` or specific test suites such as `./run_tests.sh 1` or `./run_tests.sh 1.2` to run all 1.x.x or 1.2.x, respectively.
 
 Acknowledgements
 ----------------
 
 This workflow relies on [qWorkflow](https://github.com/qlassiqa/qWorkflow) by [Ursan Razvan](https://github.com/qlassiqa) to communicate with Alfred. The qWorkflow library is bundled with the workflow in a compiled format and also included with the workflow source as a submodule.
+
+The [cliclick](www.bluem.net/en/mac/cliclick/) utility by [Carsten Blüm](https://github.com/BlueM) allows the workflow to perform mouse clicks, unlocking much functionality that is not easily keyboard-accessible in Wunderlist. The cliclick utility is bundled with the workflow in a compiled format and also included with the workflow source as a submodule.
 
 Alternatives
 ------------
