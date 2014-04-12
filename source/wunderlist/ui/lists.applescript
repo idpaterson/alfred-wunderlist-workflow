@@ -56,6 +56,9 @@ property toolbarButtonCount : 4
 *)
 on focusListAtIndex(listIndex)
 
+	# Show the lists pane
+	setWindowViewNormal()
+
 	set listInfo to item listIndex of getListInfo()
 
 	clickAt(listInfo's listPosition)

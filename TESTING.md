@@ -117,6 +117,17 @@ Adding Tasks
 | Press *return*                               | —                 | —                                 | New task *Sample task* added in *Today* |
 |                                              |                   |                                   |                                         |
 
+-----
+
+**Test 1.4.0 –** Adding a task with Wunderlist in compact mode <a name="1.4.0"></a>
+
+|                     Action                     |     Alfred Query    |          Alfred Results          |                Wunderlist               |
+| ---------------------------------------------- | ------------------- | -------------------------------- | --------------------------------------- |
+| Select *Window* > *Compact Mode* in Wunderlist | —                   | —                                | Wunderlist is in Compact mode           |
+| Type `wl to:Sample task` in Alfred             | `wl to:Sample task` | *Today* and other matching lists | —                                       |
+| Press *return*                                 | —                   | —                                | Wunderlist switches to Normal mode      |
+|                                                |                     |                                  | New task *Sample task* added in *Today* |
+
 
 Go to a List
 ------------
