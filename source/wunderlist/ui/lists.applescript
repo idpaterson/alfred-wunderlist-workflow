@@ -246,29 +246,28 @@ end invalidateListInfoCache
 	proper result from @link getListInfo @/link to be returned.
 
 	@see getListInfo
-	@return A records in the <code>ListInfo</code> format
+	@return A record in the <code>ListInfo</code> format
 *)
 on getListInfoForActiveList()
 
+	setWindowViewCollapsed()
+
 	tell application "System Events"
 		tell process "Wunderlist"
-			# Switch to Collapsed View 
-			click menu item 9 of menu 1 of menu bar item 6 of menu bar 1
 
 			# Get the list name from the window title label
 			set theListName to value of static text 1 of window "Wunderlist" 
 
-			# Return to Normal View
-			click menu item 8 of menu 1 of menu bar item 6 of menu bar 1
-
 		end tell
 	end tell
+
+	setWindowViewNormal()
 
 	set listsInfo to getListInfo()
 
 	# Return the matching list
 	repeat with listInfo in listsInfo
-		if listName of listInfo is theListName
+		if listName of listInfo is theListName then
 			return listInfo
 		end 
 	end repeat
@@ -291,7 +290,7 @@ on getIndexOfListNamed(theListName)
 
 	# Find the matching list
 	repeat with i from 1 to count of listInfo
-		if listName of item i of listInfo is theListName
+		if listName of item i of listInfo is theListName then
 			return i
 		end 
 	end repeat

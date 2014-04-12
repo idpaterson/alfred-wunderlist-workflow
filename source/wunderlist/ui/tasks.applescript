@@ -321,18 +321,17 @@ end positionWithinTasksContainerAdjustedForListsContainer
 	@abstract Creates a new task in the currently selected list with the 
 	specified text.
 
-	@param task The text of the task
+	@param theTask The text of the task
 *)
-on addNewTask(task)
+on addNewTask(theTask)
 
 	activateWunderlist()
 
 	focusTaskInput()
 
-	# Insert the name of the list
-	insertText(task)
+	insertText(theTask)
 	
-	# Return key to rename the list
+	# Return key to insert the task
 	tell application "System Events" to keystroke return
 
 end addNewTask
