@@ -42,8 +42,11 @@
 	keyboard focus on the task input for the specified list.
 	@attributeblock List Identifiers
 	To identify a list by name, <code>task</code> should contain the list name
-	and the text of the task separated by a colon. 
-	<pre><code>    Grocery List:2% milk</code></pre>
+	or a portion of the list name and the text of the task separated by a colon.
+	These formats are handled by the script filter; this handler expects only the
+	following index-based format.
+	<pre><code>    Grocery List:2% milk
+	groc:2% milk</code></pre>
 
 	To identify a list by index, <code>task</code> should contain the list index
 	and the text of the task separated by two colons. This is primarily for 
@@ -97,8 +100,8 @@ end addTask
 
 (*!
 	@abstract   Adds a task to the specified list in Wunderlist
-	@discussion Uses @link focusListAtIndex @/link to focus the specified list,
-	then inserts the task.
+	@discussion Uses @link //apple_ref/applescript/func/focusListAtIndex @/link to 
+	focus the specified list, then inserts the task.
 
 	If the specified list does not allow task input, such as <em>Assigned to Me</em>
 	or <em>Week</em>, the task will be added in the Inbox.
@@ -342,7 +345,7 @@ end cleanup
 	@abstract Provides support for command line operations
 	@attributelist Commands
 	showListOptions See @link showListOptions @/link, returns 1
-	updateListInfo See @link getListInfo @/link, returns 1 if the lists could be loaded, otherwise 0 (which may occur if Wunderlist is not visible on the current desktop)
+	updateListInfo See @link //apple_ref/applescript/func/getListInfo @/link, returns 1 if the lists could be loaded, otherwise 0 (which may occur if Wunderlist is not visible on the current desktop)
 	forceUpdateListInfo Ensures that list info is loaded which may require switching to the desktop showing Wunderlist.
 	@param argv The list of arguments from the command line
 	@return 1 for success or 0 for error

@@ -151,7 +151,7 @@ clean:
 docs: headerdoc/headerDoc2HTML.pl source/*.applescript source/*/*.applescript source/*/*/*.applescript source/*.php
 	# Delete old docs without removing the .git directory
 	find docs/* -type d -not -name '.git' | xargs rm -rf
-	headerdoc/headerDoc2HTML.pl -o docs source/*/*/*.applescript source/*.applescript source/*/*.applescript source/*.php
+	headerdoc/headerDoc2HTML.pl -o docs source/*.applescript source/*/*.applescript source/*/*/*.applescript source/*.php
 	headerdoc/gatherHeaderDoc.pl docs
 
 .PHONY: all clean docs build/localization build/icons build/update.json Wunderlist.json require-release-notes update-version-numbers

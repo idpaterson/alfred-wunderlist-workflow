@@ -72,7 +72,9 @@ on addNewList(theListName)
 	insertText(theListName)
 	
 	# Return key to rename the list
-	tell application "System Events" to keystroke return
+	tell application "System Events"
+		keystroke return
+	end tell
 
 	invalidateListInfoCache()
 
