@@ -69,7 +69,7 @@ Contributing
 
 So you want to help make this workflow better? That's great! Please see [the documentation](http://idpaterson.github.io/alfred-wunderlist-workflow/) for an introduction to the structure of this workflow. After cloning the repository, run `make develop` to build the workflow and install a copy in Alfred containing symlinks to your repository. After making a change, simply run `make` to rebuild the workflow then use Alfred to test. Using this process, the workflow is kept up-to-date while you work.
 
-Always run through the semi-automated tests to ensure that your change does not cause issues elsewhere. When possible, add correpsonding tests for your contributions. Be sure to add human-readable steps to `TESTING.md` as well as corresponding `tests/x.x.x - Test name.applescript` files. You can run individual tests with `./run_tests.sh 1.2.3` or specific test suites such as `./run_tests.sh 1` or `./run_tests.sh 1.2` to run all 1.x.x or 1.2.x, respectively.
+Always run through the semi-automated tests to ensure that your change does not cause issues elsewhere. When possible, add corresponding tests for your contributions. Be sure to add human-readable steps to `TESTING.md` as well as corresponding `tests/x.x.x - Test name.applescript` files. You can run individual tests with `./run_tests.sh 1.2.3` or specific test suites such as `./run_tests.sh 1` or `./run_tests.sh 1.2` to run all 1.x.x or 1.2.x, respectively.
 
 Acknowledgements
 ----------------
