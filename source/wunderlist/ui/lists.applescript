@@ -196,6 +196,11 @@ on getListInfo()
 
 	set listInfo to {}
 
+	# Ensure that Wunderlist is in the normal window view
+	if application "Wunderlist" is frontmost then
+		setWindowViewNormal()
+	end if
+
 	tell application "System Events"
 		tell process "Wunderlist"
 			if count of windows > 0 then
