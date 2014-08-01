@@ -3,6 +3,8 @@ Wunderlist Workflow for Alfred
 
 Create tasks and lists in [Wunderlist 2 for OS X](http://appstore.com/mac/Wunderlist) from [Alfred 2](http://www.alfredapp.com/) (requires Powerpack license).
 
+*Wunderlist 3* is not yet supported. Please subscribe to issue #43 for updates or to participate in testing the next iteration of this workflow.
+
 ![Adding a task to Wunderlist](https://raw.github.com/idpaterson/alfred-wunderlist-workflow/gh-pages/images/screenshots/add_task_to_list.jpg)
 
 Setup
