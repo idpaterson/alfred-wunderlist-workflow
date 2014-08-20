@@ -18,7 +18,6 @@ tell application "System Events"
 	# Down arrow to "Today" list
 	key code 125
 	key code 125
-	key code 125
 	
 	delay 0.5
 

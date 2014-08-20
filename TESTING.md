@@ -169,6 +169,17 @@ Adding Tasks
 | Press *return*                                        | –                   | –                                    | New task "Sample task" added in the *Today* list |
 | Wait a few seconds                                    | —                   | —                                    | Previous frontmost application is reactivated    |
 
+-----
+
+**Test 1.4.4 –** Adding a task with Wunderlist not yet running <a name="1.4.4"></a>
+
+|               Action               |     Alfred Query    |            Alfred Results            |                              Wunderlist                             |
+| ---------------------------------- | ------------------- | ------------------------------------ | ------------------------------------------------------------------- |
+| Quit Wunderlist                    | –                   | –                                    | Wunderlist is not running                                           |
+| Type `wl to:Sample task` in Alfred | `wl to:Sample task` | *Today* and any other matching lists | –                                                                   |
+| Press *return*                     | –                   | –                                    | Wunderlist starts, new task "Sample task" added in the *Today* list |
+| Wait a few seconds                 | —                   | —                                    | Previous frontmost application is reactivated                       |
+
 
 Go to a List
 ------------
