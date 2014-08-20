@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
 	# Or just run all tests
 	if len(tests) == 0:
-		tests = glob.glob('*.applescript')
+		tests = glob.glob('* - *.applescript')
 
 	# Run the tests
 	pass_count = 0
