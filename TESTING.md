@@ -347,15 +347,21 @@ Use this template for confirming test compliance on each release
 - [ ] **Test 1.3.0 –** Simple `wl` task by selecting the list
 - [ ] **Test 1.3.1 –** Simple `wl` task in most recently used list
 - [ ] **Test 1.3.2 –** `wl` task prefixed by a colon
+- [ ] **Test 1.4.0 –** Adding a task with Wunderlist in compact mode
+- [ ] **Test 1.4.1 –** Adding a task with Wunderlist window closed
+- [ ] **Test 1.4.2 –** Adding a task with Wunderlist window minimized and built-in list selected
+- [ ] **Test 1.4.3 –** Adding a task with Wunderlist window minimized and custom list selected
+- [ ] **Test 1.4.4 –** Adding a task with Wunderlist not yet running
 - [ ] **Test 2.0.0 –** Go to list by autocompletion
 - [ ] **Test 2.1.0 –** Go to list by substring matching
 - [ ] **Test 2.2.0 –** Go to *Inbox* by `wlin`
 - [ ] **Test 3.0.0 –** Add a new list
 - [ ] **Test 3.0.1 –** Unicode and character escaping in `wllist`
 - [ ] **Test 3.1.0 –** Newly added list appears in `wl` command
+- [ ] **Test 3.2.0 –** Adding a list with Wunderlist in compact mode
+- [ ] **Test 3.2.1 –** Adding a list with Wunderlist window closed
+- [ ] **Test 3.2.2 –** Adding a list with Wunderlist window minimized
+- [ ] **Test 3.2.3 –** Adding a list with Wunderlist viewing search results
 - [ ] **Test 4.0.0 –** Switching back to previous application on the same desktop
 - [ ] **Test 4.0.1 –** Switching back to previous application on a different desktop
-- [ ] **Test 4.1.0 –** Adding a task with Wunderlist window closed
-- [ ] **Test 4.2.0 –** Adding a task with Wunderlist window minimized and built-in list selected
-- [ ] **Test 4.2.1 –** Adding a task with Wunderlist window minimized and custom list selected
 ```
