@@ -2,7 +2,7 @@
 	@header     UI Interaction with Lists
 	@abstract   Interacts with the Wunderlist UI for reading and modifying lists.
 	@discussion 
-	@version    0.2
+	@version    0.3
 *)
 
 (*! 
