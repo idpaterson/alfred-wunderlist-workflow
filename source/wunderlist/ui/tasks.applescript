@@ -2,7 +2,7 @@
 	@header     UI Interaction with Tasks
 	@abstract   Interacts with the Wunderlist UI for reading and modifying tasks.
 	@discussion 
-	@version    0.2
+	@version    0.3
 *)
 
 (*!

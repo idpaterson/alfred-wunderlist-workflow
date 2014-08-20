@@ -6,7 +6,7 @@
 	            to those that are keyboard and mouse accessible. Regardless, it saves a lot of 
 	            keystrokes!
 	@author     Ian Paterson
-	@version    0.2
+	@version    0.3
 *)
 
 #include "../lib/qWorkflow/uncompiled source/q_workflow"
