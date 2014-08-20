@@ -20,11 +20,12 @@
     workflow, only the Double Quotes and Backslashes options should be
     checked. Excess escaping can cause problems handling simple characters
     such as spaces.
-	@version    0.2
+	@version    0.3
 *)
 
 (*!
-	@abstract   Adds a task to Wunderlist
+	@abstract   Adds a task to Wunderlist with support for syntax determining to 
+	which list it will be added.
 	@discussion To support Script Filter inputs and keyboard entry, the task may
 	be prefixed by a list identifier to insert it into a specific list using
 	@link addTaskToList @/link. The prefix ensures that the task is added to a
@@ -41,8 +42,11 @@
 	keyboard focus on the task input for the specified list.
 	@attributeblock List Identifiers
 	To identify a list by name, <code>task</code> should contain the list name
-	and the text of the task separated by a colon. 
-	<pre><code>    Grocery List:2% milk</code></pre>
+	or a portion of the list name and the text of the task separated by a colon.
+	These formats are handled by the script filter; this handler expects only the
+	following index-based format.
+	<pre><code>    Grocery List:2% milk
+	groc:2% milk</code></pre>
 
 	To identify a list by index, <code>task</code> should contain the list index
 	and the text of the task separated by two colons. This is primarily for 
@@ -52,6 +56,8 @@
 	list identifier.
 *)
 on addTask(task)
+
+	requireAccessibilityControl()
 
 	if task is not "" then
 		# The format used to add a task to a specific list, e.g. 5::2% milk
@@ -69,17 +75,7 @@ on addTask(task)
 		
 		activateWunderlist()
 
-		focusTaskInput()
-		
-		tell application "System Events"
-
-			# Populate the field with the text of the task
-			keystroke task
-			
-			# Return key to add the task
-			keystroke return
-			
-		end tell
+		addNewTask(task)
 
 		# Show that the task was added
 		delay 1
@@ -97,13 +93,15 @@ on addTask(task)
 		focusTaskInput()
 
 	end if
+
+	cleanup()
 	
 end addTask
 
 (*!
 	@abstract   Adds a task to the specified list in Wunderlist
-	@discussion Uses @link focusListAtIndex @/link to focus the specified list,
-	then inserts the task.
+	@discussion Uses @link //apple_ref/applescript/func/focusListAtIndex @/link to 
+	focus the specified list, then inserts the task.
 
 	If the specified list does not allow task input, such as <em>Assigned to Me</em>
 	or <em>Week</em>, the task will be added in the Inbox.
@@ -118,9 +116,14 @@ end addTask
 *)
 on addTaskToList(listIndex, task)
 
+	requireAccessibilityControl()
+
 	launchWunderlistIfNecessary()
 	
 	activateWunderlist()
+
+	# Make sure that the list info is accurate
+	invalidateListInfoCache()
 
 	if listIndex >= 0 then
 		focusListAtIndex(listIndex)
@@ -130,72 +133,17 @@ on addTaskToList(listIndex, task)
 	
 	# If a task is specified, add it then return to the previous application
 	if task is not "" then
-		tell application "System Events"
-
-			# Populate the field with the text of the task
-			keystroke task
-			
-			# Return key to add the task
-			keystroke return
-			
-		end tell
+		addNewTask(task)
 
 		# Show that the task was added
 		delay 1
 		
-		# Return the user to whichever list was previously visible
-		focusPreviousList()
-		
 		activatePreviousApplication()
 	end if
-	
-end addTask
 
-(*!
-	@abstract   Adds a task to the Inbox list in Wunderlist
-	@discussion Provides a shortcut for entering tasks directly in the Inbox.
-
-	After calling this handler, the previous application is reactivated. However, if 
-	<code>task</code> is not specified, Wunderlist will remain active with the 
-	keyboard focus on the task input for the Inbox.
-
-	@param task The text of the task
-*)
-on addTaskToInbox(task)
-
-	launchWunderlistIfNecessary()
+	cleanup()
 	
-	activateWunderlist()
-	
-	focusInbox()
-	
-	focusTaskInput()
-	
-	# If a task is specified, add it then return to the previous application
-	if task is not "" then
-		
-		tell application "System Events"
-
-			# Populate the task input field with the text of the task
-			keystroke task
-			
-			# Return key to add the task
-			keystroke return
-			
-		end tell
-		
-		# Since we can't do this entire process in the background, at least
-		# allow the user a moment to see what happened.
-		delay 1.5
-		
-		# Return the user to whichever list was previously visible
-		focusPreviousList()
-		
-		activatePreviousApplication()
-		
-	end if
-	
-end addTaskToInbox
+end addTaskToList
 
 (*!
 	@abstract   Adds a new list to Wunderlist
@@ -206,43 +154,17 @@ end addTaskToInbox
 *)
 on addList(listName)
 
+	requireAccessibilityControl()
+
 	launchWunderlistIfNecessary()
-	
+
 	activateWunderlist()
 	
-	# Show the lists pane
-	setWindowViewNormal()
-	
-	# Always the top item in the task list
-	focusInbox()
-	
-	tell application "System Events"
-		
-		# Use Command-L to create a new list
-		keystroke "l" using command down
-		
-		# There is some delay before the new list is added
-		delay 0.75
-		
-		# Use Up arrow to focus on the new list at the bottom
-		key code 126
-		
-		# Use Option-R to rename the new list
-		keystroke "r" using option down
-
-		# Insert the name of the list
-		keystroke listName
-		
-		# Return key to rename the list
-		keystroke return
-		
-	end tell
+	addNewList(listName)
 
 	focusTaskInput()
 
-	# Make sure that the new list is picked up the next time
-	# the list info is displayed
-	invalidateListInfoCache()
+	cleanup()
 	
 end addList
 
@@ -298,16 +220,16 @@ on showListOptions(task)
 	# find lists matching the user's filter
 	repeat with listInfo in allLists
 		ignoring case and diacriticals
-			if listInfo's listName is not in readonlyLists then 
+			if listName of listInfo is not in readonlyLists then 
 				# If nothing matches the filter we need to have a 
 				# record of all the lists that accept tasks
-				set writableLists's end to listInfo
+				set end of writableLists to listInfo
 
-				if listInfo's listName contains listFilter then 
+				if listName of listInfo contains listFilter then 
 					# The list is an exact match and the user has typed
 					# (or autocompleted) the : following the list name, 
 					# look no further
-					if listInfo's listName is listFilter and count of taskComponents is 2 then
+					if listName of listInfo is listFilter and count of taskComponents is 2 then
 						# Show only the matching list and add the task 
 						# on return
 						set matchingLists to {listInfo}
@@ -315,7 +237,7 @@ on showListOptions(task)
 						exit repeat
 					# The list filter is a substring of this list name
 					else
-						set matchingLists's end to listInfo
+						set end of matchingLists to listInfo
 					end if 
 				end if
 			end if
@@ -403,15 +325,27 @@ on showListOptions(task)
 		tell wf to add_result given theUid:theUid, theArg:theArg, theTitle:listName, theSubtitle:theSubtitle, theAutocomplete:theAutocomplete, isValid:isValid, theIcon:theIcon, theType:missing value
 	end repeat
 	
-	return wf's to_xml("")
+	return to_xml("") of wf
 	
 end showListOptions
+
+(*!
+	@abstract Ensures that any state modified during execution of a handler,
+	such as the clipboard contents, is cleaned up.
+*)
+on cleanup()
+	
+	if originalClipboard is not missing value then
+		set the clipboard to originalClipboard
+	end if
+
+end cleanup
 
 (*!
 	@abstract Provides support for command line operations
 	@attributelist Commands
 	showListOptions See @link showListOptions @/link, returns 1
-	updateListInfo See @link getListInfo @/link, returns 1 if the lists could be loaded, otherwise 0 (which may occur if Wunderlist is not visible on the current desktop)
+	updateListInfo See @link //apple_ref/applescript/func/getListInfo @/link, returns 1 if the lists could be loaded, otherwise 0 (which may occur if Wunderlist is not visible on the current desktop)
 	forceUpdateListInfo Ensures that list info is loaded which may require switching to the desktop showing Wunderlist.
 	@param argv The list of arguments from the command line
 	@return 1 for success or 0 for error
@@ -435,18 +369,27 @@ on run(argv)
 				set status to 1
 			end if
 		else if theCommand is "forceUpdateListInfo" then
+			set theQuery to getAlfredQuery()
+			requireAccessibilityControl()
+
 			# Wunderlist has to be running in order to get the list info
 			launchWunderlistIfNecessary()
 
 			invalidateListInfoCache()
+
+			# List info was able to be loaded; restore the previous Alfred query
 			if count of getListInfo() > 0 then
+				activatePreviousApplication()
+				setAlfredQuery(theQuery)
 				set status to 1
 			else
 				# Switch to the desktop containing Wunderlist if necessary
-				tell application "Wunderlist" to activate
+				activateWunderlist()
 				delay 0.5
 				
 				if count of getListInfo() > 0 then
+					activatePreviousApplication()
+					setAlfredQuery(theQuery)
 					set status to 1
 				end if
 			end if

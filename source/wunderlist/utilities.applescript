@@ -1,7 +1,7 @@
 (*!
 	@header     Utilities
 	@abstract   A collection of useful functions.
-	@version    0.2
+	@version    0.3
 *)
 
 (*!
@@ -40,7 +40,7 @@ end l10n
 *)
 on wll10n(key)
 	return appl10n(key, "Wunderlist", "Localizable")
-end l10n
+end wll10n
 
 (*!
 	@abstract   Returns the most appropriate translation of the specified string
@@ -58,7 +58,7 @@ on appl10n(key, appName, tableName)
 	tell application appName
 		return localized string key from table tableName
 	end tell
-end l10n
+end appl10n
 
 (*!
 	@functiongroup Alfred Helpers
@@ -107,12 +107,38 @@ end getCurrentWorkflow
 on sendNotification(key)
 
 	set theMessage to l10n(key & "/Title")
-	set theDetails to l10n(key & "/Message")
+	set theDetails to l10n(key & "/Subtitle")
 	set theExtra to l10n(key & "/Details")
 
 	q_send_notification(theMessage, theDetails, theExtra)
 
 end sendNotification
+
+(*!
+	@abstract Retrieves the current query text in the Alfred 2 input field.
+	@return the current query text
+*)
+on getAlfredQuery()
+
+	try 
+		tell application "System Events" to return value of text field 1 of window 1 of process "Alfred 2"
+	on error
+		return missing value
+	end try
+
+end getAlfredQuery
+
+(*!
+	@abstract Updates Alfred to show the specified query and any associated
+	results.
+*)
+on setAlfredQuery(theQuery)
+
+	if class of theQuery is text and theQuery is not "" then
+		tell application "Alfred 2" to search theQuery
+	end if
+
+end setAlfredQuery
 
 (*!
 	@functiongroup Algorithms
@@ -205,5 +231,5 @@ on quickSortWithKeyHandler(theList, keyHandler)
 	if length of bs's alist > 1 then bs's Qsort(1, length of bs's alist)
 
 	return bs's alist
-end quickSort
+end quickSortWithKeyHandler
 

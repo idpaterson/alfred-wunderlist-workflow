@@ -62,7 +62,7 @@ set wunderlistlib to load script POSIX file (workflowFolder &amp; "/wunderlist.s
 set task to "{query}" as text
 
 tell wunderlistlib
-	addTaskToInbox(task)
+	addTaskToList(1, task)
 end tell</string>
 				<key>type</key>
 				<integer>6</integer>
