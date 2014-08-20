@@ -107,12 +107,12 @@ on launchWunderlistIfNecessary()
 		end tell
 	on error
 		# Wunderlist may not be on the current desktop, so switch to it.
-		tell application appName to activate
+		activateWunderlist()
 
 		# Wunderlist may not be launching; if the user closed the window, such
-		# as with Cmd+W, or minimized the window, use the new task command to 
+		# as with Cmd+W, or minimized the window, use a command to 
 		# bring the window back.
-		focusTaskInput()
+		restoreWunderlistWindow()
 
 		# Wait for the window to become available
 		tell application "System Events"
@@ -127,6 +127,26 @@ on launchWunderlistIfNecessary()
 	end try
 
 end launchWunderlistIfNecessary
+
+(*!
+	@abstract Brings back the main Wunderlist window after it has been closed,
+	such as with Cmd+W.
+*)
+on restoreWunderlistWindow()
+
+	# Wunderlist 3 does not deal well with having its window hidden. Changing 
+	# the window view or using other options while the window is hidden can 
+	# cause the window to be corrupted. In Wunderlist 2 the window could be
+	# brought back by adding a new item but in 3 the only way to bring it back
+	# is to begin creating a new list.
+	clickMenuItem("File", "Add New List")
+
+	activateWunderlist()
+
+	# Send an escape key to not add the list
+	tell application "System Events" to key code 53
+
+end restoreWunderlistWindow
 
 (*!
 	@abstract Determines whether the user has enabled accessibility control for

@@ -205,12 +205,12 @@ on getListInfo()
 		tell process "Wunderlist"
 			if count of windows > 0 then
 				# The immediate parent element of all the list elements
-				set listsContainer to UI element 1 of UI element 1 of UI element 1 of UI element 1 of splitter group 1 of window "Wunderlist"
+				set listsContainer to my getListsContainerElement()
 				
-				set {listValues, listPositions} to {value, position} of static texts of UI elements of listsContainer
+				set {listValues, listPositions} to {value, position} of static texts of UI elements of rows of listsContainer
 
 				repeat with i from 1 to count of listValues
-					set listValue to item i of listValues
+					set listValue to item 1 of item i of listValues
 
 					if (count of listValue) is 2 then
 						# There are a few elements in addition to the list elements,
@@ -219,7 +219,7 @@ on getListInfo()
 						set {listName, taskCount} to listValue
 
 						# Get the position of the first static text
-						set listPosition to item 1 of item i of listPositions
+						set listPosition to item 1 of item 1 of item i of listPositions
 						
 						set taskCount to taskCount as integer
 						
@@ -353,16 +353,16 @@ on getListsContainerElement()
 
 	tell application "System Events"
 		tell process "Wunderlist"
-
-			set splitterElements to UI elements of splitter group 1 of window "Wunderlist"	
+			
+			set splitterElement to UI element 1 of splitter group 1 of window "Wunderlist"
+			
+			if (count of UI elements of splitterElement) > 0 then
+				return UI element 1 of splitterElement
+			else
+				return missing value
+			end if
 			
 		end tell
 	end tell
-
-	if count of splitterElements is 2 then
-		return item 1 of splitterElements
-	else
-		return missing value
-	end if
 
 end getListsContainerElement
