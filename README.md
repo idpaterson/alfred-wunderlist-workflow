@@ -1,9 +1,9 @@
 Wunderlist Workflow for Alfred
 ==========================
 
-Create tasks and lists in [Wunderlist 2 for OS X](http://appstore.com/mac/Wunderlist) from [Alfred 2](http://www.alfredapp.com/) (requires Powerpack license).
+Create tasks and lists in [Wunderlist 3 for OS X](http://appstore.com/mac/Wunderlist) from [Alfred 2](http://www.alfredapp.com/) (requires Powerpack license).
 
-**Wunderlist 3 is not yet supported.** Please subscribe to [this discussion](https://github.com/idpaterson/alfred-wunderlist-workflow/issues/43) for updates, to share suggestions, or to participate in testing the next iteration of this workflow.
+:exclamation: **OS X Yosemite has broken critical features that this workflow relied on.** The workflow does not function in Yosemite and cannot be fixed without changes to Yosemite or Wunderlist's UI. Please subscribe to [this discussion](https://github.com/idpaterson/alfred-wunderlist-workflow/issues/44) for updates, to share suggestions, or to participate in testing the next iteration of this workflow.
 
 ![Adding a task to Wunderlist](https://raw.github.com/idpaterson/alfred-wunderlist-workflow/gh-pages/images/screenshots/add_task_to_list.jpg)
 
@@ -59,7 +59,7 @@ To add a new list, use the Alfred shortcut `wllist`, followed by the name of the
 Limitations
 -----------
 
-The current implementation relies heavily on keyboard navigation and mouse clicks in Wunderlist 2, which does [not yet](http://www.alfredforum.com/topic/1302-workflow-for-wunderlist-2/?p=8074) provide bindings for AppleScript. Improvements in this direction could make it possible to create and manage tasks with more fine-grained control over attributes such as due dates and Pro features. Please submit feature requests so that the workflow can be updated once Wunderlist 2 becomes more accessible via a public API or AppleScript bindings!
+The current implementation relies heavily on keyboard navigation and mouse clicks in Wunderlist 3, which does [not yet](http://www.alfredforum.com/topic/1302-workflow-for-wunderlist-2/?p=8074) provide bindings for AppleScript. Improvements in this direction could make it possible to create and manage tasks with more fine-grained control over attributes such as due dates and Pro features. Please submit feature requests so that the workflow can be updated once Wunderlist 3 becomes more accessible via a public API or AppleScript bindings!
 
 Testing
 -------
