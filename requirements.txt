@@ -1,0 +1,1 @@
+Alfred-Workflow==1.11.1
