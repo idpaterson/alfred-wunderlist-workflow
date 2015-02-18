@@ -1,11 +1,9 @@
-import random
-import string
-import urllib
 from wunderlist.util import workflow
 from wunderlist import config
 
 def authorize():
 	from multiprocessing import Process
+	import urllib
 	import webbrowser
 
 	state = new_oauth_state()
@@ -51,6 +49,9 @@ def oauth_state():
 		return None
 
 def new_oauth_state():
+	import random
+	import string
+
 	state_length = 20
 	state = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(state_length))
 

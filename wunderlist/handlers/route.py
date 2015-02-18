@@ -3,20 +3,26 @@ from wunderlist.util import workflow
 
 def route(args):
 	handler = None
+	command = None
+
+	if args:
+		command = args[0].split(' ')
 
 	if not is_authorized():
 		from wunderlist.handlers import login
 		handler = login
-	elif 'list' in args:
+	elif 'list' in command:
 		from wunderlist.handlers import lists
 		handler = lists
-	elif 'logout' in args:
+	elif 'logout' in command:
 		from wunderlist.handlers import logout
 		handler = logout
-	elif 'pref' in args:
+	elif 'pref' in command:
 		from wunderlist.handlers import preferences
-		handler = preferences
-	elif not args or not args[0]: 
+	elif 'sync' in command:
+		from wunderlist.sync import sync
+		sync()
+	elif not command or not command[0]: 
 		from wunderlist.handlers import welcome
 		handler = welcome
 	else:
@@ -25,9 +31,8 @@ def route(args):
 
 	if handler:
 		if '--commit' in args:
-			args.remove('--commit')
-			handler.commit(args)
+			handler.commit(command)
 		else:
-			handler.filter(args)
+			handler.filter(command)
 
 	workflow().send_feedback()

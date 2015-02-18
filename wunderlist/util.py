@@ -6,6 +6,8 @@ def workflow():
 	global _workflow
 
 	if _workflow is None:
-		_workflow = Workflow()
+		_workflow = Workflow(
+			capture_args=False
+		)
 
 	return _workflow
