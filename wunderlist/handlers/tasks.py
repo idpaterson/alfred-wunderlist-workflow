@@ -1,79 +1,57 @@
 # encoding: utf-8
 
-import re
 from wunderlist.util import workflow
-from parsedatetime import Calendar
-from datetime import datetime
+from wunderlist.models.task_parser import TaskParser
+from datetime import date
 
 _calendar = u'📅'
 _star = u'★'
 _recurrence = u'↻'
 
-_recurrence_pattern = r' every (\d*) ?((?:day|week|month)s?)'
-_star_pattern = r'\*$'
-
 def _task(args):
-	return ' '.join(args)
+	return TaskParser(' '.join(args))
 
 def filter(args):
 	task = _task(args)
-	cal = Calendar()
-	due_date = None
-	starred = False
-	list_name = 'Inbox'
 	subtitle = []
 
-	recurrence = re.search(_recurrence_pattern, task)
-	if recurrence:
-		task = re.sub(_recurrence_pattern, '', task)
-
-	dates = cal.nlp(task)
-
-	# Only remove the last date for now
-	if dates:
-		info = dates[-1]
-		due_date = info[0]
-		task = task.replace(info[4], '', 1)
-		task = task.replace('due ', '')
-	elif recurrence:
-		due_date = datetime.today()
-
-	if re.search(_star_pattern, task):
-		starred = True
-		task = re.sub(_star_pattern, '', task)
+	if task.starred:
 		subtitle.append(_star)
 
-	if due_date:
-		now = datetime.now()
-		if due_date.date() == now.date():
+	if task.due_date:
+		today = date.today()
+		if task.due_date == today:
 			date_format = 'Today'
-		if due_date.year == now.year:
+		if task.due_date.year == today.year:
 			date_format = '%a, %b %d'
 		else:
 			date_format = '%b %d, %Y'
 
-		subtitle.append('%s Due %s' % (_calendar, due_date.strftime(date_format)))
+		subtitle.append('%s Due %s' % (_calendar, task.due_date.strftime(date_format)))
 
-	if recurrence:
-		subtitle.append(u'%s Every %d %s' % (_recurrence, int(recurrence.group(1) or 1), recurrence.group(2)))
+	if task.recurrence_type:
+		subtitle.append(u'%s Every %d %s%s' % (_recurrence, task.recurrence_count, task.recurrence_type, 's' if task.recurrence_count != 1 else ''))
 
-	subtitle.append(task)
+	subtitle.append(task.title or 'Begin typing to add a new task')
 
-	workflow().add_item('Add Task to ' + list_name, '   '.join(subtitle), valid=True, modifier_subtitles={'alt': 'Select task before adding'})
+	workflow().add_item('Add Task to ' + task.list_title, '   '.join(subtitle), arg=task.phrase, valid=True)
 
-	workflow().add_item('Assign to list', 'Prefix the task, e.g. Automotive: ' + task, autocomplete=': ' + task)
-	workflow().add_item('Set a due date', '"due" followed by any date-related phrase, e.g. due next Tuesday; due May 4', autocomplete=task.strip() + ' due ')
-	workflow().add_item('Make it a recurring task', '"every" followed by a unit of time, e.g. every 2 months; every year', autocomplete=task.strip() + ' every ')
+	workflow().add_item('Assign to list', 'Prefix the task, e.g. Automotive: ' + task.title, autocomplete=task.phrase_with(list_title=True))
+	workflow().add_item('Set a due date', '"due" followed by any date-related phrase, e.g. due next Tuesday; due May 4', autocomplete=task.phrase_with(due_date=True))
+	workflow().add_item('Make it a recurring task', '"every" followed by a unit of time, e.g. every 2 months; every year; every 4w', autocomplete=task.phrase_with(recurrence=True))
 
-	if starred:
-		workflow().add_item('Unstar', 'Remove * from the task', autocomplete=' '.join(args).replace('*', ''))
+	if task.starred:
+		workflow().add_item('Unstar', 'Remove * from the task', autocomplete=task.phrase_with(starred=False))
 	else:
 		workflow().add_item('Star', 'End the task with * (asterisk)'
-			, autocomplete=' '.join(args) + ' *')
+			, autocomplete=task.phrase_with(starred=True))
 
 def commit(args):
 	from wunderlist.api import tasks
-	list_id = args[0]
-	task = _task(args[1:])
+	task = _task(args)
 
-	tasks.create_task(list_id, task)
+	# TODO: handle all the other task metadata
+	tasks.create_task(task.list_id, task.title, assignee_id=task.assignee_id, 
+		recurrence_type=task.recurrence_type, recurrence_count=task.recurrence_count, 
+		due_date=task.due_date, starred=task.starred, completed=task.completed
+	)

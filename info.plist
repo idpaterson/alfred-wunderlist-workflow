@@ -87,7 +87,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>/usr/bin/env python alfred-wunderlist-workflow.py --commit {query}</string>
+				<string>/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -104,7 +104,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>/usr/bin/env python alfred-wunderlist-workflow.py --commit --alt {query}</string>
+				<string>/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --alt</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -121,7 +121,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>/usr/bin/env python alfred-wunderlist-workflow.py --commit --cmd {query}</string>
+				<string>/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --cmd</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>

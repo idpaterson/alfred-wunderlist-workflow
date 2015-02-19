@@ -43,12 +43,12 @@ def create_task(list_id, title, assignee_id=None, recurrence_type=None, recurren
 	if assignee_id:
 		params['assignee_id'] = int(assignee_id)
 
-	if recurrence_type:
+	if recurrence_type and recurrence_count:
 		params['recurrence_type'] = recurrence_type
-		params['recurrence_count'] = recurrence_count
+		params['recurrence_count'] = int(recurrence_count)
 
 	if due_date:
-		params['due_date'] = due_date
+		params['due_date'] = due_date.strftime('%Y-%m-%d')
 
 	req = api.post('tasks', params)
 	info = req.json()
