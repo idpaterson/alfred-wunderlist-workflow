@@ -8,7 +8,7 @@ def filter(args):
 
 	workflow().add_item(
 		'New list',
-		autocomplete='create list '
+		autocomplete='new list '
 	)
 
 	workflow().add_item(

@@ -5,10 +5,10 @@ from parsedatetime import Calendar
 from datetime import date
 
 # Up to 8 words (sheesh!) followed by a colon
-_list_title_pattern = r'^((?:\S+ *){1,8}):'
+_list_title_pattern = r'^((?:\S+ *){0,8}):'
 
 # `every N units` optionally preceded by `repeat`
-_recurrence_pattern = r'(?:\brepeat:? )?\bevery (\d*) ?((?:day|week|month|year|d|w|m|y|da|wk|mo|yr)s?)\b'
+_recurrence_pattern = r'(?:\brepeat:? )?\bevery *(\d*) *((?:day|week|month|year|d|w|m|y|da|wk|mo|yr)s?\b)?'
 
 # Anything following the `due` keyword
 _due_pattern = r'(\bdue:?\b)(.*)'
@@ -39,6 +39,10 @@ class TaskParser():
 	starred = False
 	completed = False
 
+	has_list_prompt = False
+	has_due_date_prompt = False
+	has_recurrence_prompt = False
+
 	_list_phrase = None
 	_due_date_phrase = None
 	_recurrence_phrase = None
@@ -62,20 +66,26 @@ class TaskParser():
 
 		match = re.search(_list_title_pattern, phrase)
 		if match:
-			matching_lists = wf.filter(
-				match.group(1),
-				lists,
-				lambda l:l['title'],
-				# Ignore MATCH_ALLCHARS which is expensive and inaccurate
-				match_on=MATCH_ALL ^ MATCH_ALLCHARS
-			)
+			if match.group(1):
+				matching_lists = wf.filter(
+					match.group(1),
+					lists,
+					lambda l:l['title'],
+					# Ignore MATCH_ALLCHARS which is expensive and inaccurate
+					match_on=MATCH_ALL ^ MATCH_ALLCHARS
+				)
 
-			if matching_lists:
+				# Take the first match as the desired list
+				if matching_lists:
+					self.list_id = matching_lists[0]['id']
+					self.list_title = matching_lists[0]['title']
+			# The list name was empty
+			else:
+				self.has_list_prompt = True
+
+			if self.list_title or self.has_list_prompt:
 				self._list_phrase = match.group()
 				phrase = phrase.replace(self._list_phrase, '')
-				
-				self.list_id = matching_lists[0]['id']
-				self.list_title = matching_lists[0]['title']
 
 		if not self.list_title:
 			inbox = lists[0]
@@ -86,18 +96,33 @@ class TaskParser():
 		# not interfere with the due date
 		match = re.search(_recurrence_pattern, phrase)
 		if match:
+			if match.group(2):
+				# Look up the recurrence type based on the first letter of the
+				# work or abbreviation used in the phrase
+				self.recurrence_type = _recurrence_types[match.group(2)[0]]
+				self.recurrence_count = int(match.group(1) or 1)
+			else:
+				self.has_recurrence_prompt = True
+
 			self._recurrence_phrase = match.group()
 			phrase = phrase.replace(self._recurrence_phrase, '')
 
-			# Look up the recurrence type based on the first letter of the
-			# work or abbreviation used in the phrase
-			self.recurrence_type = _recurrence_types[match.group(2)[0]]
-			self.recurrence_count = int(match.group(1) or 1)
-
+		due_keyword = None
+		potential_date_phrase = None
 		match = re.search(_due_pattern, phrase)
+		# Search for the due date only following the `due` keyword
 		if match:
 			due_keyword = match.group(1)
-			potential_date_phrase = match.group(2)
+
+			if match.group(2):
+				potential_date_phrase = match.group(2)
+		# Otherwise find a due date anywhere in the phrase
+		else:
+			potential_date_phrase = phrase
+
+		if potential_date_phrase:
+			# nlp() does not parse "next month", requires "in 1 month"
+			potential_date_phrase = potential_date_phrase.replace(' next ', ' in 1 ')
 			dates = cal.nlp(potential_date_phrase)
 
 			if dates:
@@ -108,22 +133,24 @@ class TaskParser():
 					self.due_date = datetime_info[0].date()
 
 					# Pull in any words between the `due` keyword and the
-					# actual date text					
-					due_date_phrase_match = re.search(re.escape(due_keyword) + r'.*?' + re.escape(datetime_info[4]), phrase)
+					# actual date text
+					date_pattern = re.escape(datetime_info[4])
+					date_pattern = date_pattern.replace('in\\ 1\\ ', ' (?:in 1|next) ')
 
-					self._due_date_phrase = due_date_phrase_match.group()
-					phrase = phrase.replace(self._due_date_phrase, '')
+					if due_keyword:
+						date_pattern = re.escape(due_keyword) + r'.*?' + date_pattern
 
-		# Use nlp to find a date, which can be slightly less featureful
-		else:
-			dates = cal.nlp(phrase)
+					due_date_phrase_match = re.search(date_pattern, phrase)
 
-			if dates:
-				# Only remove the last date for now
-				datetime_info = dates[-1]
-				if datetime_info[1] != 2:
-					self.due_date = datetime_info[0].date()
-					phrase = phrase.replace(datetime_info[4], '', 1)
+					if due_date_phrase_match:
+						self._due_date_phrase = due_date_phrase_match.group()
+						phrase = phrase.replace(self._due_date_phrase, '')
+
+		# The word due was not followed by a date
+		if due_keyword and not self._due_date_phrase:
+			self.has_due_date_prompt = True
+			self._due_date_phrase = match.group(1)
+			phrase = phrase.replace(self._due_date_phrase, '')
 
 		if self.recurrence_type and not self.due_date:
 			self.due_date = date.today()
