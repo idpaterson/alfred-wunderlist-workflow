@@ -136,6 +136,14 @@ def test_list_initials():
 
 	assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
 
+def test_list_name_case_insensitive_match():
+	target_list = _single_word_list
+	title = 'a sample task'
+	phrase = '%s: %s' % (target_list.upper(), title) # FINANCES: a sample task
+	task = TaskParser(phrase)
+
+	assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
+
 def test_list_name_diacritic_insensitive_match():
 	target_list = _diacritic_list
 	title = 'a sample task'
@@ -155,10 +163,42 @@ def test_list_prompt():
 # Due date
 # 
 
+_12_13_14 = date(2014, 12, 13)
+due_date_formats = {
+	'12/13/14': _12_13_14,
+	'Dec 13, 2014': _12_13_14
+}
+
+def test_due_date_formats():
+	for (due_phrase, due_date) in due_date_formats.iteritems():
+		title = 'a sample task'
+		phrase = '%s %s' % (title, due_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, due_date=due_date)
+
+def test_due_date_formats_with_keyword():
+	for (due_phrase, due_date) in due_date_formats.iteritems():
+		due_phrase = 'due ' + due_phrase
+		title = 'a sample task'
+		phrase = '%s %s' % (title, due_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, due_date=due_date)
+
 def test_explicit_due_date():
 	title = 'a sample task'
 	due_phrase = 'due 12/13/14'
-	due_date = date(2014, 12, 13)
+	due_date = _12_13_14
+	phrase = '%s %s' % (title, due_phrase)
+	task = TaskParser(phrase)
+
+	assert_task(task, phrase=phrase, title=title, due_date=due_date)
+
+def test_case_insensitive_due_date():
+	title = 'a sample task'
+	due_phrase = 'DUe 12/13/14'
+	due_date = _12_13_14
 	phrase = '%s %s' % (title, due_phrase)
 	task = TaskParser(phrase)
 
@@ -236,6 +276,69 @@ def test_due_date_prompt_with_star_whitespace():
 	task = TaskParser(phrase)
 
 	assert_task(task, phrase=phrase, title=title, has_due_date_prompt=True, starred=True)
+
+#
+# Recurrence
+# 
+
+recurrence_types = {
+	'year': 'year',
+	'yr': 'year',
+	'y': 'year',
+	'month': 'month',
+	'mo': 'month',
+	'm': 'month',
+	'week': 'week',
+	'wk': 'week',
+	'w': 'week',
+	'day': 'day',
+	'da': 'day',
+	'd': 'day'
+}
+
+def test_recurrence_implicitly_due_today():
+	title = 'a sample task'
+	recurrence_type = 'month'
+	recurrence_count = 1
+	recurrence_phrase = 'every ' + recurrence_type
+	due_date = date.today()
+	phrase = '%s %s' % (title, recurrence_phrase)
+	task = TaskParser(phrase)
+
+	assert_task(task, phrase=phrase, title=title, recurrence_type=recurrence_type, recurrence_count=recurrence_count, due_date=due_date)
+
+def test_recurrence_types():
+	recurrence_count = 1
+	(due_phrase, due_date) = due_date_formats.items()[0]
+	for (recurrence_phrase, recurrence_type) in recurrence_types.iteritems():
+		title = 'a sample task'
+		recurrence_phrase = 'every ' + recurrence_phrase
+		phrase = '%s %s due %s' % (title, recurrence_phrase, due_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, recurrence_type=recurrence_type, recurrence_count=recurrence_count, due_date=due_date)
+
+def test_plural_recurrence_types():
+	recurrence_count = 2
+	(due_phrase, due_date) = due_date_formats.items()[1]
+	for (recurrence_phrase, recurrence_type) in recurrence_types.iteritems():
+		title = 'a sample task'
+		recurrence_phrase = 'every %d %ss' % (recurrence_count, recurrence_phrase)
+		phrase = '%s due %s %s' % (title, due_phrase, recurrence_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, recurrence_type=recurrence_type, recurrence_count=recurrence_count, due_date=due_date)
+
+def test_case_insensitive_recurrence_types():
+	(due_phrase, due_date) = due_date_formats.items()[0]
+	title = 'a sample task'
+	recurrence_count = 2
+	recurrence_type = 'year'
+	recurrence_phrase = 'REpeat EVerY %d %sS' % (recurrence_count, recurrence_type.upper())
+	phrase = '%s %s %s' % (title, due_phrase, recurrence_phrase)
+	task = TaskParser(phrase)
+
+	assert_task(task, phrase=phrase, title=title, recurrence_type=recurrence_type, recurrence_count=recurrence_count, due_date=due_date)
 
 #
 # Star

@@ -67,7 +67,7 @@ class TaskParser():
 			self._starred_phrase = match.group()
 			phrase = re.sub(_star_pattern, '', phrase)
 
-		match = re.search(_list_title_pattern, phrase)
+		match = re.search(_list_title_pattern, phrase, re.IGNORECASE)
 		if match:
 			if match.group(1):
 				matching_lists = wf.filter(
@@ -97,12 +97,12 @@ class TaskParser():
 
 		# Parse and remove the recurrence phrase first so that any dates do
 		# not interfere with the due date
-		match = re.search(_recurrence_pattern, phrase)
+		match = re.search(_recurrence_pattern, phrase, re.IGNORECASE)
 		if match:
 			if match.group(2):
 				# Look up the recurrence type based on the first letter of the
 				# work or abbreviation used in the phrase
-				self.recurrence_type = _recurrence_types[match.group(2)[0]]
+				self.recurrence_type = _recurrence_types[match.group(2)[0].lower()]
 				self.recurrence_count = int(match.group(1) or 1)
 			else:
 				self.has_recurrence_prompt = True
@@ -112,7 +112,7 @@ class TaskParser():
 
 		due_keyword = None
 		potential_date_phrase = None
-		match = re.search(_due_pattern, phrase)
+		match = re.search(_due_pattern, phrase, re.IGNORECASE)
 		# Search for the due date only following the `due` keyword
 		if match:
 			due_keyword = match.group(1)
@@ -125,7 +125,7 @@ class TaskParser():
 
 		if potential_date_phrase:
 			# nlp() does not parse "next month", requires "in 1 month"
-			potential_date_phrase = re.sub(_next_pattern, r'\1in 1 ', potential_date_phrase)
+			potential_date_phrase = re.sub(_next_pattern, r'\1in 1 ', potential_date_phrase, re.IGNORECASE)
 			dates = cal.nlp(potential_date_phrase)
 
 			if dates:
@@ -143,7 +143,7 @@ class TaskParser():
 					if due_keyword:
 						date_pattern = re.escape(due_keyword) + r'.*?' + date_pattern
 
-					due_date_phrase_match = re.search(date_pattern, phrase)
+					due_date_phrase_match = re.search(date_pattern, phrase, re.IGNORECASE)
 
 					if due_date_phrase_match:
 						self._due_date_phrase = due_date_phrase_match.group()
