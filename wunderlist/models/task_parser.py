@@ -11,13 +11,16 @@ _list_title_pattern = r'^((?:\S+ *){0,8}):'
 _recurrence_pattern = r'(?:\brepeat:? )?\bevery *(\d*) *((?:day|week|month|year|d|w|m|y|da|wk|mo|yr)s?\b)?'
 
 # Anything following the `due` keyword
-_due_pattern = r'(\bdue:?\b)(.*)'
+_due_pattern = r'(\bdue:?\b\s*)(.*)'
 
 # An asterisk at the end of the phrase
 _star_pattern = r'\*$'
 
 # Tabs or multiple consecutive spaces
 _whitespace_cleanup_pattern = r'\t|\s{2,}'
+
+# For transforming "next month" to "in 1 month"
+_next_pattern = r'(^| )next '
 
 # Maps first letter to the API recurrence type
 _recurrence_types = {
@@ -122,7 +125,7 @@ class TaskParser():
 
 		if potential_date_phrase:
 			# nlp() does not parse "next month", requires "in 1 month"
-			potential_date_phrase = potential_date_phrase.replace(' next ', ' in 1 ')
+			potential_date_phrase = re.sub(_next_pattern, r'\1in 1 ', potential_date_phrase)
 			dates = cal.nlp(potential_date_phrase)
 
 			if dates:
@@ -135,7 +138,7 @@ class TaskParser():
 					# Pull in any words between the `due` keyword and the
 					# actual date text
 					date_pattern = re.escape(datetime_info[4])
-					date_pattern = date_pattern.replace('in\\ 1\\ ', ' (?:in 1|next) ')
+					date_pattern = date_pattern.replace('in\\ 1\\ ', '(?:in 1|next) ')
 
 					if due_keyword:
 						date_pattern = re.escape(due_keyword) + r'.*?' + date_pattern
@@ -145,6 +148,15 @@ class TaskParser():
 					if due_date_phrase_match:
 						self._due_date_phrase = due_date_phrase_match.group()
 						phrase = phrase.replace(self._due_date_phrase, '')
+					# This should not happen
+					else:
+						due_keyword = None
+				# Just a time component
+				else:
+					due_keyword = None
+			# No dates in the phrase
+			else:
+				due_keyword = None
 
 		# The word due was not followed by a date
 		if due_keyword and not self._due_date_phrase:

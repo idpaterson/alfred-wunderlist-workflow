@@ -4,7 +4,7 @@ from wunderlist.models.task_parser import TaskParser
 import pytest
 import re
 import locale
-from datetime import date
+from datetime import date, timedelta
 
 _inbox = 'Inbox'
 _single_word_list = 'Finances'
@@ -74,6 +74,13 @@ def test_title():
 	title = 'a sample task'
 	phrase = title
 	task = TaskParser(phrase)
+
+	assert_task(task, phrase=phrase, title=title)
+
+def test_phrase_is_trimmed():
+	title = 'a sample task'
+	phrase = title
+	task = TaskParser(' %s ' % phrase)
 
 	assert_task(task, phrase=phrase, title=title)
 
@@ -148,7 +155,7 @@ def test_list_prompt():
 # Due date
 # 
 
-def test_due_date():
+def test_explicit_due_date():
 	title = 'a sample task'
 	due_phrase = 'due 12/13/14'
 	due_date = date(2014, 12, 13)
@@ -157,6 +164,34 @@ def test_due_date():
 
 	assert_task(task, phrase=phrase, title=title, due_date=due_date)
 
+def test_relative_due_date():
+	title = 'a sample task'
+	due_phrase = 'due today'
+	due_date = date.today()
+	phrase = '%s %s' % (title, due_phrase)
+	task = TaskParser(phrase)
+
+	assert_task(task, phrase=phrase, title=title, due_date=due_date)
+
+def test_due_next_year():
+	"""
+	The "next" word was not understood by parsedatetime.nlp(), so "next week"
+	is transformed to "in 1 week" before calling nlp.
+
+	This test would fail if run on Feb 29.
+	"""
+	due_date = date.today()
+
+	# Do not attempt on Feb 29 because that date will not exist next year
+	if due_date.month != 2 or due_date.day != 29:
+		title = 'a sample task'
+		due_phrase = 'due next year'
+		due_date = due_date.replace(year=due_date.year + 1)
+		phrase = '%s %s' % (title, due_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, due_date=due_date)
+
 def test_due_date_ignores_time():
 	title = 'a sample task due 4:00'
 	phrase = title
@@ -164,6 +199,43 @@ def test_due_date_ignores_time():
 
 	assert_task(task, phrase=phrase, title=title)
 
+def test_due_date_ignores_time_no_keyword():
+	title = 'a sample task 4:00'
+	phrase = title
+	task = TaskParser(phrase)
+
+	assert_task(task, phrase=phrase, title=title)
+
+def test_due_keyword_without_date():
+	title = 'We are due for some rain'
+	phrase = title
+	task = TaskParser(phrase)
+
+	assert_task(task, phrase=phrase, title=title)
+
+def test_due_date_prompt():
+	title = 'a sample task'
+	due_phrase = 'due'
+	phrase = '%s %s' % (title, due_phrase)
+	task = TaskParser(phrase)
+
+	assert_task(task, phrase=phrase, title=title, has_due_date_prompt=True)
+
+def test_due_date_prompt_with_star():
+	title = 'a sample task'
+	due_phrase = 'due'
+	phrase = '%s %s*' % (title, due_phrase)
+	task = TaskParser(phrase)
+
+	assert_task(task, phrase=phrase, title=title, has_due_date_prompt=True, starred=True)
+
+def test_due_date_prompt_with_star_whitespace():
+	title = 'a sample task'
+	due_phrase = 'due'
+	phrase = '%s %s *' % (title, due_phrase)
+	task = TaskParser(phrase)
+
+	assert_task(task, phrase=phrase, title=title, has_due_date_prompt=True, starred=True)
 
 #
 # Star
