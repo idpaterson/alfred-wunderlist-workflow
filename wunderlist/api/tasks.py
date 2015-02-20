@@ -1,4 +1,4 @@
-import requests
+from requests import codes
 import wunderlist.api.base as api
 
 NO_CHANGE='!nochange!'
@@ -90,4 +90,4 @@ def update_task(id, revision, title=NO_CHANGE, assignee_id=NO_CHANGE, recurrence
 def delete_task(id, revision):
 	req = api.delete('tasks/' + id, { 'revision': revision })
 	
-	return req.status_code == requests.codes.no_content 
+	return req.status_code == codes.no_content 

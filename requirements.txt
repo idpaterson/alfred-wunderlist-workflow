@@ -1,1 +1,2 @@
 Alfred-Workflow==1.11.1
+peewee==2.4.7
