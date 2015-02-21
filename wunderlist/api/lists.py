@@ -24,7 +24,7 @@ def lists(order='display', task_counts=False):
 
 	if task_counts:
 		for list in lists:
-			_update_list_with_tasks_count(list)
+			update_list_with_tasks_count(list)
 
 	for (index, list) in enumerate(lists):
 		if list['list_type'] in SMART_LISTS:

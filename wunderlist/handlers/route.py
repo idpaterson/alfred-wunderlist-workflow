@@ -3,7 +3,7 @@ from wunderlist.util import workflow
 
 def route(args):
 	handler = None
-	command = None
+	command = ''
 
 	if args:
 		command = args[0].split(' ')
@@ -17,11 +17,9 @@ def route(args):
 	elif 'logout' in command:
 		from wunderlist.handlers import logout
 		handler = logout
-	elif 'pref' in command:
+	elif 'pref' in command or 'sync' in command:
 		from wunderlist.handlers import preferences
-	elif 'sync' in command:
-		from wunderlist.sync import sync
-		sync()
+		handler = preferences
 	elif not command or not command[0]: 
 		from wunderlist.handlers import welcome
 		handler = welcome
