@@ -148,9 +148,6 @@ class TaskParser():
 					if due_date_phrase_match:
 						self._due_date_phrase = due_date_phrase_match.group()
 						phrase = phrase.replace(self._due_date_phrase, '')
-					# This should not happen
-					else:
-						due_keyword = None
 				# Just a time component
 				else:
 					due_keyword = None

@@ -152,6 +152,13 @@ def test_list_name_diacritic_insensitive_match():
 
 	assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
 
+def test_ignores_unknown_list_name():
+	title = 'not a list: a sample task'
+	phrase = title
+	task = TaskParser(phrase)
+
+	assert_task(task, phrase=phrase, title=title)
+
 def test_list_prompt():
 	title = 'a sample task'
 	phrase = ': %s' % (title)
@@ -409,7 +416,7 @@ class TestPhrases():
 		assert phrase == new_phrase
 
 	def test_complex_unchanged_phrase(self):
-		phrase = 'Oil change next Tuesday repeat every 3mo *'
+		phrase = 'fin: Oil change next Tuesday repeat every 3mo *'
 		task = TaskParser(phrase)
 		new_phrase = task.phrase_with()
 
@@ -420,8 +427,8 @@ class TestPhrases():
 		This is not necessarily a desired feature compared to returning the
 		same phrase the user entered, but it works for now.
 		"""
-		phrase = 'every 3mo Oil change next Tuesday *'
-		target_phrase = 'Oil change next Tuesday every 3mo *'
+		phrase = 'finances: every 3mo Oil change next Tuesday *'
+		target_phrase = 'finances: Oil change next Tuesday every 3mo *'
 		task = TaskParser(phrase)
 		new_phrase = task.phrase_with()
 
@@ -456,6 +463,18 @@ class TestPhrases():
 
 		assert new_phrase == '%s *' % (self.title)
 
+	def test_prompt_list_title(self):
+		new_phrase = self.task.phrase_with(list_title=True)
 
+		assert new_phrase == ': %s' % (self.title)
 
+	def test_prompt_due_date(self):
+		new_phrase = self.task.phrase_with(due_date=True)
+
+		assert new_phrase == '%s due ' % (self.title)
+
+	def test_prompt_recurrence(self):
+		new_phrase = self.task.phrase_with(recurrence=True)
+
+		assert new_phrase == '%s every ' % (self.title)
 
