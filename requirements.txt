@@ -1,2 +1,3 @@
 Alfred-Workflow==1.11.1
+parsedatetime==1.4
 peewee==2.4.7
