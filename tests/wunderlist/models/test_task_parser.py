@@ -164,9 +164,21 @@ def test_list_prompt():
 # 
 
 _12_13_14 = date(2014, 12, 13)
+_today = date.today()
+_tomorrow = date.today() + timedelta(days=1)
+_next_week = date.today() + timedelta(days=7)
 due_date_formats = {
 	'12/13/14': _12_13_14,
-	'Dec 13, 2014': _12_13_14
+	'12/13/2014': _12_13_14,
+	'Dec 13, 2014': _12_13_14,
+	'December 13, 2014': _12_13_14,
+	'Dec 13th 2014': _12_13_14,
+	'tomorrow': _tomorrow,
+	'1d': _tomorrow,
+	'next week': _next_week,
+	'1w': _next_week,
+	'in 1 week': _next_week,
+	'in 7d': _next_week
 }
 
 def test_due_date_formats():
@@ -180,6 +192,15 @@ def test_due_date_formats():
 def test_due_date_formats_with_keyword():
 	for (due_phrase, due_date) in due_date_formats.iteritems():
 		due_phrase = 'due ' + due_phrase
+		title = 'a sample task'
+		phrase = '%s %s' % (title, due_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, due_date=due_date)
+
+def test_due_date_formats_with_keyword_and_filler_text():
+	for (due_phrase, due_date) in due_date_formats.iteritems():
+		due_phrase = 'due any filler text ' + due_phrase
 		title = 'a sample task'
 		phrase = '%s %s' % (title, due_phrase)
 		task = TaskParser(phrase)
@@ -339,6 +360,15 @@ def test_case_insensitive_recurrence_types():
 	task = TaskParser(phrase)
 
 	assert_task(task, phrase=phrase, title=title, recurrence_type=recurrence_type, recurrence_count=recurrence_count, due_date=due_date)
+
+def test_recurrence_prompt():
+	title = 'a sample task'
+	recurrence_phrase = 'every'
+	phrase = '%s %s' % (title, recurrence_phrase)
+	task = TaskParser(phrase)
+
+	assert_task(task, phrase=phrase, title=title, has_recurrence_prompt=True)
+
 
 #
 # Star

@@ -10,17 +10,17 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>E0AE4F8B-253B-4EFD-B568-E9A2A46AA0C7</string>
+				<string>39540B6D-5AA4-4427-BA63-42256009EE5F</string>
 				<key>modifiers</key>
-				<integer>0</integer>
+				<integer>524288</integer>
 				<key>modifiersubtext</key>
 				<string></string>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
-				<string>39540B6D-5AA4-4427-BA63-42256009EE5F</string>
+				<string>E0AE4F8B-253B-4EFD-B568-E9A2A46AA0C7</string>
 				<key>modifiers</key>
-				<integer>524288</integer>
+				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
 			</dict>
@@ -44,6 +44,23 @@
 	<string>Wunderlist</string>
 	<key>objects</key>
 	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --alt</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>39540B6D-5AA4-4427-BA63-42256009EE5F</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -104,23 +121,6 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --alt</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>39540B6D-5AA4-4427-BA63-42256009EE5F</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
 				<string>/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --cmd</string>
 				<key>type</key>
 				<integer>0</integer>
@@ -140,12 +140,12 @@
 		<key>0F2D229C-18BA-4E40-A81D-D796A6E159BC</key>
 		<dict>
 			<key>ypos</key>
-			<real>10</real>
+			<real>130</real>
 		</dict>
 		<key>39540B6D-5AA4-4427-BA63-42256009EE5F</key>
 		<dict>
 			<key>ypos</key>
-			<real>130</real>
+			<real>10</real>
 		</dict>
 		<key>B17D3A8B-97D1-4CB1-AA34-48754A1CC6F3</key>
 		<dict>
@@ -155,7 +155,7 @@
 		<key>E0AE4F8B-253B-4EFD-B568-E9A2A46AA0C7</key>
 		<dict>
 			<key>ypos</key>
-			<real>10</real>
+			<real>130</real>
 		</dict>
 	</dict>
 	<key>webaddress</key>
