@@ -3,6 +3,7 @@
 from wunderlist.util import workflow
 from wunderlist.models.task_parser import TaskParser
 from datetime import date
+from random import random
 
 _calendar = u'📅'
 _star = u'★'
@@ -38,7 +39,12 @@ def filter(args):
 	if task.has_list_prompt:
 		lists = wf.stored_data('lists')
 		for list in lists:
-			wf.add_item(list['title'], 'Assign task to this list, e.g. %s: %s' % (list['title'][:4].lower(), task.title), autocomplete=task.phrase_with(list_title=list['title']))
+			# Show some full list names and some concatenated in command
+			# suggestions
+			sample_command = list['title']
+			if random() > 0.5:
+				sample_command = sample_command[:int(len(sample_command) * .75)]
+			wf.add_item(list['title'], 'Assign task to this list, e.g. %s: %s' % (sample_command.lower(), task.title), autocomplete=task.phrase_with(list_title=list['title']))
 	
 	# Task has an unfinished recurrence phrase
 	elif task.has_recurrence_prompt:
