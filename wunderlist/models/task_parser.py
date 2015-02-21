@@ -170,7 +170,7 @@ class TaskParser():
 		# Condense extra whitespace remaining in the task title after parsing
 		self.title = re.sub(_whitespace_cleanup_pattern, ' ', phrase).strip()
 
-	def phrase_with(self, list_title=None, due_date=None, recurrence=None, starred=None):
+	def phrase_with(self, title=None, list_title=None, due_date=None, recurrence=None, starred=None):
 		components = []
 
 		# Retain the current list
@@ -189,7 +189,9 @@ class TaskParser():
 			pass
 
 		# Add the task text
-		if self.title:
+		if title:
+			components.append(title)
+		elif self.title:
 			components.append(self.title)
 
 		# Retain the current due date

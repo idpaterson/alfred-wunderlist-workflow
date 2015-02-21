@@ -387,3 +387,75 @@ def test_ignore_infix_asterisk():
 	task = TaskParser(phrase)
 
 	assert_task(task, phrase=phrase, title=title, starred=False)
+
+#
+# phrase_with()
+#
+
+class TestPhrases():
+
+	task = None
+	title = 'a sample task'
+
+	@pytest.fixture(autouse=True)
+	def setup_task(self):
+		phrase = self.title
+		self.task = TaskParser(phrase)
+
+	def test_simple_unchanged_phrase(self):
+		phrase = self.task.phrase
+		new_phrase = self.task.phrase_with()
+
+		assert phrase == new_phrase
+
+	def test_complex_unchanged_phrase(self):
+		phrase = 'Oil change next Tuesday repeat every 3mo *'
+		task = TaskParser(phrase)
+		new_phrase = task.phrase_with()
+
+		assert phrase == new_phrase
+
+	def test_phrase_reordering(self):
+		"""
+		This is not necessarily a desired feature compared to returning the
+		same phrase the user entered, but it works for now.
+		"""
+		phrase = 'every 3mo Oil change next Tuesday *'
+		target_phrase = 'Oil change next Tuesday every 3mo *'
+		task = TaskParser(phrase)
+		new_phrase = task.phrase_with()
+
+		assert target_phrase == new_phrase
+
+	def test_change_title(self):
+		new_title = 'new title'
+		new_phrase = self.task.phrase_with(title=new_title)
+
+		assert new_phrase == '%s' % (new_title)
+
+	def test_change_list_title(self):
+		new_list_title = 'new title'
+		new_phrase = self.task.phrase_with(list_title=new_list_title)
+
+		assert new_phrase == '%s: %s' % (new_list_title, self.title)
+
+	def test_change_due_date(self):
+		new_due_date = 'due tomorrow'
+		new_phrase = self.task.phrase_with(due_date=new_due_date)
+
+		assert new_phrase == '%s %s' % (self.title, new_due_date)
+
+	def test_change_recurrence(self):
+		new_recurrence = 'every month'
+		new_phrase = self.task.phrase_with(recurrence=new_recurrence)
+
+		assert new_phrase == '%s %s' % (self.title, new_recurrence)
+
+	def test_change_star(self):
+		new_phrase = self.task.phrase_with(starred=True)
+
+		assert new_phrase == '%s *' % (self.title)
+
+
+
+
