@@ -1,5 +1,2 @@
 Alfred-Workflow==1.11.1
 peewee==2.4.7
-pytest==2.6.4
-pytest-mock==0.4.0
-pytest-cov==1.8.1
