@@ -90,7 +90,7 @@ class TaskParser():
 				self._list_phrase = match.group()
 				phrase = phrase.replace(self._list_phrase, '')
 
-		if not self.list_title:
+		if lists and not self.list_title:
 			inbox = lists[0]
 			self.list_id = inbox['id']
 			self.list_title = inbox['title']

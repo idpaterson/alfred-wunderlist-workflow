@@ -4,7 +4,7 @@ from user import User
 
 class Root(BaseModel):
 	id = PrimaryKeyField()
-	user = ForeignKeyField(User)
+	user = ForeignKeyField(User, null=True)
 	revision = IntegerField()
 
 	@classmethod

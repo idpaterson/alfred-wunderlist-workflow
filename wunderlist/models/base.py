@@ -25,11 +25,9 @@ class BaseModel(Model):
 		# Map of id to the normalized item
 		update_items = { item['id']:cls._api2model(item) for item in update_items }
 
-		print update_items
-
 		for instance in model_instances:
 			if not instance:
-				pass
+				continue
 			if instance.id in update_items:
 				update_item = update_items[instance.id]
 

@@ -11,7 +11,7 @@ def sync():
 	root.Root.sync()
 
 def backgroundSync():
-	from workflow.background import run_in_background, is_running
+	from workflow.background import run_in_background
 	from wunderlist.util import workflow
 
 	# Only runs if another sync is not already in progress

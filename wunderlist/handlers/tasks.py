@@ -2,6 +2,7 @@
 
 from wunderlist.util import workflow
 from wunderlist.models.task_parser import TaskParser
+from workflow.background import is_running
 from datetime import date
 from random import random
 
@@ -38,13 +39,16 @@ def filter(args):
 
 	if task.has_list_prompt:
 		lists = wf.stored_data('lists')
-		for list in lists:
-			# Show some full list names and some concatenated in command
-			# suggestions
-			sample_command = list['title']
-			if random() > 0.5:
-				sample_command = sample_command[:int(len(sample_command) * .75)]
-			wf.add_item(list['title'], 'Assign task to this list, e.g. %s: %s' % (sample_command.lower(), task.title), autocomplete=task.phrase_with(list_title=list['title']))
+		if lists:
+			for list in lists:
+				# Show some full list names and some concatenated in command
+				# suggestions
+				sample_command = list['title']
+				if random() > 0.5:
+					sample_command = sample_command[:int(len(sample_command) * .75)]
+				wf.add_item(list['title'], 'Assign task to this list, e.g. %s: %s' % (sample_command.lower(), task.title), autocomplete=task.phrase_with(list_title=list['title']))
+		elif is_running('sync'):
+			wf.add_item('Your lists are being synchronized', 'Please try again in a few moments')
 	
 	# Task has an unfinished recurrence phrase
 	elif task.has_recurrence_prompt:
