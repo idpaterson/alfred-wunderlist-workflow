@@ -1,11 +1,18 @@
-from wunderlist import util, auth
+from wunderlist import util, auth, icons
 
 def filter(args):
 	util.workflow().add_item(
 		'Are you sure?',
 		'You will need to log in to a Wunderlist account to continue using the workflow',
 		arg=' '.join(args),
-		valid=True
+		valid=True,
+		icon=icons.CHECKMARK
+	)
+
+	util.workflow().add_item(
+		'Nevermind',
+		autocomplete='',
+		icon=icons.CANCEL
 	)
 
 def commit(args):
