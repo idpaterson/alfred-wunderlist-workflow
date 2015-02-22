@@ -10,25 +10,9 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>39540B6D-5AA4-4427-BA63-42256009EE5F</string>
-				<key>modifiers</key>
-				<integer>524288</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
 				<string>E0AE4F8B-253B-4EFD-B568-E9A2A46AA0C7</string>
 				<key>modifiers</key>
 				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>B17D3A8B-97D1-4CB1-AA34-48754A1CC6F3</string>
-				<key>modifiers</key>
-				<integer>1048576</integer>
 				<key>modifiersubtext</key>
 				<string></string>
 			</dict>

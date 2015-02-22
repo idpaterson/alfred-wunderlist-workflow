@@ -4,7 +4,8 @@ from wunderlist.sync import backgroundSync
 def filter(args):
 	workflow().add_item(
 		'New task',
-		'Begin typing to add a new task'
+		'Begin typing to add a new task',
+		autocomplete=':'
 	)
 
 	workflow().add_item(
