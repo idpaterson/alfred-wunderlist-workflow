@@ -125,7 +125,7 @@ class TaskParser():
 							# If the date expression is only one word and the next
 							# due date is less than one week from now, set a
 							# weekly recurrence, e.g. every Tuesday
-							if len(date_expression.split(' ')) == 1 and self.due_date < date.today() + timedelta(days=7):
+							if len(date_expression.split(' ')) == 1 and self.due_date < date.today() + timedelta(days=8):
 								self.recurrence_count = 1
 								self.recurrence_type = 'week'
 							# Otherwise expect a multi-word value like a date,
