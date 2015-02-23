@@ -17,6 +17,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>CB67A7A4-2A1F-4905-990C-5BD07FD51C1C</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>0F2D229C-18BA-4E40-A81D-D796A6E159BC</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 	</dict>
 	<key>createdby</key>
 	<string>Ian Paterson</string>
@@ -44,6 +55,33 @@
 			<string>39540B6D-5AA4-4427-BA63-42256009EE5F</string>
 			<key>version</key>
 			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>13</integer>
+				<key>hotmod</key>
+				<integer>1703936</integer>
+				<key>hotstring</key>
+				<string>W</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>CB67A7A4-2A1F-4905-990C-5BD07FD51C1C</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -135,6 +173,11 @@
 		<dict>
 			<key>ypos</key>
 			<real>250</real>
+		</dict>
+		<key>CB67A7A4-2A1F-4905-990C-5BD07FD51C1C</key>
+		<dict>
+			<key>ypos</key>
+			<real>130</real>
 		</dict>
 		<key>E0AE4F8B-253B-4EFD-B568-E9A2A46AA0C7</key>
 		<dict>
