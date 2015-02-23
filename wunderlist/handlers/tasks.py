@@ -88,6 +88,8 @@ def filter(args):
 		else:
 			wf.add_item('Star', 'End the task with * (asterisk)', autocomplete=task.phrase_with(starred=True), icon=icons.STAR)
 
+		wf.add_item('Cancel', autocomplete='', icon=icons.CANCEL)
+
 def commit(args):
 	from wunderlist.api import tasks
 	task = _task(args)
