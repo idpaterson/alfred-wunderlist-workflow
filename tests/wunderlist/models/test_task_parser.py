@@ -390,7 +390,7 @@ class TestRecurrence():
 	def test_recurrence_with_explicit_weekday(self):
 		title = 'a sample task'
 		recurrence_count = 1
-		due_date = _today + timedelta(days=(7 - _today.weekday()) % 7)
+		due_date = _today + timedelta(days=7 - _today.weekday())
 		recurrence_type = 'week'
 		recurrence_phrase = 'every Monday'
 		phrase = '%s %s' % (title, recurrence_phrase)
