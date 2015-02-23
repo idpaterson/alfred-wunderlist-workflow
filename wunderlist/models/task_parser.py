@@ -2,13 +2,14 @@ import re
 from workflow import MATCH_ALL, MATCH_ALLCHARS
 from wunderlist.util import workflow
 from parsedatetime import Calendar
-from datetime import date
+from datetime import date, timedelta
 
 # Up to 8 words (sheesh!) followed by a colon
 _list_title_pattern = r'^((?:\S+ *){0,8}):'
 
 # `every N units` optionally preceded by `repeat`
 _recurrence_pattern = r'(?:\brepeat:? )?\bevery *(\d*) *((?:day|week|month|year|d|w|m|y|da|wk|mo|yr)s?\b)?'
+_recurrence_by_date_pattern = r'(?:\brepeat:? )?\bevery *((?:\S+ *){0,2})'
 
 # Anything following the `due` keyword
 _due_pattern = r'(\bdue:?\b\s*)(.*)'
@@ -105,6 +106,46 @@ class TaskParser():
 				self.recurrence_type = _recurrence_types[match.group(2)[0].lower()]
 				self.recurrence_count = int(match.group(1) or 1)
 			else:
+				match = re.search(_recurrence_by_date_pattern, phrase, re.IGNORECASE)
+				if match:
+					recurrence_phrase = match.group()
+					dates = cal.nlp(match.group(1))
+
+					if dates:
+						# Only remove the first date following `every`
+						datetime_info = dates[0]
+						# Set due_date if a datetime was found and it is not time only
+						if datetime_info[1] != 2:
+							self.due_date = datetime_info[0].date()
+							date_expression = datetime_info[4]
+
+							# FIXME: This logic could be improved to better
+							# differentiate between week and year expressions
+
+							# If the date expression is only one word and the next
+							# due date is less than one week from now, set a
+							# weekly recurrence, e.g. every Tuesday
+							if len(date_expression.split(' ')) == 1 and self.due_date < date.today() + timedelta(days=7):
+								self.recurrence_count = 1
+								self.recurrence_type = 'week'
+							# Otherwise expect a multi-word value like a date,
+							# e.g. every May 17
+							else:
+								self.recurrence_count = 1
+								self.recurrence_type = 'year'
+
+							self.has_recurrence_prompt = False
+
+							# Pull in any words between the `due` keyword and the
+							# actual date text
+							date_pattern = re.escape(date_expression)
+							date_pattern = r'.*?' + date_pattern
+
+							# Prepare to set the recurrence phrase below
+							match = re.search(date_pattern, recurrence_phrase, re.IGNORECASE)
+
+			# This is just the "every" keyword with no date following
+			if not self.recurrence_type:
 				self.has_recurrence_prompt = True
 
 			self._recurrence_phrase = match.group()
