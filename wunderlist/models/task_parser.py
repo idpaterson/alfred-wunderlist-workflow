@@ -69,7 +69,7 @@ class TaskParser():
 			phrase = re.sub(_star_pattern, '', phrase)
 
 		match = re.search(_list_title_pattern, phrase, re.IGNORECASE)
-		if match:
+		if lists and match:
 			if match.group(1):
 				matching_lists = wf.filter(
 					match.group(1),
@@ -91,10 +91,14 @@ class TaskParser():
 				self._list_phrase = match.group()
 				phrase = phrase.replace(self._list_phrase, '')
 
-		if lists and not self.list_title:
-			inbox = lists[0]
-			self.list_id = inbox['id']
-			self.list_title = inbox['title']
+		if not self.list_title:
+			if lists:
+				inbox = lists[0]
+				self.list_id = inbox['id']
+				self.list_title = inbox['title']
+			else:
+				self.list_id = 0
+				self.list_title = 'Inbox'
 
 		# Parse and remove the recurrence phrase first so that any dates do
 		# not interfere with the due date
