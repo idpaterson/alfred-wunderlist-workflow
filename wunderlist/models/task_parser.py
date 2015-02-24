@@ -1,8 +1,9 @@
 import re
 from workflow import MATCH_ALL, MATCH_ALLCHARS
 from wunderlist.util import workflow
-from parsedatetime import Calendar
+from parsedatetime import Calendar, Constants
 from datetime import date, timedelta
+import locale
 
 # Up to 8 words (sheesh!) followed by a colon
 _list_title_pattern = r'^((?:\S+ *){0,8}):'
@@ -58,7 +59,9 @@ class TaskParser():
 
 	def _parse(self):
 		phrase = self.phrase
-		cal = Calendar()
+		loc = locale.getdefaultlocale()[0]
+		c = Constants(loc)
+		cal = Calendar(c)
 		wf = workflow()
 		lists = wf.stored_data('lists')
 
