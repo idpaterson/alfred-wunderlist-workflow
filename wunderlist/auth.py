@@ -103,6 +103,10 @@ def await_token():
 
 			SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self);
 
+			# Reopen the workflow
+			import subprocess
+			subprocess.call(['/usr/bin/env', 'osascript', 'launch_alfred.scpt', 'wl '])
+
 	server = SocketServer.TCPServer(("", config.OAUTH_PORT), OAuthTokenResponseHandler)
 
 	server.timeout = config.OAUTH_TIMEOUT
