@@ -8,13 +8,13 @@ def filter(args):
 	workflow().add_item(
 		'Sign out',
 		'You are logged in as ' + current_user.name,
-		autocomplete='logout', icon=icons.CANCEL
+		autocomplete=':logout', icon=icons.CANCEL
 	)
 
 	workflow().add_item(
 		'Switch theme',
 		'Toggle between light and dark icons',
-		arg='pref retheme',
+		arg=':pref retheme',
 		valid=True,
 		icon=icons.PAINTBRUSH
 	)
@@ -22,7 +22,7 @@ def filter(args):
 	workflow().add_item(
 		'Force Sync',
 		'The workflow syncs automatically, but feel free to be forcible.',
-		arg='sync', valid=True, icon=icons.SYNC
+		arg=':sync', valid=True, icon=icons.SYNC
 	)
 
 	workflow().add_item(
@@ -31,7 +31,7 @@ def filter(args):
 	)
 
 def commit(args):
-	if 'sync' in args:
+	if ':sync' in args:
 		from wunderlist.sync import sync
 		sync()
 	elif 'retheme' in args:
@@ -45,4 +45,4 @@ def commit(args):
 
 		workflow().store_data('prefs', prefs)
 
-		subprocess.call(['/usr/bin/env', 'osascript', 'launch_alfred.scpt', 'wl pref'])
+		subprocess.call(['/usr/bin/env', 'osascript', 'launch_alfred.scpt', 'wl:pref'])
