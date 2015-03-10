@@ -59,11 +59,11 @@ class TaskParser():
 
 	def _parse(self):
 		phrase = self.phrase
-		loc = locale.getlocale()[0]
+		loc = locale.getlocale(locale.LC_TIME)[0]
 
 		if not loc:
 			loc = locale.getdefaultlocale()[0]
-			
+
 		c = Constants(loc)
 		cal = Calendar(c)
 		wf = workflow()

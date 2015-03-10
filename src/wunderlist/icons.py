@@ -14,7 +14,7 @@ def icon_theme():
 
 	return _icon_theme
 
-_icon_path = 'assets/icons/%s/' % icon_theme()
+_icon_path = 'icons/%s/' % icon_theme()
 
 ACCOUNT = _icon_path + 'account.png'
 BACK = _icon_path + 'back.png'

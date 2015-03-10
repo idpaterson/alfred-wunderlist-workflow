@@ -1,7 +1,9 @@
 #!/usr/bin/python
 # encoding: utf-8
 
-import sys
+import sys, os
+
+sys.path.insert(1, os.path.dirname(__file__))
 
 from wunderlist.handlers.route import route
 from wunderlist.util import workflow

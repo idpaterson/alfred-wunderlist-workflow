@@ -1,0 +1,9 @@
+[submodule "lib/parsedatetime"]
+	path = lib/parsedatetime
+	url = https://github.com/bear/parsedatetime.git
+[submodule "lib/alfred-workflow"]
+	path = lib/alfred-workflow
+	url = https://github.com/deanishe/alfred-workflow.git
+[submodule "lib/peewee"]
+	path = lib/peewee
+	url = https://github.com/coleifer/peewee.git

@@ -1,5 +1,11 @@
 *.pyc
 *.pyo
 
+/dist
+
+/.tmp
+
 /htmlcov
 .coverage
+
+node_modules

@@ -105,7 +105,7 @@ def await_token():
 
 			# Reopen the workflow
 			import subprocess
-			subprocess.call(['/usr/bin/env', 'osascript', 'launch_alfred.scpt', 'wl '])
+			subprocess.call(['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl '])
 
 	server = SocketServer.TCPServer(("", config.OAUTH_PORT), OAuthTokenResponseHandler)
 
