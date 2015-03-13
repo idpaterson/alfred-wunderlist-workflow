@@ -1,13 +1,13 @@
 from wunderlist import util, icons
 
 def _list_name(args):
-	return ' '.join(args[1:])
+	return ' '.join(args[1:]).strip()
 
 def filter(args):
 	list_name = _list_name(args)
 	subtitle = list_name if list_name else 'Type the name of the list'
 
-	util.workflow().add_item('New list...', subtitle, arg=' '.join(args), valid=True, icon=icons.LIST)
+	util.workflow().add_item('New list...', subtitle, arg=' '.join(args), valid=list_name != '', icon=icons.LIST)
 
 	util.workflow().add_item(
 		'Main menu',
