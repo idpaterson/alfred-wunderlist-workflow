@@ -3,7 +3,11 @@ Wunderlist Workflow for Alfred
 
 Create tasks and lists in [Wunderlist 3 for OS X](http://appstore.com/mac/Wunderlist) from [Alfred 2](http://www.alfredapp.com/) (requires Powerpack license).
 
-:exclamation: **OS X Yosemite has broken critical features that this workflow relied on.** The workflow does not function in Yosemite and cannot be fixed without abandoning UI automation outright. The workflow is currently being rewritten to leverage the new official Wunderlist API. [Keep track of the progress](/idpaterson/alfred-wunderlist-workflow/issues?q=is%3Aopen+is%3Aissue+milestone%3A0.4) for updates and to get involved in beta testing, or just [preview some of the upcoming task entry features](/idpaterson/alfred-wunderlist-workflow/issues/49)!
+:exclamation: **OS X Yosemite has broken critical features that version 0.3 of this workflow relied on.** 
+
+[**Download the latest beta release**](/idpaterson/alfred-wunderlist-workflow/releases) to help test the new workflow featuring natural language due dates (e.g. "Oil change next Tuesday repeat every 4 months") and read the release notes to learn more about the features coming in version 0.4.
+
+The current workflow, version 0.3, does not work in Yosemite and was not able to be fixed without abandoning UI automation outright. The workflow rewrite leveraging the new official Wunderlist API is nearing completion. 
 
 ![Adding a task to Wunderlist](https://raw.github.com/idpaterson/alfred-wunderlist-workflow/gh-pages/images/screenshots/add_task_to_list.jpg)
 
