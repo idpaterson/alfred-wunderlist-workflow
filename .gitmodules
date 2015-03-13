@@ -1,15 +1,9 @@
-[submodule "lib/qWorkflow"]
-	path = lib/qWorkflow
-	url = https://github.com/qlassiqa/qWorkflow.git
-[submodule "docs"]
-	path = docs
-	url = git@github.com:idpaterson/alfred-wunderlist-workflow.git
-[submodule "lib/Workflows"]
-	path = lib/Workflows
-	url = https://github.com/jdfwarrior/Workflows.git
-[submodule "lib/CFPropertyList"]
-	path = lib/CFPropertyList
-	url = https://github.com/rodneyrehm/CFPropertyList.git
-[submodule "lib/cliclick"]
-	path = lib/cliclick
-	url = git@github.com:BlueM/cliclick.git
+[submodule "lib/parsedatetime"]
+	path = lib/parsedatetime
+	url = https://github.com/bear/parsedatetime.git
+[submodule "lib/alfred-workflow"]
+	path = lib/alfred-workflow
+	url = https://github.com/deanishe/alfred-workflow.git
+[submodule "lib/peewee"]
+	path = lib/peewee
+	url = https://github.com/coleifer/peewee.git

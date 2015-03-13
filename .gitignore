@@ -1,4 +1,11 @@
-build
-docs
-Wunderlist-symlinked.alfredworkflow
-headerdoc
+*.pyc
+*.pyo
+
+/dist
+
+/.tmp
+
+/htmlcov
+.coverage
+
+node_modules

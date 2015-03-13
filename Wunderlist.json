@@ -1,5 +1,0 @@
-{
-    "version": 0.3,
-    "download_url": "https://raw.github.com/idpaterson/alfred-wunderlist-workflow/master/Wunderlist.alfredworkflow",
-    "description": "Supports Wunderlist 3 and introduces mouse automation for faster list navigation performance. This version does not support Wunderlist 2."
-}
