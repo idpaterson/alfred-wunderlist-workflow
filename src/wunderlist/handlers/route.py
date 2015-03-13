@@ -24,13 +24,14 @@ def route(args):
 	elif action == ':pref' or action == ':sync':
 		from wunderlist.handlers import preferences
 		handler = preferences
-	elif len(command) <= 1 and not action: 
-		from wunderlist.handlers import welcome
-		handler = welcome
-	# With no special keywords, the workflow creates a new task
-	else:
+	# If the command starts with a space (no special keywords), the workflow
+	# creates a new task
+	elif args[0] and args[0][0] == ' ':
 		from wunderlist.handlers import tasks
 		handler = tasks
+	else:
+		from wunderlist.handlers import welcome
+		handler = welcome
 
 	if handler:
 		if '--commit' in args:
