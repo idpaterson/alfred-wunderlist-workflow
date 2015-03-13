@@ -15,12 +15,11 @@ def filter(args):
 	)
 
 def commit(args):
-	if 'new' in args:
-		from wunderlist.api.lists import lists
-		from wunderlist.sync import sync
+	from wunderlist.api import lists
+	from wunderlist.sync import sync
 
-		list_name = _list_name(args)
+	list_name = _list_name(args)
 
-		lists.create_list(list_name)
+	lists.create_list(list_name)
 
-		sync()
+	sync()
