@@ -7,7 +7,7 @@ def route(args):
 	action = ''
 
 	if args:
-		command = args[0].rstrip().split(' ')
+		command = args[0].split(' ')
 
 	if command:
 		action = command[0]
