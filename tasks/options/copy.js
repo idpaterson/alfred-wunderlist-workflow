@@ -39,6 +39,14 @@ module.exports = {
 					'!parsedatetime/**/tests/**/*'
 				]
 			},
+			{
+				expand: true,
+				cwd: '<%= paths.lib %>/requests',
+				dest: '<%= paths.dist_lib %>',
+				src: [
+					'requests/**/*.{py,pem}'
+				]
+			},
 			// TODO: remove bundled HTML files once ghpages documentation and
 			// landing page are available
 			{
