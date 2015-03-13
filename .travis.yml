@@ -8,7 +8,8 @@ install:
   - pip install -r test_requirements.txt
 
 script:
-  - PYTHONPATH=. py.test --cov-report term-missing --cov wunderlist
+  - grunt build
+  - "cd dist/workflow && PYTHONPATH=. py.test ../../tests --cov-report term-missing --cov wunderlist"
 
 after_success:
   - coveralls
