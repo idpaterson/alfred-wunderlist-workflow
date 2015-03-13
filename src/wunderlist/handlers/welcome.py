@@ -6,7 +6,7 @@ def filter(args):
 	workflow().add_item(
 		'New task...',
 		'Begin typing to add a new task',
-		autocomplete=' :',
+		autocomplete=' ',
 		icon=icons.TASK_COMPLETED
 	)
 

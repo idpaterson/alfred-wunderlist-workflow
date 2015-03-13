@@ -63,9 +63,9 @@ def filter(args):
 
 	# Task has an unfinished due date phrase
 	elif task.has_due_date_prompt:
-		wf.add_item('Today', 'e.g. due today', autocomplete=' ' + task.phrase_with(due_date='due today'), icon=icons.CALENDAR)
-		wf.add_item('Tomorrow', 'e.g. due tomorrow', autocomplete=' ' + task.phrase_with(due_date='due tomorrow'), icon=icons.CALENDAR)
-		wf.add_item('Next Week', 'e.g. due next week', autocomplete=' ' + task.phrase_with(due_date='due next week'), icon=icons.CALENDAR)
+		wf.add_item('Today', 'e.g. due today', autocomplete=' ' + task.phrase_with(due_date='due today'), icon=icons.TODAY)
+		wf.add_item('Tomorrow', 'e.g. due tomorrow', autocomplete=' ' + task.phrase_with(due_date='due tomorrow'), icon=icons.TOMORROW)
+		wf.add_item('Next Week', 'e.g. due next week', autocomplete=' ' + task.phrase_with(due_date='due next week'), icon=icons.NEXT_WEEK)
 		wf.add_item('Next Month', 'e.g. due next month', autocomplete=' ' + task.phrase_with(due_date='due next month'), icon=icons.CALENDAR)
 		wf.add_item('Next Year', 'e.g. due next year, due April 15', autocomplete=' ' + task.phrase_with(due_date='due next year'), icon=icons.CALENDAR)
 		wf.add_item('Remove due date', autocomplete=' ' + task.phrase_with(due_date=False), icon=icons.CANCEL)
