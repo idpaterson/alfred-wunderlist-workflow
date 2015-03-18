@@ -7,7 +7,6 @@ from workflow.background import is_running
 from datetime import date
 from random import random
 
-_calendar = u'📅'
 _star = u'★'
 _recurrence = u'↻'
 
@@ -31,7 +30,7 @@ def filter(args):
 		else:
 			date_format = '%b %d, %Y'
 
-		subtitle.append('%s Due %s' % (_calendar, task.due_date.strftime(date_format)))
+		subtitle.append('Due %s' % (task.due_date.strftime(date_format)))
 
 	if task.recurrence_type:
 		subtitle.append(u'%s Every %d %s%s' % (_recurrence, task.recurrence_count, task.recurrence_type, 's' if task.recurrence_count != 1 else ''))
