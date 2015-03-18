@@ -30,6 +30,8 @@ module.exports = {
 	scripts: '<%= paths.www %>/<%= paths.scripts_dirname %>',
 	styles: '<%= paths.www %>/<%= paths.styles_dirname %>',
 
+	tests: 'tests',
+
 	// Built distribution
 	dist: '<%= paths.dist_dirname %>',
 

@@ -10,5 +10,14 @@ module.exports = {
 			}
 		},
 		command: 'zip --symlinks -r ../../<%= paths.dist_workflow_symlinked %> *'
+	},
+
+	pyTest: {
+		options: {
+			execOptions: {
+				cwd: '<%= paths.dist_app %>'
+			}
+		},
+		command: 'PYTHONPATH=. py.test ../../<%= paths.tests %> --cov-report term-missing --cov wunderlist'
 	}
 };
