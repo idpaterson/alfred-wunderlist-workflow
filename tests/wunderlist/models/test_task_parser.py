@@ -52,6 +52,14 @@ recurrence_types = {
 	'd': 'day'
 }
 
+single_recurrence_types = {
+	'yearly': 'year',
+	'annually': 'year',
+	'monthly': 'month',
+	'weekly': 'week',
+	'daily': 'day'
+}
+
 @pytest.fixture(autouse=True)
 def mock_lists(mocker):
 	"""
@@ -360,6 +368,20 @@ class TestRecurrence():
 		for (recurrence_phrase, recurrence_type) in recurrence_types.iteritems():
 			title = 'a sample task'
 			recurrence_phrase = 'every %d %ss' % (recurrence_count, recurrence_phrase)
+			phrase = '%s due %s %s' % (title, due_phrase, recurrence_phrase)
+			task = TaskParser(phrase)
+
+			assert_task(task, phrase=phrase, title=title, recurrence_type=recurrence_type, recurrence_count=recurrence_count, due_date=due_date)
+
+	def test_single_count_recurrence_phrases(self):
+		"""
+		These phrases do not use the `every` keyword, e.g. monthly oil change
+		"""
+		recurrence_count = 1
+		(due_phrase, due_date) = due_date_formats.items()[1]
+		for (recurrence_phrase, recurrence_type) in single_recurrence_types.iteritems():
+			title = 'a sample task'
+			recurrence_phrase = recurrence_phrase
 			phrase = '%s due %s %s' % (title, due_phrase, recurrence_phrase)
 			task = TaskParser(phrase)
 

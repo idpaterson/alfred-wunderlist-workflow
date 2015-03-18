@@ -33,7 +33,13 @@ def filter(args):
 		subtitle.append('Due %s' % (task.due_date.strftime(date_format)))
 
 	if task.recurrence_type:
-		subtitle.append(u'%s Every %d %s%s' % (_recurrence, task.recurrence_count, task.recurrence_type, 's' if task.recurrence_count != 1 else ''))
+		if task.recurrence_count > 1:
+			subtitle.append('%s Every %d %ss' % (_recurrence, task.recurrence_count, task.recurrence_type))
+		# Cannot simply add -ly suffix
+		elif task.recurrence_type == 'day':
+			subtitle.append('%s Daily' % (_recurrence))
+		else:
+			subtitle.append('%s %sly' % (_recurrence, task.recurrence_type.title()))
 
 	subtitle.append(task.title or 'Begin typing to add a new task')
 

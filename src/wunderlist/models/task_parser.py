@@ -9,7 +9,7 @@ import locale
 _list_title_pattern = r'^((?:\S+ *){0,8}):'
 
 # `every N units` optionally preceded by `repeat`
-_recurrence_pattern = r'(?:\brepeat:? )?\bevery *(\d*) *((?:day|week|month|year|d|w|m|y|da|wk|mo|yr)s?\b)?'
+_recurrence_pattern = r'(?:\brepeat(?:ing|s)?:? )?(?:\bevery *(\d*) *((?:day|week|month|year|d|w|m|y|da|wk|mo|yr)s?\b)?|(daily|weekly|monthly|yearly|annually))'
 _recurrence_by_date_pattern = r'(?:\brepeat:? )?\bevery *((?:\S+ *){0,2})'
 
 # Anything following the `due` keyword
@@ -29,7 +29,9 @@ _recurrence_types = {
 	'd': 'day',
 	'w': 'week',
 	'm': 'month',
-	'y': 'year'
+	'y': 'year',
+	# for "annually"
+	'a': 'year'
 }
 
 class TaskParser():
@@ -111,10 +113,11 @@ class TaskParser():
 		# not interfere with the due date
 		match = re.search(_recurrence_pattern, phrase, re.IGNORECASE)
 		if match:
-			if match.group(2):
+			type_phrase = match.group(2) if match.group(2) else match.group(3)
+			if type_phrase:
 				# Look up the recurrence type based on the first letter of the
 				# work or abbreviation used in the phrase
-				self.recurrence_type = _recurrence_types[match.group(2)[0].lower()]
+				self.recurrence_type = _recurrence_types[type_phrase[0].lower()]
 				self.recurrence_count = int(match.group(1) or 1)
 			else:
 				match = re.search(_recurrence_by_date_pattern, phrase, re.IGNORECASE)
