@@ -1,13 +1,27 @@
 from wunderlist.auth import is_authorized
 from wunderlist.util import workflow
+import re
+import os
 
 def route(args):
 	handler = None
 	command = []
+	command_string = ''
 	action = ''
 
-	if args:
-		command = args[0].split(' ')
+	# Read the stored query, which will correspond to the user's alfred query
+	# as of the very latest keystroke. This may be different than the query
+	# when this script was launched due to the startup latency.
+	if args[0] == '--stored-query':
+		query_file = workflow().workflowfile('.query')
+		with open(query_file, 'r') as f:
+			command_string = f.read()
+		os.remove(queryfile)
+	# Otherwise take the command from the first command line argument
+	elif args:
+		command_string = args[0]
+
+	command = command_string.split(' ')
 
 	if command:
 		action = command[0]
@@ -26,7 +40,7 @@ def route(args):
 		handler = preferences
 	# If the command starts with a space (no special keywords), the workflow
 	# creates a new task
-	elif args[0] and args[0][0] == ' ':
+	elif command_string and command_string[0] == ' ':
 		from wunderlist.handlers import tasks
 		handler = tasks
 	else:

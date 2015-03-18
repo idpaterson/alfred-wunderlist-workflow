@@ -103,7 +103,8 @@
 				<key>runningsubtext</key>
 				<string>Preparing workflow</string>
 				<key>script</key>
-				<string>/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}"</string>
+				<string>echo "{query}" &gt; .query
+/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}"</string>
 				<key>subtext</key>
 				<string>Type wl to control Wunderlist</string>
 				<key>title</key>

@@ -72,7 +72,7 @@ def filter(args):
 
 	# Main menu for tasks
 	else:
-		wf.add_item('New task in ' + task.list_title + '...', '   '.join(subtitle), arg=' ' + task.phrase, valid=task.title != '', icon=icons.TASK)
+		wf.add_item(task.list_title + u' – create a new task...', '   '.join(subtitle), arg='--stored-query', valid=task.title != '', icon=icons.TASK)
 
 		title = 'Change list' if task.list_title else 'Select a list'
 		wf.add_item(title, 'Prefix the task, e.g. Automotive: ' + task.title, autocomplete=' ' + task.phrase_with(list_title=True), icon=icons.LIST)
