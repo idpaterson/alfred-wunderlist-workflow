@@ -6,6 +6,7 @@
   "devDependencies": {
     "glob": "~4.4.0",
     "grunt": "~0.4.5",
+    "grunt-bumpup": "~0.6.2",
     "grunt-contrib-clean": "~0.6.0",
     "grunt-contrib-compass": "~1.0.1",
     "grunt-contrib-compress": "~0.13.0",
