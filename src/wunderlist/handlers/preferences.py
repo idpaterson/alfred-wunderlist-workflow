@@ -5,11 +5,13 @@ from wunderlist import icons
 def filter(args):
 	current_user = User.get()
 
-	workflow().add_item(
-		'Sign out',
-		'You are logged in as ' + current_user.name,
-		autocomplete=':logout', icon=icons.CANCEL
-	)
+	if current_user and current_user.name:
+		workflow().add_item(
+			'Sign out',
+			'You are logged in as ' + current_user.name,
+			autocomplete=':logout', icon=icons.CANCEL
+		)
+
 
 	workflow().add_item(
 		'Switch theme',
