@@ -16,7 +16,7 @@ def route(args):
 		query_file = workflow().workflowfile('.query')
 		with open(query_file, 'r') as f:
 			command_string = f.read()
-		os.remove(queryfile)
+		os.remove(query_file)
 	# Otherwise take the command from the first command line argument
 	elif args:
 		command_string = args[0]
