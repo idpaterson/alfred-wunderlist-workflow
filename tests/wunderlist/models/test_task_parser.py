@@ -68,6 +68,14 @@ def mock_lists(mocker):
 	lists = map(lambda (i, title): { 'title': title, 'id': i }, enumerate(_lists))
 	mocker.patch('workflow.Workflow.stored_data', new=lambda *arg:lists)
 
+@pytest.fixture()
+def mock_lists_empty(mocker):
+	"""
+	Causes stored_data to return an empty array for lists
+	"""
+	lists = []
+	mocker.patch('workflow.Workflow.stored_data', new=lambda *arg:lists)
+
 @pytest.fixture(autouse=True)
 def set_locale():
 	"""
@@ -128,6 +136,15 @@ class TestBasics():
 		assert_task(task, phrase=phrase, title=title)
 
 	def test_inbox_is_default(self):
+		target_list = _inbox
+		title = 'a sample task'
+		phrase = title
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
+
+	@pytest.mark.usefixtures("mock_lists_empty")
+	def test_inbox_is_default_before_syncing_lists(self):
 		target_list = _inbox
 		title = 'a sample task'
 		phrase = title
