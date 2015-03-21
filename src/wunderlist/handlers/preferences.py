@@ -47,4 +47,6 @@ def commit(args):
 
 		workflow().store_data('prefs', prefs)
 
-		subprocess.call(['/usr/bin/env', 'osascript', 'launch_alfred.scpt', 'wl:pref'])
+		print 'The workflow is now using the %s icon theme' % (prefs['icon_theme'])
+
+		subprocess.call(['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl:pref'])

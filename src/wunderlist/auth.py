@@ -94,9 +94,11 @@ def await_token():
 
 			# request is either for a file to be served up or our test
 			if 'code' in params and validate_oauth_state(params['state'][0]):
+				print 'You are now logged in'
 				self.path = 'www/authorize.html'
 				resolve_oauth_token(params['code'][0])
 			elif 'error' in params:
+				print 'Please try again later'
 				self.path = 'www/decline.html'
 			else:
 				self.path = 'www/' + self.path

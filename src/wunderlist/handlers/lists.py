@@ -22,4 +22,6 @@ def commit(args):
 
 	lists.create_list(list_name)
 
+	print 'The new list was created'
+
 	sync()

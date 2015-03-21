@@ -52,5 +52,4 @@ def route(args):
 			handler.commit(command)
 		else:
 			handler.filter(command)
-
-	workflow().send_feedback()
+			workflow().send_feedback()

@@ -97,7 +97,6 @@ def filter(args):
 
 def commit(args):
 	from wunderlist.api import tasks
-	import subprocess
 
 	task = _task(args)
 
@@ -106,4 +105,4 @@ def commit(args):
 		due_date=task.due_date, starred=task.starred, completed=task.completed
 	)
 
-	subprocess.call(['/usr/bin/env', 'osascript', '-e', 'display notification "The task has been added to ' + task.list_title + '" with title "Task created"'])
+	print 'The task was added to ' + task.list_title

@@ -33,19 +33,16 @@ class BaseModel(Model):
 
 				# If the revision is different, sync any children, then update the db
 				if instance.revision != update_item['revision']:
-					print 'Updated ' + type(instance).__name__
 					instance._sync_children()
 					cls.update(**update_item).where(cls.id == instance.id).execute()
 
 				del update_items[instance.id]
 			# The model does not exist anymore
 			else:
-				print 'Deleted ' + type(instance).__name__
 				instance.delete_instance()
 
 		for update_item in update_items.values():
 			instance = cls.create(**update_item)
-			print 'Created ' + type(instance).__name__
 			instance._sync_children()
 
 	@classmethod

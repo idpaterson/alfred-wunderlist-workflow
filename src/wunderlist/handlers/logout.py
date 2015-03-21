@@ -17,3 +17,5 @@ def filter(args):
 
 def commit(args):
 	auth.deauthorize()
+
+	print 'You are now logged out'
