@@ -306,6 +306,20 @@ class TestDueDate():
 
 			assert_task(task, phrase=phrase, title=title, due_date=due_date)
 
+	def test_due_next_weekday(self):
+		# Get the day name 8 days from now. If today is Friday, due_date will
+		# be not tomorrow but the following Saturday and weekday will be
+		# "Saturday"
+		due_date = date.today() + timedelta(8)
+		weekday = due_date.strftime('%A')
+
+		title = 'a sample task'
+		due_phrase = 'due next %s' % (weekday)
+		phrase = '%s %s' % (title, due_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, due_date=due_date)
+
 	def test_due_date_ignores_time(self):
 		title = 'a sample task due 4:00'
 		phrase = title

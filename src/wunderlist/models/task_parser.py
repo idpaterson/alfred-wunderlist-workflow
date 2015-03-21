@@ -179,9 +179,14 @@ class TaskParser():
 			potential_date_phrase = phrase
 
 		if potential_date_phrase:
-			# nlp() does not parse "next month", requires "in 1 month"
-			potential_date_phrase = re.sub(_next_pattern, r'\1in 1 ', potential_date_phrase, re.IGNORECASE)
 			dates = cal.nlp(potential_date_phrase)
+
+			if not dates:
+				# nlp() does not parse "next month", requires "in 1 month" but
+				# some phrases like "next tuesday" work. This is a fallback if
+				# nothing matches.
+				potential_date_phrase = re.sub(_next_pattern, r'\1in 1 ', potential_date_phrase, re.IGNORECASE)
+				dates = cal.nlp(potential_date_phrase)
 
 			if dates:
 				# Only remove the first date following `due`
