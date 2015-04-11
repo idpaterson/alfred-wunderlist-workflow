@@ -283,8 +283,6 @@ class TaskParser():
 		if starred is None:
 			if self._starred_phrase:
 				components.append(self._starred_phrase)
-			else:
-				components.append(' ')
 		# Adds a star
 		elif starred:
 			components.append('*')
