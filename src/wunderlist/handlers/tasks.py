@@ -60,19 +60,19 @@ def filter(args):
 	
 	# Task has an unfinished recurrence phrase
 	elif task.has_recurrence_prompt:
-		wf.add_item('Every month', 'Same day every month, e.g. every mo', uid="recurrence_1m", autocomplete=' ' + task.phrase_with(recurrence='every month'), icon=icons.RECURRENCE)
-		wf.add_item('Every week', 'Same day every week, e.g. every week, every Tuesday', uid="recurrence_1w", autocomplete=' ' + task.phrase_with(recurrence='every week'), icon=icons.RECURRENCE)
-		wf.add_item('Every year', 'Same date every year, e.g. every 1 y, every April 15', uid="recurrence_1y", autocomplete=' ' + task.phrase_with(recurrence='every year'), icon=icons.RECURRENCE)
-		wf.add_item('Every 3 months', 'Same day every 3 months, e.g. every 3 months', uid="recurrence_3m", autocomplete=' ' + task.phrase_with(recurrence='every 3 months'), icon=icons.RECURRENCE)
+		wf.add_item('Every month', 'Same day every month, e.g. every mo', uid="recurrence_1m", autocomplete=' %s ' % task.phrase_with(recurrence='every month'), icon=icons.RECURRENCE)
+		wf.add_item('Every week', 'Same day every week, e.g. every week, every Tuesday', uid="recurrence_1w", autocomplete=' %s ' % task.phrase_with(recurrence='every week'), icon=icons.RECURRENCE)
+		wf.add_item('Every year', 'Same date every year, e.g. every 1 y, every April 15', uid="recurrence_1y", autocomplete=' %s ' % task.phrase_with(recurrence='every year'), icon=icons.RECURRENCE)
+		wf.add_item('Every 3 months', 'Same day every 3 months, e.g. every 3 months', uid="recurrence_3m", autocomplete=' %s ' % task.phrase_with(recurrence='every 3 months'), icon=icons.RECURRENCE)
 		wf.add_item('Remove recurrence', autocomplete=' ' + task.phrase_with(recurrence=False), icon=icons.CANCEL)
 
 	# Task has an unfinished due date phrase
 	elif task.has_due_date_prompt:
-		wf.add_item('Today', 'e.g. due today', autocomplete=' ' + task.phrase_with(due_date='due today'), icon=icons.TODAY)
-		wf.add_item('Tomorrow', 'e.g. due tomorrow', autocomplete=' ' + task.phrase_with(due_date='due tomorrow'), icon=icons.TOMORROW)
-		wf.add_item('Next Week', 'e.g. due next week', autocomplete=' ' + task.phrase_with(due_date='due next week'), icon=icons.NEXT_WEEK)
-		wf.add_item('Next Month', 'e.g. due next month', autocomplete=' ' + task.phrase_with(due_date='due next month'), icon=icons.CALENDAR)
-		wf.add_item('Next Year', 'e.g. due next year, due April 15', autocomplete=' ' + task.phrase_with(due_date='due next year'), icon=icons.CALENDAR)
+		wf.add_item('Today', 'e.g. due today', autocomplete=' %s ' % task.phrase_with(due_date='due today'), icon=icons.TODAY)
+		wf.add_item('Tomorrow', 'e.g. due tomorrow', autocomplete=' %s ' % task.phrase_with(due_date='due tomorrow'), icon=icons.TOMORROW)
+		wf.add_item('Next Week', 'e.g. due next week', autocomplete=' %s ' % task.phrase_with(due_date='due next week'), icon=icons.NEXT_WEEK)
+		wf.add_item('Next Month', 'e.g. due next month', autocomplete=' %s ' % task.phrase_with(due_date='due next month'), icon=icons.CALENDAR)
+		wf.add_item('Next Year', 'e.g. due next year, due April 15', autocomplete=' %s ' % task.phrase_with(due_date='due next year'), icon=icons.CALENDAR)
 		wf.add_item('Remove due date', autocomplete=' ' + task.phrase_with(due_date=False), icon=icons.CANCEL)
 
 	# Main menu for tasks
