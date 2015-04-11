@@ -45,7 +45,8 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --alt</string>
+				<string>export LANG="$(defaults read -g AppleLocale).UTF-8"
+/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --alt</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -53,6 +54,45 @@
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>39540B6D-5AA4-4427-BA63-42256009EE5F</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>wl</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
+				<key>runningsubtext</key>
+				<string>Preparing workflow</string>
+				<key>script</key>
+				<string>export LANG="$(defaults read -g AppleLocale).UTF-8"
+echo "{query}" &gt; .query
+/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}"</string>
+				<key>subtext</key>
+				<string>Type wl to control Wunderlist</string>
+				<key>title</key>
+				<string>Wunderlist</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>0F2D229C-18BA-4E40-A81D-D796A6E159BC</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -86,48 +126,11 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>1</integer>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>keyword</key>
-				<string>wl</string>
-				<key>queuedelaycustom</key>
-				<integer>3</integer>
-				<key>queuedelayimmediatelyinitially</key>
-				<true/>
-				<key>queuedelaymode</key>
-				<integer>0</integer>
-				<key>queuemode</key>
-				<integer>2</integer>
-				<key>runningsubtext</key>
-				<string>Preparing workflow</string>
-				<key>script</key>
-				<string>echo "{query}" &gt; .query
-/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}"</string>
-				<key>subtext</key>
-				<string>Type wl to control Wunderlist</string>
-				<key>title</key>
-				<string>Wunderlist</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>0F2D229C-18BA-4E40-A81D-D796A6E159BC</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit</string>
+				<string>export LANG="$(defaults read -g AppleLocale).UTF-8"
+/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -144,7 +147,8 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --cmd</string>
+				<string>export LANG="$(defaults read -g AppleLocale).UTF-8"
+/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --cmd</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
