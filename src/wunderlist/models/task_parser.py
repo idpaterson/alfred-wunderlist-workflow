@@ -64,7 +64,12 @@ class TaskParser():
 		loc = locale.getlocale(locale.LC_TIME)[0]
 
 		if not loc:
-			loc = locale.getdefaultlocale()[0]
+			# In case the LC_* environment variables are misconfigured, catch
+			# an exception that may be thrown
+			try:
+				loc = locale.getdefaultlocale()[0]
+			except:
+				loc = 'en_US'
 
 		c = Constants(loc)
 		cal = Calendar(c)
