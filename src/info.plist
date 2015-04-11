@@ -45,7 +45,8 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --alt</string>
+				<string>export LC_CTYPE="$(defaults read -g AppleLocale).UTF-8"
+/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --alt</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -103,7 +104,8 @@
 				<key>runningsubtext</key>
 				<string>Preparing workflow</string>
 				<key>script</key>
-				<string>echo "{query}" &gt; .query
+				<string>export LC_CTYPE="$(defaults read -g AppleLocale).UTF-8"
+echo "{query}" &gt; .query
 /usr/bin/env python -O alfred-wunderlist-workflow.py "{query}"</string>
 				<key>subtext</key>
 				<string>Type wl to control Wunderlist</string>
@@ -127,7 +129,8 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit</string>
+				<string>export LC_CTYPE="$(defaults read -g AppleLocale).UTF-8"
+/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -144,7 +147,8 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --cmd</string>
+				<string>export LC_CTYPE="$(defaults read -g AppleLocale).UTF-8"
+/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --cmd</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
