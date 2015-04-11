@@ -64,7 +64,13 @@ class TaskParser():
 		loc = locale.getlocale(locale.LC_TIME)[0]
 
 		if not loc:
-			loc = locale.getdefaultlocale()[0]
+			# In some instances, getdefaultlocale() has been known to throw an
+			# exception due apparently to no locale being set wherein UTF-8 is
+			# attempted to substitute for the locale
+			try:
+				loc = locale.getdefaultlocale()[0]
+			except:
+				loc = 'en_US'
 
 		c = Constants(loc)
 		cal = Calendar(c)
