@@ -1,5 +1,6 @@
 from wunderlist.auth import is_authorized
 from wunderlist.util import workflow
+from wunderlist import icons
 import re
 import os
 
@@ -52,4 +53,8 @@ def route(args):
 			handler.commit(command)
 		else:
 			handler.filter(command)
+
+			if workflow().update_available:
+				workflow().add_item('An update is available!', 'Update the Wunderlist workflow to a newer version', arg=':pref update', valid=True, icon=icons.DOWNLOAD)
+
 			workflow().send_feedback()

@@ -11,8 +11,10 @@ def workflow():
 			update_settings={
 				'github_slug': 'idpaterson/alfred-wunderlist-workflow',
 				'version': '__VERSION__',
-				# Check for updates weekly
-				'frequency': 7
+				# Check for updates daily
+				# TODO: check less frequently as the workflow becomes more
+				# stable
+				'frequency': 1
 			}
 		)
 
