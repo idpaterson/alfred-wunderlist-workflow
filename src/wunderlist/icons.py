@@ -2,15 +2,21 @@ from wunderlist.util import workflow
 
 _icon_theme = None
 
+def alfred_is_dark():
+	# Formatted rgba(255,255,255,0.90)
+	background_rgba = workflow().alfred_env['theme_background']
+	rgb = [int(x) for x in background_rgba[5:-6].split(',')]
+	return (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255 < 0.5
+
 def icon_theme():
 	global _icon_theme
 	if not _icon_theme:
 		prefs = workflow().stored_data('prefs')
 
 		if prefs and 'icon_theme' in prefs:
-			_icon_theme = prefs['icon_theme'] 
+			_icon_theme = prefs['icon_theme']
 		else:
-			_icon_theme = 'dark'
+			_icon_theme = 'light' if alfred_is_dark() else 'dark'
 
 	return _icon_theme
 
