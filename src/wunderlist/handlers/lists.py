@@ -7,7 +7,7 @@ def filter(args):
 	list_name = _list_name(args)
 	subtitle = list_name if list_name else 'Type the name of the list'
 
-	util.workflow().add_item('New list...', subtitle, arg='--stored-query', valid=list_name != '', icon=icons.LIST)
+	util.workflow().add_item('New list...', subtitle, arg='--stored-query', valid=list_name != '', icon=icons.LIST_NEW)
 
 	util.workflow().add_item(
 		'Main menu',

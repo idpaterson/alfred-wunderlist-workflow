@@ -15,7 +15,7 @@ def filter(args):
 	workflow().add_item(
 		'New list',
 		autocomplete=':list ',
-		icon=icons.LIST
+		icon=icons.LIST_NEW
 	)
 
 	workflow().add_item(
