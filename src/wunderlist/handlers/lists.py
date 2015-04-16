@@ -16,7 +16,7 @@ def filter(args):
 
 def commit(args):
 	from wunderlist.api import lists
-	from wunderlist.sync import sync
+	from wunderlist.sync import backgroundSync
 
 	list_name = _list_name(args)
 
@@ -24,4 +24,4 @@ def commit(args):
 
 	print 'The new list was created'
 
-	sync()
+	backgroundSync()

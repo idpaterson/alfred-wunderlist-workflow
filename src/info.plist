@@ -28,6 +28,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>E0AE4F8B-253B-4EFD-B568-E9A2A46AA0C7</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A28E28AD-30A4-4578-87C2-E258E3948B63</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 	</dict>
 	<key>createdby</key>
 	<string>Ian Paterson</string>
@@ -60,29 +71,27 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>action</key>
-				<integer>0</integer>
-				<key>argument</key>
-				<integer>0</integer>
-				<key>hotkey</key>
-				<integer>13</integer>
-				<key>hotmod</key>
-				<integer>1703936</integer>
-				<key>hotstring</key>
-				<string>W</string>
-				<key>leftcursor</key>
+				<key>lastpathcomponent</key>
 				<false/>
-				<key>modsmode</key>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>output</key>
 				<integer>0</integer>
-				<key>relatedAppsMode</key>
-				<integer>0</integer>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Wunderlist</string>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
+			<string>alfred.workflow.output.notification</string>
 			<key>uid</key>
-			<string>CB67A7A4-2A1F-4905-990C-5BD07FD51C1C</string>
+			<string>A28E28AD-30A4-4578-87C2-E258E3948B63</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -126,6 +135,33 @@ echo "{query}" &gt; .query
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>CB67A7A4-2A1F-4905-990C-5BD07FD51C1C</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
@@ -173,6 +209,11 @@ echo "{query}" &gt; .query
 		<dict>
 			<key>ypos</key>
 			<real>10</real>
+		</dict>
+		<key>A28E28AD-30A4-4578-87C2-E258E3948B63</key>
+		<dict>
+			<key>ypos</key>
+			<real>130</real>
 		</dict>
 		<key>B17D3A8B-97D1-4CB1-AA34-48754A1CC6F3</key>
 		<dict>

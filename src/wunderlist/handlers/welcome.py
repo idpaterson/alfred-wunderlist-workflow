@@ -3,6 +3,8 @@ from wunderlist.util import workflow
 from wunderlist.sync import backgroundSync
 
 def filter(args):
+	backgroundSync()
+
 	workflow().add_item(
 		'New task...',
 		'Begin typing to add a new task',
@@ -21,5 +23,3 @@ def filter(args):
 		autocomplete=':pref ',
 		icon=icons.PREFERENCES
 	)
-
-	backgroundSync()
