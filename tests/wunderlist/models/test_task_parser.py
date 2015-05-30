@@ -289,17 +289,33 @@ class TestDueDate():
 
 	def test_due_next_year(self):
 		"""
-		The "next" word was not understood by parsedatetime.nlp(), so "next week"
-		is transformed to "in 1 week" before calling nlp.
+		The "next" word was not understood by parsedatetime.nlp() in an
+		earlier version and the implementation in the workflow was incorrect;
+		rather than the same date one year from now, "next year" means Jan 1
+		of the following year.
+		"""
+		today = date.today()
+		title = 'a sample task'
+		due_phrase = 'due next year'
+		due_date = date(year=today.year + 1, month=1, day=1)
+		phrase = '%s %s' % (title, due_phrase)
+		task = TaskParser(phrase)
 
-		This test would fail if run on Feb 29.
+		assert_task(task, phrase=phrase, title=title, due_date=due_date)
+
+	def test_due_in_a_year(self):
+		"""
+		Due on this date, one year from now.
+
+		This test would fail if run on Feb 29, so it will not run on that
+		date.
 		"""
 		due_date = date.today()
 
 		# Do not attempt on Feb 29 because that date will not exist next year
 		if due_date.month != 2 or due_date.day != 29:
 			title = 'a sample task'
-			due_phrase = 'due next year'
+			due_phrase = 'due in a year'
 			due_date = due_date.replace(year=due_date.year + 1)
 			phrase = '%s %s' % (title, due_phrase)
 			task = TaskParser(phrase)
