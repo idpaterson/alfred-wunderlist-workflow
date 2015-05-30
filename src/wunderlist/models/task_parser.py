@@ -21,9 +21,6 @@ _star_pattern = r'\*$'
 # Tabs or multiple consecutive spaces
 _whitespace_cleanup_pattern = r'\t|\s{2,}'
 
-# For transforming "next month" to "in 1 month"
-_next_pattern = r'(^| )next '
-
 # Maps first letter to the API recurrence type
 _recurrence_types = {
 	'd': 'day',
@@ -187,10 +184,6 @@ class TaskParser():
 			dates = cal.nlp(potential_date_phrase)
 
 			if not dates:
-				# nlp() does not parse "next month", requires "in 1 month" but
-				# some phrases like "next tuesday" work. This is a fallback if
-				# nothing matches.
-				potential_date_phrase = re.sub(_next_pattern, r'\1in 1 ', potential_date_phrase, re.IGNORECASE)
 				dates = cal.nlp(potential_date_phrase)
 
 			if dates:
@@ -203,7 +196,6 @@ class TaskParser():
 					# Pull in any words between the `due` keyword and the
 					# actual date text
 					date_pattern = re.escape(datetime_info[4])
-					date_pattern = date_pattern.replace('in\\ 1\\ ', '(?:in 1|next) ')
 
 					if due_keyword:
 						date_pattern = re.escape(due_keyword) + r'.*?' + date_pattern
