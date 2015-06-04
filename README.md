@@ -3,6 +3,10 @@ Wunderlist Workflow for Alfred
 
 Create tasks in [Wunderlist](http://wunderlist.com) more effortlessly than ever before with this [Alfred 2](http://www.alfredapp.com/) workflow (requires Powerpack license). 
 
+Beginner and advanced approaches to adding a monthly repeating task beginning the following week:
+
+![Simple and advanced usage](https://cloud.githubusercontent.com/assets/507058/7975455/ff5acaea-0a3b-11e5-93f9-74b4b14039dc.gif)
+
 Setup
 -----
 
