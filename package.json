@@ -1,0 +1,29 @@
+{
+  "name": "alfred-wunderlist-workflow",
+  "version": "0.4.0",
+  "dependencies": {},
+  "private": true,
+  "devDependencies": {
+    "glob": "~4.4.0",
+    "grunt": "~0.4.5",
+    "grunt-bumpup": "~0.6.2",
+    "grunt-contrib-clean": "~0.6.0",
+    "grunt-contrib-compass": "~1.0.1",
+    "grunt-contrib-compress": "~0.13.0",
+    "grunt-contrib-copy": "~0.8.0",
+    "grunt-contrib-imagemin": "~0.9.3",
+    "grunt-contrib-jshint": "~0.11.0",
+    "grunt-contrib-symlink": "~0.3.0",
+    "grunt-newer": "~1.1.0",
+    "grunt-pylint": "~1.0.0",
+    "grunt-shell": "~1.1.2",
+    "grunt-text-replace": "~0.4.0",
+    "jshint-stylish": "~1.0.1",
+    "load-grunt-tasks": "~3.1.0",
+    "lodash": "~3.3.1",
+    "time-grunt": "~1.1.0"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  }
+}
