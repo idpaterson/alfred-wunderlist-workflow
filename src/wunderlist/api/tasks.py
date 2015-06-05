@@ -14,9 +14,15 @@ def tasks(list_id, order='display', completed=False):
 		positions = task_positions(list_id)
 
 		def position(task):
-			return positions.index(task['id'])
+			try:
+				return positions.index(task['id'])
+			except:
+				return 1e99
 
 		tasks.sort(key=position)
+
+	for (index, task) in enumerate(tasks):
+		task['order'] = index
 
 	return tasks
 

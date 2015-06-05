@@ -34,12 +34,12 @@ class List(BaseModel):
 	def _populate_api_extras(cls, info):
 		lists.update_list_with_tasks_count(info)
 
-		return info		
+		return info	
 
 	def _sync_children(self):
 		from task import Task
 
-		Task.sync()
+		Task.sync_tasks_in_list(self)
 
 	class Meta:
 		order_by = ('order', 'id')

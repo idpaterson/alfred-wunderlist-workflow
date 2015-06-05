@@ -1,5 +1,6 @@
-from peewee import Model, SqliteDatabase
+from peewee import Model, SqliteDatabase, ForeignKeyField
 from wunderlist.util import workflow
+from copy import copy
 
 db = SqliteDatabase(workflow().datadir + '/wunderlist.db', threadlocals=True)
 
@@ -7,14 +8,17 @@ class BaseModel(Model):
 
 	@classmethod
 	def _api2model(cls, data):
-		fields = cls._meta.fields
+		fields = copy(cls._meta.fields)
 
 		# Map relationships, e.g. from user_id to user
-		for (k,v) in fields.iteritems():
+		for (k,v) in cls._meta.fields.iteritems():
 			if k.endswith('_id'):
 				fields[k[:-3]] = v
+			elif isinstance(v, ForeignKeyField):
+				fields[k + '_id'] = v
 
-		return {k:v for (k,v) in data.iteritems() if k in fields}
+		# Map each data property to the correct field
+		return {fields[k].name : v for (k,v) in data.iteritems() if k in fields}
 
 	@classmethod
 	def sync(cls):
@@ -32,9 +36,10 @@ class BaseModel(Model):
 				update_item = update_items[instance.id]
 
 				# If the revision is different, sync any children, then update the db
-				if instance.revision != update_item['revision']:
+				if True or instance.revision != update_item['revision']:
 					instance._sync_children()
-					cls.update(**update_item).where(cls.id == instance.id).execute()
+					if instance.revision != update_item['revision']:
+						cls.update(**update_item).where(cls.id == instance.id).execute()
 
 				del update_items[instance.id]
 			# The model does not exist anymore
