@@ -14,6 +14,7 @@
     "grunt-contrib-imagemin": "~0.9.3",
     "grunt-contrib-jshint": "~0.11.0",
     "grunt-contrib-symlink": "~0.3.0",
+    "grunt-contrib-watch": "~0.6.1",
     "grunt-newer": "~1.1.0",
     "grunt-pylint": "~1.0.0",
     "grunt-shell": "~1.1.2",
