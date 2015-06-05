@@ -5,8 +5,10 @@ _icon_theme = None
 def alfred_is_dark():
 	# Formatted rgba(255,255,255,0.90)
 	background_rgba = workflow().alfred_env['theme_background']
-	rgb = [int(x) for x in background_rgba[5:-6].split(',')]
-	return (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255 < 0.5
+	if background_rgba:
+		rgb = [int(x) for x in background_rgba[5:-6].split(',')]
+		return (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255 < 0.5
+	return False
 
 def icon_theme():
 	global _icon_theme
