@@ -105,4 +105,5 @@ def commit(args):
 		due_date=task.due_date, starred=task.starred, completed=task.completed
 	)
 
-	print 'The task was added to ' + task.list_title
+	# Output must be a UTF-8 encoded string
+	print ('The task was added to ' + task.list_title).encode('utf-8')
