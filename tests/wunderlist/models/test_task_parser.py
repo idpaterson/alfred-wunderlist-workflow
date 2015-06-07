@@ -332,7 +332,7 @@ class TestDueDate():
 		# will actually correspond to the very next day rather than a week
 		# later as expected. TODO: remove this workaround if fixed in
 		# parsedatetime, but otherwise the test will always fail on Sunday.
-		if date.today().weekday == 6:
+		if date.today().weekday() == 6:
 			due_date = date.today() + timedelta(days=1)
 
 		weekday = due_date.strftime('%A')
