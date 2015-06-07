@@ -326,7 +326,15 @@ class TestDueDate():
 		# Get the day name 8 days from now. If today is Friday, due_date will
 		# be not tomorrow but the following Saturday and weekday will be
 		# "Saturday"
-		due_date = date.today() + timedelta(8)
+		due_date = date.today() + timedelta(days=8)
+
+		# Since Sunday is the last day of the week in Python, "next Monday"
+		# will actually correspond to the very next day rather than a week
+		# later as expected. TODO: remove this workaround if fixed in
+		# parsedatetime, but otherwise the test will always fail on Sunday.
+		if date.today().weekday == 6:
+			due_date = date.today() + timedelta(days=1)
+
 		weekday = due_date.strftime('%A')
 
 		title = 'a sample task'
