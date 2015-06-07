@@ -16,7 +16,7 @@ def route(args):
 	if args[0] == '--stored-query':
 		query_file = workflow().workflowfile('.query')
 		with open(query_file, 'r') as f:
-			command_string = f.read()
+			command_string = workflow().decode(f.read())
 		os.remove(query_file)
 	# Otherwise take the command from the first command line argument
 	elif args:
