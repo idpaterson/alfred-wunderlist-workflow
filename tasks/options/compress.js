@@ -15,7 +15,10 @@ module.exports = {
 		files: [{
 			expand: true,
 			cwd: '<%= paths.dist_app %>',
-			src: '**/*'
+			src: [
+				'**/*',
+				'!**/*.{pyc,pyo}'
+			]
 		}]
 	}
 };

@@ -16,7 +16,7 @@ def route(args):
 	if args[0] == '--stored-query':
 		query_file = workflow().workflowfile('.query')
 		with open(query_file, 'r') as f:
-			command_string = f.read()
+			command_string = workflow().decode(f.read())
 		os.remove(query_file)
 	# Otherwise take the command from the first command line argument
 	elif args:
@@ -55,6 +55,7 @@ def route(args):
 			handler.filter(command)
 
 			if workflow().update_available:
-				workflow().add_item('An update is available!', 'Update the Wunderlist workflow to a newer version', arg=':pref update', valid=True, icon=icons.DOWNLOAD)
+				update_data = workflow().cached_data('__workflow_update_status', max_age=0)
+				workflow().add_item('An update is available!', 'Update the Wunderlist workflow from version __VERSION__ to %s' % update_data.get('version'), arg=':pref update', valid=True, icon=icons.DOWNLOAD)
 
 			workflow().send_feedback()

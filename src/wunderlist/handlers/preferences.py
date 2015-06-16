@@ -12,13 +12,10 @@ def filter(args):
 			autocomplete=':logout', icon=icons.CANCEL
 		)
 
-
 	workflow().add_item(
-		'Switch theme',
-		'Toggle between light and dark icons',
-		arg=':pref retheme',
-		valid=True,
-		icon=icons.PAINTBRUSH
+		'New in this version',
+		'Installed: __VERSION__   See the changes from the previous version',
+		arg=':pref changelog', valid=True, icon=icons.INFO
 	)
 
 	workflow().add_item(
@@ -31,6 +28,14 @@ def filter(args):
 		'Update workflow',
 		'Check for updates to the workflow (automatically checked periodically)',
 		arg=':pref update', valid=True, icon=icons.DOWNLOAD
+	)
+
+	workflow().add_item(
+		'Switch theme',
+		'Toggle between light and dark icons',
+		arg=':pref retheme',
+		valid=True,
+		icon=icons.PAINTBRUSH
 	)
 
 	workflow().add_item(
@@ -47,6 +52,10 @@ def commit(args):
 			print 'The workflow is being updated'
 		else:
 			print 'You already have the latest workflow version'
+	elif 'changelog' in args:
+		import webbrowser
+
+		webbrowser.open('https://github.com/idpaterson/alfred-wunderlist-workflow/releases/tag/__VERSION__')
 	elif 'retheme' in args:
 		import subprocess
 
