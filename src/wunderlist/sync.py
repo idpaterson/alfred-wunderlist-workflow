@@ -1,11 +1,12 @@
 def sync():
-	from wunderlist.models import base, root, list, task, user
+	from wunderlist.models import base, root, list, task, user, hashtag
 
 	base.BaseModel._meta.database.create_tables([
 		root.Root,
 		list.List,
 		task.Task,
-		user.User
+		user.User,
+		hashtag.Hashtag
 	], safe=True)
 
 	root.Root.sync()

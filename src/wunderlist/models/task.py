@@ -33,6 +33,10 @@ class Task(BaseModel):
 
 		cls._perform_updates(instances, tasks_data)
 
+	def _sync_children(self):
+		from hashtag import Hashtag
+
+		Hashtag.sync_hashtags_in_task(self)
 
 	class Meta:
 		order_by = ('order', 'id')
