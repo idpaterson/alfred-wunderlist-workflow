@@ -36,7 +36,7 @@ class BaseModel(Model):
 				update_item = update_items[instance.id]
 
 				# If the revision is different, sync any children, then update the db
-				if True or instance.revision != update_item['revision']:
+				if instance.revision != update_item['revision']:
 					instance._sync_children()
 					if instance.revision != update_item['revision']:
 						cls.update(**update_item).where(cls.id == instance.id).execute()
