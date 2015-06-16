@@ -24,7 +24,7 @@ class Task(BaseModel):
 		instances = []
 
 		try:
-			instances = cls.select(list_id=list)
+			instances = cls.select().where(cls.list == list.id)
 		except:
 			pass
 
