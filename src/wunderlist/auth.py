@@ -37,10 +37,7 @@ def oauth_token():
 		return None
 
 def client_id():
-	try:
-		return workflow().get_password(config.KC_OAUTH_TOKEN)
-	except:
-		return None
+	return config.WL_CLIENT_ID
 
 def oauth_state():
 	try:
