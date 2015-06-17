@@ -45,6 +45,18 @@ class Task(BaseModel):
 			.order_by(List.order.asc(), cls.due_date.asc())
 		)
 
+	@classmethod
+	def search(cls, query):
+		from datetime import date
+
+		return (cls
+			.select(cls, List)
+			.join(List)
+			.where(cls.completed_at == None)
+			.where(cls.title.contains(query))
+			.order_by(List.order.asc(), cls.due_date.asc())
+		)
+
 	def _sync_children(self):
 		from hashtag import Hashtag
 
