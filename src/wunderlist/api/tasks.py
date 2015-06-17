@@ -3,8 +3,8 @@ import wunderlist.api.base as api
 
 NO_CHANGE='!nochange!'
 
-def tasks(list_id, order='display', completed=False):
-	req = api.get('tasks', { 
+def tasks(list_id, order='display', completed=False, subtasks=False):
+	req = api.get(('subtasks' if subtasks else 'tasks'), {
 		'list_id': int(list_id),
 		'completed': completed
 	})
@@ -27,10 +27,21 @@ def tasks(list_id, order='display', completed=False):
 	return tasks
 
 def task_positions(list_id):
+	positions = []
+
 	req = api.get('task_positions', { 'list_id': list_id })
 	info = req.json()
 
-	return info[0]['values']
+	if len(info):
+		positions += info[0]['values']
+
+	req = api.get('subtask_positions', { 'list_id': list_id })
+	info = req.json()
+
+	if len(info):
+		positions += info[0]['values']
+
+	return positions
 
 def task(id):
 	req = api.get('tasks/' + id)

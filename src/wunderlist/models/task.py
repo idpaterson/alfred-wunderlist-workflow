@@ -5,11 +5,12 @@ from wunderlist.models.user import User
 
 class Task(BaseModel):
 	id = PrimaryKeyField()
-	list = ForeignKeyField(List, related_name='tasks')
+	list = ForeignKeyField(List, null=True, related_name='tasks')
+	task = ForeignKeyField('self', null=True, related_name='subtasks')
 	title = CharField(index=True)
 	completed_at = DateTimeField(null=True)
 	completed_by = ForeignKeyField(User, related_name='completed_tasks', null=True)
-	starred = BooleanField(index=True)
+	starred = BooleanField(index=True, null=True)
 	due_date = DateField(index=True, null=True)
 	assignee = ForeignKeyField(User, related_name='assigned_tasks', null=True)
 	order = IntegerField(index=True, null=True)
@@ -30,6 +31,8 @@ class Task(BaseModel):
 
 		tasks_data = tasks.tasks(list.id, completed=False)
 		tasks_data += tasks.tasks(list.id, completed=True)
+		tasks_data += tasks.tasks(list.id, completed=False, subtasks=True)
+		tasks_data += tasks.tasks(list.id, completed=True, subtasks=True)
 
 		cls._perform_updates(instances, tasks_data)
 
