@@ -33,6 +33,18 @@ class Task(BaseModel):
 
 		cls._perform_updates(instances, tasks_data)
 
+	@classmethod
+	def due_today(cls):
+		from datetime import date
+
+		return (cls
+			.select(cls, List)
+			.join(List)
+			.where(cls.completed_at == None)
+			.where(cls.due_date <= date.today())
+			.order_by(List.order.asc(), cls.due_date.asc())
+		)
+
 	def _sync_children(self):
 		from hashtag import Hashtag
 
