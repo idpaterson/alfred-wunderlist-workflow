@@ -279,7 +279,7 @@ class TaskParser():
 		# Condense extra whitespace remaining in the task title after parsing
 		self.title = re.sub(_whitespace_cleanup_pattern, ' ', phrase).strip()
 
-	def phrase_with(self, title=None, list_title=None, due_date=None, recurrence=None, reminder=None, starred=None):
+	def phrase_with(self, title=None, list_title=None, due_date=None, recurrence=None, reminder_date=None, starred=None):
 		components = []
 
 		# Retain the current list
@@ -332,14 +332,14 @@ class TaskParser():
 			pass
 
 		# Retain the current reminder
-		if reminder is None:
+		if reminder_date is None:
 			if self._reminder_phrase:
 				components.append(self._reminder_phrase)
 		# Specifies a reminder phrase
-		elif isinstance(reminder, basestring):
-			components.append(reminder)
+		elif isinstance(reminder_date, basestring):
+			components.append(reminder_date)
 		# Triggers selection of a reminder
-		elif reminder:
+		elif reminder_date:
 			components.append('remind me ')
 		# Remove the current value
 		else:

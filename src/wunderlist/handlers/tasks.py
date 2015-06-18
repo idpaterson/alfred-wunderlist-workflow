@@ -9,6 +9,7 @@ from random import random
 
 _star = u'★'
 _recurrence = u'↻'
+_reminder = u'⏰'
 
 def _task(args):
 	return TaskParser(' '.join(args))
@@ -40,6 +41,18 @@ def filter(args):
 			subtitle.append('%s Daily' % (_recurrence))
 		else:
 			subtitle.append('%s %sly' % (_recurrence, task.recurrence_type.title()))
+
+	if task.reminder_date:
+		time_format = 'at %I:%M %p'
+		today = date.today()
+		if task.reminder_date.date() == today:
+			date_format = 'Today ' + time_format
+		if task.reminder_date.year == today.year:
+			date_format = '%a, %b %d ' + time_format
+		else:
+			date_format = '%b %d, %Y ' + time_format
+
+		subtitle.append('%s %s' % (_reminder, task.reminder_date.strftime(date_format)))
 
 	subtitle.append(task.title or 'Begin typing to add a new task')
 
@@ -75,6 +88,16 @@ def filter(args):
 		wf.add_item('Next Year', 'e.g. due next year, due April 15', autocomplete=' %s ' % task.phrase_with(due_date='due next year'), icon=icons.CALENDAR)
 		wf.add_item('Remove due date', autocomplete=' ' + task.phrase_with(due_date=False), icon=icons.CANCEL)
 
+	# Task has an unfinished reminder phrase
+	elif task.has_reminder_prompt:
+		due_date_hint = ' on the due date' if task.due_date else ''
+		wf.add_item('Reminder at 9:00 AM%s' % due_date_hint, 'e.g. r 9a', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at 9:00am'), icon=icons.REMINDER)
+		wf.add_item('At noon%s' % due_date_hint, 'e.g. reminder noon', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at noon'), icon=icons.REMINDER)
+		wf.add_item('At 8:00 PM%s' % due_date_hint, 'e.g. remind at 8:00 PM', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at 6:00pm'), icon=icons.REMINDER)
+		wf.add_item('At dinner%s' % due_date_hint, 'e.g. alarm at dinner', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at dinner'), icon=icons.REMINDER)
+		wf.add_item('Today at 6:00 PM', 'e.g. remind me today at 6pm', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me today at 6:00pm'), icon=icons.REMINDER)
+		wf.add_item('Remove reminder', autocomplete=' ' + task.phrase_with(reminder_date=False), icon=icons.CANCEL)
+
 	# Main menu for tasks
 	else:
 		wf.add_item(task.list_title + u' – create a new task...', '   '.join(subtitle), arg='--stored-query', valid=task.title != '', icon=icons.TASK)
@@ -87,6 +110,9 @@ def filter(args):
 
 		title = 'Change the recurrence' if task.recurrence_type else 'Make it a recurring task'
 		wf.add_item(title, '"every" followed by a unit of time, e.g. every 2 months; every year; every 4w', autocomplete=' ' + task.phrase_with(recurrence=True), icon=icons.RECURRENCE)
+
+		title = 'Change the reminder' if task.reminder_date else 'Set a reminder'
+		wf.add_item(title, '"remind me" followed by a time and/or date, e.g. remind me at noon; r 10am; alarm 8:45p', autocomplete=' ' + task.phrase_with(reminder_date=True), icon=icons.REMINDER)
 
 		if task.starred:
 			wf.add_item('Remove star', 'Remove * from the task', autocomplete=' ' + task.phrase_with(starred=False), icon=icons.STAR_REMOVE)
