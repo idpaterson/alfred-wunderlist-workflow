@@ -82,7 +82,7 @@ class TaskParser():
 		if match:
 			self.starred = True
 			self._starred_phrase = match.group()
-			phrase = re.sub(_star_pattern, '', phrase)
+			phrase = phrase[:match.start()] + phrase[match.end():]
 
 		match = re.search(_list_title_pattern, phrase, re.IGNORECASE)
 		if lists and match:
@@ -105,7 +105,7 @@ class TaskParser():
 
 			if self.list_title or self.has_list_prompt:
 				self._list_phrase = match.group()
-				phrase = phrase.replace(self._list_phrase, '')
+				phrase = phrase[:match.start()] + phrase[match.end():]
 
 		if not self.list_title:
 			if lists:
@@ -170,7 +170,7 @@ class TaskParser():
 				self.has_recurrence_prompt = True
 
 			self._recurrence_phrase = match.group()
-			phrase = phrase.replace(self._recurrence_phrase, '')
+			phrase = phrase.replace(self._recurrence_phrase, '', 1)
 
 		due_keyword = None
 		potential_date_phrase = None
@@ -209,7 +209,7 @@ class TaskParser():
 
 					if due_date_phrase_match:
 						self._due_date_phrase = due_date_phrase_match.group()
-						phrase = phrase.replace(self._due_date_phrase, '')
+						phrase = phrase.replace(self._due_date_phrase, '', 1)
 				# Just a time component
 				else:
 					due_keyword = None
@@ -221,7 +221,10 @@ class TaskParser():
 		if due_keyword and not self._due_date_phrase:
 			self.has_due_date_prompt = True
 			self._due_date_phrase = match.group(1)
-			phrase = phrase.replace(self._due_date_phrase, '')
+
+			# Avoid accidentally replacing "due" inside words elsewhere in the
+			# string
+			phrase = phrase[:match.start(1)] + phrase[match.end(1):]
 
 		if self.recurrence_type and not self.due_date:
 			self.due_date = date.today()
