@@ -19,6 +19,7 @@ _lists = [
 	_diacritic_list
 ]
 
+_default_reminder_time = time(9, 0, 0)
 _12_13_14 = date(2014, 12, 13)
 _today = date.today()
 _tomorrow = date.today() + timedelta(days=1)
@@ -492,10 +493,59 @@ class TestRecurrence():
 
 class TestReminders():
 
-	def test_reminders_implicitly_relative_to_today(self):
+	def test_reminder_implicitly_relative_to_today(self):
 		title = 'a sample task'
 		reminder_phrase = 'r noon'
-		reminder_date = datetime.combine(date.today(), time(12, 0, 0))
+		reminder_date = datetime.combine(_today, time(12, 0, 0))
+		phrase = '%s %s' % (title, reminder_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, reminder_date=reminder_date)
+
+	def test_reminder_implicitly_relative_to_today_no_time(self):
+		title = 'a sample task'
+		reminder_phrase = 'reminder'
+		reminder_date = datetime.combine(_today, _default_reminder_time)
+		phrase = '%s %s' % (title, reminder_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, reminder_date=reminder_date, has_reminder_prompt=True)
+
+	def test_reminder_implicitly_relative_to_due_date(self):
+		title = 'a sample task'
+		due_date = _tomorrow
+		due_phrase = 'due tomorrow'
+		reminder_phrase = 'alarm at 8:00a'
+		reminder_date = datetime.combine(due_date, time(8, 0, 0))
+		phrase = '%s %s %s' % (title, due_phrase, reminder_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, due_date=due_date, reminder_date=reminder_date)
+
+	def test_reminder_implicitly_relative_to_due_date_no_time(self):
+		title = 'a sample task'
+		due_date = _tomorrow
+		due_phrase = 'due tomorrow'
+		reminder_phrase = 'r'
+		reminder_date = datetime.combine(due_date, _default_reminder_time)
+		phrase = '%s %s %s' % (title, due_phrase, reminder_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, due_date=due_date, reminder_date=reminder_date, has_reminder_prompt=True)
+
+	def test_reminder_explicit_date(self):
+		title = 'a sample task'
+		reminder_phrase = 'remind me at dinner on Dec 13, 2014'
+		reminder_date = datetime.combine(_12_13_14, time(19, 0, 0))
+		phrase = '%s %s' % (title, reminder_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, reminder_date=reminder_date)
+
+	def test_reminder_explicit_date(self):
+		title = 'a sample task'
+		reminder_phrase = 'remind me Dec 13, 2014'
+		reminder_date = datetime.combine(_12_13_14, _default_reminder_time)
 		phrase = '%s %s' % (title, reminder_phrase)
 		task = TaskParser(phrase)
 
