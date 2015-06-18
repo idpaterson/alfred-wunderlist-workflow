@@ -2,7 +2,7 @@ import re
 from workflow import MATCH_ALL, MATCH_ALLCHARS
 from wunderlist.util import workflow
 from parsedatetime import Calendar, Constants
-from datetime import date, timedelta
+from datetime import date, datetime, time, timedelta
 import locale
 
 # Up to 8 words (sheesh!) followed by a colon
@@ -11,6 +11,8 @@ _list_title_pattern = r'^((?:\S+ *){0,8}):'
 # `every N units` optionally preceded by `repeat`
 _recurrence_pattern = r'(?:\brepeat(?:ing|s)?:? )?(?:\bevery *(\d*) *((?:day|week|month|year|d|w|m|y|da|wk|mo|yr)s?\b)?|(daily|weekly|monthly|yearly|annually))'
 _recurrence_by_date_pattern = r'(?:\brepeat:? )?\bevery *((?:\S+ *){0,2})'
+
+_reminder_pattern = r'\b((?:remind me|reminder|remind|r|alarm):?\b *)(.*)'
 
 # Anything following the `due` keyword
 _due_pattern = r'(\bdue:?\b\s*)(.*)'
@@ -39,6 +41,7 @@ class TaskParser():
 	due_date = None
 	recurrence_type = None
 	recurrence_count = None
+	reminder_date = None
 	assignee_id = None
 	starred = False
 	completed = False
@@ -46,10 +49,12 @@ class TaskParser():
 	has_list_prompt = False
 	has_due_date_prompt = False
 	has_recurrence_prompt = False
+	has_reminder_prompt = False
 
 	_list_phrase = None
 	_due_date_phrase = None
 	_recurrence_phrase = None
+	_reminder_phrase = None
 	_starred_phrase = None
 
 	def __init__(self, phrase):
@@ -221,10 +226,40 @@ class TaskParser():
 		if self.recurrence_type and not self.due_date:
 			self.due_date = date.today()
 
+		match = re.search(_reminder_pattern, phrase, re.IGNORECASE)
+		if match:
+			datetimes = cal.nlp(match.group(2))
+
+			if not self.due_date:
+				self.due_date = date.today()
+
+			if datetimes and datetimes[0][2] == 0:
+				# Only remove the first date following the keyword
+				datetime_info = datetimes[0]
+				(dt, datetime_type, start_index, _, reminder_phrase) = datetime_info
+
+				# Time only; set the reminder on the due day
+				if datetime_type == 2:
+					self.reminder_date = datetime.combine(self.due_date, dt.time())
+				elif datetime_type == 1:
+					self.reminder_date = datetime.combine(dt.date(), time(9))
+				else:
+					self.reminder_date = dt
+
+				self._reminder_phrase = match.group(1) + reminder_phrase
+				phrase = phrase.replace(self._reminder_phrase, '')
+			else:
+				if not match.group(2):
+					self.has_reminder_prompt = True
+				self.reminder_date = datetime.combine(self.due_date, time(9))
+				self._reminder_phrase = match.group(1)
+				phrase = phrase.replace(self._reminder_phrase, '')
+
+		
 		# Condense extra whitespace remaining in the task title after parsing
 		self.title = re.sub(_whitespace_cleanup_pattern, ' ', phrase).strip()
 
-	def phrase_with(self, title=None, list_title=None, due_date=None, recurrence=None, starred=None):
+	def phrase_with(self, title=None, list_title=None, due_date=None, recurrence=None, reminder=None, starred=None):
 		components = []
 
 		# Retain the current list
@@ -272,6 +307,20 @@ class TaskParser():
 		# Triggers selection of a recurrence
 		elif recurrence:
 			components.append('every ')
+		# Remove the current value
+		else:
+			pass
+
+		# Retain the current reminder
+		if reminder is None:
+			if self._reminder_phrase:
+				components.append(self._reminder_phrase)
+		# Specifies a reminder phrase
+		elif isinstance(reminder, basestring):
+			components.append(reminder)
+		# Triggers selection of a reminder
+		elif reminder:
+			components.append('remind me ')
 		# Remove the current value
 		else:
 			pass

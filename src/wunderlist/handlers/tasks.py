@@ -100,9 +100,10 @@ def commit(args):
 
 	task = _task(args)
 
-	tasks.create_task(task.list_id, task.title, assignee_id=task.assignee_id, 
-		recurrence_type=task.recurrence_type, recurrence_count=task.recurrence_count, 
-		due_date=task.due_date, starred=task.starred, completed=task.completed
+	tasks.create_task(task.list_id, task.title, assignee_id=task.assignee_id,
+		recurrence_type=task.recurrence_type, recurrence_count=task.recurrence_count,
+		due_date=task.due_date, reminder_date=task.reminder_date, starred=task.starred,
+		completed=task.completed
 	)
 
 	# Output must be a UTF-8 encoded string
