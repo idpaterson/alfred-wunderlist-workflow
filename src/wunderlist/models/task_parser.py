@@ -230,28 +230,36 @@ class TaskParser():
 		if match:
 			datetimes = cal.nlp(match.group(2))
 
-			if not self.due_date:
-				self.due_date = date.today()
+			# If a due date is set, a time-only reminder is relative to that
+			# date; otherwise if there is no due date it is relative to today
+			reference_date = self.due_date if self.due_date else date.today()
 
+			# If there is at least one date immediately following the reminder
+			# phrase use it as the reminder date
 			if datetimes and datetimes[0][2] == 0:
 				# Only remove the first date following the keyword
 				datetime_info = datetimes[0]
-				(dt, datetime_type, start_index, _, reminder_phrase) = datetime_info
+				(dt, datetime_type, _, _, reminder_phrase) = datetime_info
 
 				# Time only; set the reminder on the due day
 				if datetime_type == 2:
-					self.reminder_date = datetime.combine(self.due_date, dt.time())
+					self.reminder_date = datetime.combine(reference_date, dt.time())
+				# Date only; set the default reminder time on that day
 				elif datetime_type == 1:
 					self.reminder_date = datetime.combine(dt.date(), time(9))
+				# Date and time; use as-is
 				else:
 					self.reminder_date = dt
 
 				self._reminder_phrase = match.group(1) + reminder_phrase
 				phrase = phrase.replace(self._reminder_phrase, '')
+			# Otherwise if there is just a reminder phrase, set the reminder
+			# to the default time on the date due
 			else:
+				# There is no text following the reminder phrase, prompt for a reminder
 				if not match.group(2):
 					self.has_reminder_prompt = True
-				self.reminder_date = datetime.combine(self.due_date, time(9))
+				self.reminder_date = datetime.combine(reference_date, time(9))
 				self._reminder_phrase = match.group(1)
 				phrase = phrase.replace(self._reminder_phrase, '')
 
