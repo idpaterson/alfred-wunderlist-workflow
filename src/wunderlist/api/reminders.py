@@ -1,4 +1,5 @@
 from requests import codes
+from dateutil.tz import tzlocal
 import wunderlist.api.base as api
 
 NO_CHANGE = '!nochange!'
@@ -23,6 +24,8 @@ def reminder(id):
 	return info
 
 def create_reminder(task_id, date=None):
+	date = date.replace(tzinfo=tzlocal())
+
 	params = {
 		'task_id': int(task_id),
 		'date': date.isoformat()
@@ -35,9 +38,15 @@ def create_reminder(task_id, date=None):
 
 def update_reminder(id, revision, date=NO_CHANGE):
 	params = {
-		'date': date.isoformat(),
 		'revision': revision
 	}
+
+	if date != NO_CHANGE:
+		if date:
+			date = date.replace(tzinfo=tzlocal())
+			params['date'] = date.isoformat()
+		else:
+			params['date'] = null
 
 	req = api.patch('reminders/' + id, params)
 	info = req.json()
