@@ -93,7 +93,7 @@ def filter(args):
 		due_date_hint = ' on the due date' if task.due_date else ''
 		wf.add_item('Reminder at 9:00 AM%s' % due_date_hint, 'e.g. r 9a', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at 9:00am'), icon=icons.REMINDER)
 		wf.add_item('At noon%s' % due_date_hint, 'e.g. reminder noon', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at noon'), icon=icons.REMINDER)
-		wf.add_item('At 8:00 PM%s' % due_date_hint, 'e.g. remind at 8:00 PM', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at 6:00pm'), icon=icons.REMINDER)
+		wf.add_item('At 8:00 PM%s' % due_date_hint, 'e.g. remind at 8:00 PM', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at 8:00pm'), icon=icons.REMINDER)
 		wf.add_item('At dinner%s' % due_date_hint, 'e.g. alarm at dinner', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at dinner'), icon=icons.REMINDER)
 		wf.add_item('Today at 6:00 PM', 'e.g. remind me today at 6pm', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me today at 6:00pm'), icon=icons.REMINDER)
 		wf.add_item('Remove reminder', autocomplete=' ' + task.phrase_with(reminder_date=False), icon=icons.CANCEL)
