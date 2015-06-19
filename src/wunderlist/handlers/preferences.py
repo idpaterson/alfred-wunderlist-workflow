@@ -13,21 +13,9 @@ def filter(args):
 		)
 
 	workflow().add_item(
-		'New in this version',
-		'Installed: __VERSION__   See the changes from the previous version',
-		arg=':pref changelog', valid=True, icon=icons.INFO
-	)
-
-	workflow().add_item(
 		'Force sync',
 		'The workflow syncs automatically, but feel free to be forcible.',
-		arg=':sync', valid=True, icon=icons.SYNC
-	)
-
-	workflow().add_item(
-		'Update workflow',
-		'Check for updates to the workflow (automatically checked periodically)',
-		arg=':pref update', valid=True, icon=icons.DOWNLOAD
+		arg=':pref sync', valid=True, icon=icons.SYNC
 	)
 
 	workflow().add_item(
@@ -44,18 +32,9 @@ def filter(args):
 	)
 
 def commit(args):
-	if ':sync' in args:
+	if 'sync' in args:
 		from wunderlist.sync import sync
 		sync()
-	elif 'update' in args:
-		if workflow().start_update():
-			print 'The workflow is being updated'
-		else:
-			print 'You already have the latest workflow version'
-	elif 'changelog' in args:
-		import webbrowser
-
-		webbrowser.open('https://github.com/idpaterson/alfred-wunderlist-workflow/releases/tag/__VERSION__')
 	elif 'retheme' in args:
 		import subprocess
 

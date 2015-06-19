@@ -23,3 +23,10 @@ def filter(args):
 		autocomplete=':pref ',
 		icon=icons.PREFERENCES
 	)
+
+	workflow().add_item(
+		'About',
+		'Learn about the workflow and get support',
+		autocomplete=':about ',
+		icon=icons.INFO
+	)
