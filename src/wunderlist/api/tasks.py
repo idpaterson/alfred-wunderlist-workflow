@@ -1,7 +1,7 @@
 from requests import codes
 import wunderlist.api.base as api
 
-NO_CHANGE='!nochange!'
+NO_CHANGE = '!nochange!'
 
 def tasks(list_id, order='display', completed=False):
 	req = api.get('tasks', { 
@@ -32,7 +32,7 @@ def task(id):
 
 	return info
 
-def create_task(list_id, title, assignee_id=None, recurrence_type=None, recurrence_count=None, due_date=None, starred=False, completed=False):
+def create_task(list_id, title, assignee_id=None, recurrence_type=None, recurrence_count=None, due_date=None, reminder_date=None, starred=False, completed=False):
 	params = {
 		'list_id': int(list_id),
 		'title': title,
@@ -53,9 +53,14 @@ def create_task(list_id, title, assignee_id=None, recurrence_type=None, recurren
 	req = api.post('tasks', params)
 	info = req.json()
 
+	if reminder_date:
+		from wunderlist.api import reminders
+
+		reminders.create_reminder(info['id'], reminder_date)
+
 	return info
 
-def update_task(id, revision, title=NO_CHANGE, assignee_id=NO_CHANGE, recurrence_type=NO_CHANGE, recurrence_count=NO_CHANGE, due_date=NO_CHANGE, starred=NO_CHANGE, completed=NO_CHANGE):
+def update_task(id, revision, title=NO_CHANGE, assignee_id=NO_CHANGE, recurrence_type=NO_CHANGE, recurrence_count=NO_CHANGE, due_date=NO_CHANGE, reminder_date=NO_CHANGE, starred=NO_CHANGE, completed=NO_CHANGE):
 	params = {}
 	remove = []
 	changes = {
