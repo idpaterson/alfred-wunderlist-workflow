@@ -92,7 +92,7 @@ def commit(args):
 			print 'Reminders will now default to %s' % format_time(reminder_time, 'short')
 	elif 'retheme' in args:
 		relaunch_alfred = True
-		prefs.icon_theme = 'light' if prefs.icon_theme == 'dark' else 'dark'
+		prefs.icon_theme = 'light' if icons.icon_theme() == 'dark' else 'dark'
 
 		print 'The workflow is now using the %s icon theme' % (prefs.icon_theme)
 
