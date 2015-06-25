@@ -67,15 +67,23 @@ def mock_lists(mocker):
 	Causes stored_data to return the lists specified for this test suite
 	"""
 	lists = map(lambda (i, title): { 'title': title, 'id': i }, enumerate(_lists))
-	mocker.patch('workflow.Workflow.stored_data', new=lambda *arg:lists)
+	mocker.patch('workflow.Workflow.stored_data', new=lambda *arg: lists)
 
-@pytest.fixture()
+@pytest.fixture
 def mock_lists_empty(mocker):
 	"""
 	Causes stored_data to return an empty array for lists
 	"""
 	lists = []
-	mocker.patch('workflow.Workflow.stored_data', new=lambda *arg:lists)
+	mocker.patch('workflow.Workflow.stored_data', new=lambda *arg: lists)
+
+@pytest.fixture
+def mock_default_reminder_time(mocker):
+	"""
+	Returns the default reminder time specified above rather than the user's
+	preference
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.reminder_time', new=_default_reminder_time)
 
 @pytest.fixture(autouse=True)
 def set_locale():
@@ -502,6 +510,7 @@ class TestReminders():
 
 		assert_task(task, phrase=phrase, title=title, reminder_date=reminder_date)
 
+	@pytest.mark.usefixtures("mock_default_reminder_time")
 	def test_reminder_implicitly_relative_to_today_no_time(self):
 		title = 'a sample task'
 		reminder_phrase = 'reminder'
@@ -522,6 +531,7 @@ class TestReminders():
 
 		assert_task(task, phrase=phrase, title=title, due_date=due_date, reminder_date=reminder_date)
 
+	@pytest.mark.usefixtures("mock_default_reminder_time")
 	def test_reminder_implicitly_relative_to_due_date_no_time(self):
 		title = 'a sample task'
 		due_date = _tomorrow
@@ -542,6 +552,7 @@ class TestReminders():
 
 		assert_task(task, phrase=phrase, title=title, reminder_date=reminder_date)
 
+	@pytest.mark.usefixtures("mock_default_reminder_time")
 	def test_reminder_explicit_date(self):
 		title = 'a sample task'
 		reminder_phrase = 'remind me Dec 13, 2014'
