@@ -1,7 +1,6 @@
 import re
 from workflow import MATCH_ALL, MATCH_ALLCHARS
-from wunderlist.util import workflow
-from parsedatetime import Calendar, Constants
+from wunderlist.util import workflow, parsedatetime_calendar
 from datetime import date, datetime, time, timedelta
 import locale
 
@@ -33,7 +32,7 @@ _recurrence_types = {
 	'a': 'year'
 }
 
-class TaskParser():
+class TaskParser(object):
 	phrase = None
 	title = None
 	list_id = None
@@ -63,18 +62,7 @@ class TaskParser():
 
 	def _parse(self):
 		phrase = self.phrase
-		loc = locale.getlocale(locale.LC_TIME)[0]
-
-		if not loc:
-			# In case the LC_* environment variables are misconfigured, catch
-			# an exception that may be thrown
-			try:
-				loc = locale.getdefaultlocale()[0]
-			except:
-				loc = 'en_US'
-
-		c = Constants(loc)
-		cal = Calendar(c)
+		cal = parsedatetime_calendar()
 		wf = workflow()
 		lists = wf.stored_data('lists')
 
