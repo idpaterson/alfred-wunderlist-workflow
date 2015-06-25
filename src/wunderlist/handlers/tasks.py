@@ -1,8 +1,9 @@
 # encoding: utf-8
 
 from wunderlist import icons
-from wunderlist.util import workflow
+from wunderlist.util import workflow, format_time
 from wunderlist.models.task_parser import TaskParser
+from wunderlist.models.preferences import Preferences
 from workflow.background import is_running
 from datetime import date
 from random import random
@@ -43,16 +44,19 @@ def filter(args):
 			subtitle.append('%s %sly' % (_recurrence, task.recurrence_type.title()))
 
 	if task.reminder_date:
-		time_format = 'at %I:%M %p'
 		today = date.today()
 		if task.reminder_date.date() == today:
-			date_format = 'Today ' + time_format
+			date_format = 'Today '
 		if task.reminder_date.year == today.year:
-			date_format = '%a, %b %d ' + time_format
+			date_format = '%a, %b %d '
 		else:
-			date_format = '%b %d, %Y ' + time_format
+			date_format = '%b %d, %Y '
 
-		subtitle.append('%s %s' % (_reminder, task.reminder_date.strftime(date_format)))
+		subtitle.append('%s %s at %s' % (
+			_reminder,
+			task.reminder_date.strftime(date_format),
+			format_time(task.reminder_date.time(), 'short'))
+		)
 
 	subtitle.append(task.title or 'Begin typing to add a new task')
 
@@ -90,8 +94,10 @@ def filter(args):
 
 	# Task has an unfinished reminder phrase
 	elif task.has_reminder_prompt:
+		prefs = Preferences.current_prefs()
+		default_reminder_time = format_time(prefs.reminder_time, 'short')
 		due_date_hint = ' on the due date' if task.due_date else ''
-		wf.add_item('Reminder at 9:00 AM%s' % due_date_hint, 'e.g. r 9a', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at 9:00am'), icon=icons.REMINDER)
+		wf.add_item('Reminder at %s%s' % (default_reminder_time, due_date_hint), 'e.g. r %s' % default_reminder_time, autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at %s' % format_time(prefs.reminder_time, 'short')), icon=icons.REMINDER)
 		wf.add_item('At noon%s' % due_date_hint, 'e.g. reminder noon', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at noon'), icon=icons.REMINDER)
 		wf.add_item('At 8:00 PM%s' % due_date_hint, 'e.g. remind at 8:00 PM', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at 8:00pm'), icon=icons.REMINDER)
 		wf.add_item('At dinner%s' % due_date_hint, 'e.g. alarm at dinner', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at dinner'), icon=icons.REMINDER)
