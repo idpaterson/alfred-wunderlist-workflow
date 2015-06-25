@@ -1,6 +1,7 @@
 import re
 from workflow import MATCH_ALL, MATCH_ALLCHARS
 from wunderlist.util import workflow, parsedatetime_calendar
+from wunderlist.models.preferences import Preferences
 from datetime import date, datetime, time, timedelta
 import locale
 
@@ -248,6 +249,7 @@ class TaskParser(object):
 			# If a due date is set, a time-only reminder is relative to that
 			# date; otherwise if there is no due date it is relative to today
 			reference_date = self.due_date if self.due_date else date.today()
+			prefs = Preferences.current_prefs()
 
 			if reminder_info:
 				(dt, datetime_type, _, _, _) = reminder_info
@@ -257,12 +259,12 @@ class TaskParser(object):
 					self.reminder_date = datetime.combine(reference_date, dt.time())
 				# Date only; set the default reminder time on that day
 				elif datetime_type == 1:
-					self.reminder_date = datetime.combine(dt.date(), time(9))
+					self.reminder_date = datetime.combine(dt.date(), prefs.reminder_time)
 				# Date and time; use as-is
 				else:
 					self.reminder_date = dt
 			else:
-				self.reminder_date = datetime.combine(reference_date, time(9))
+				self.reminder_date = datetime.combine(reference_date, prefs.reminder_time)
 		
 		# Condense extra whitespace remaining in the task title after parsing
 		self.title = re.sub(_whitespace_cleanup_pattern, ' ', phrase).strip()
