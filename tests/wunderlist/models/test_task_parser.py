@@ -562,6 +562,18 @@ class TestReminders():
 
 		assert_task(task, phrase=phrase, title=title, reminder_date=reminder_date)
 
+	def test_reminder_with_list(self):
+		target_list = _single_word_list
+		title = 'a sample task'
+		due_date = _tomorrow
+		due_phrase = 'due tomorrow'
+		reminder_phrase = 'alarm at 8:00a'
+		reminder_date = datetime.combine(due_date, time(8, 0, 0))
+		phrase = '%s:%s %s %s' % (target_list, title, due_phrase, reminder_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list), due_date=due_date, reminder_date=reminder_date)
+
 #
 # Star
 #

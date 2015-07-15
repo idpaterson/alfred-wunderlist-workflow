@@ -6,7 +6,7 @@ from datetime import date, datetime, time, timedelta
 import locale
 
 # Up to 8 words (sheesh!) followed by a colon
-_list_title_pattern = r'^((?:\S+ *){0,8}):'
+_list_title_pattern = r'^((?:[^\s:]+ *){0,8}):'
 
 # `every N units` optionally preceded by `repeat`
 _recurrence_pattern = r'(?:\brepeat(?:ing|s)?:? )?(?:\bevery *(\d*) *((?:day|week|month|year|d|w|m|y|da|wk|mo|yr)s?\b)?|(daily|weekly|monthly|yearly|annually))'
