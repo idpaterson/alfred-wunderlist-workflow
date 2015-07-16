@@ -17,6 +17,8 @@ _reminder_pattern = r'(\b(?:remind me|reminder|remind|r|alarm)\b:? *)(.*)'
 # Anything following the `due` keyword
 _due_pattern = r'(\bdue:?\b\s*)(.*)'
 
+_not_due_pattern = r'not? due( date)?'
+
 # An asterisk at the end of the phrase
 _star_pattern = r'\*$'
 
@@ -67,11 +69,17 @@ class TaskParser(object):
 		wf = workflow()
 		lists = wf.stored_data('lists')
 		prefs = Preferences.current_prefs()
+		ignore_due_date = False
 
 		match = re.search(_star_pattern, phrase)
 		if match:
 			self.starred = True
 			self._starred_phrase = match.group()
+			phrase = phrase[:match.start()] + phrase[match.end():]
+
+		match = re.search(_not_due_pattern, phrase)
+		if match:
+			ignore_due_date = True
 			phrase = phrase[:match.start()] + phrase[match.end():]
 
 		match = re.search(_list_title_pattern, phrase, re.IGNORECASE)
@@ -191,16 +199,17 @@ class TaskParser(object):
 
 		due_keyword = None
 		potential_date_phrase = None
-		match = re.search(_due_pattern, phrase, re.IGNORECASE)
-		# Search for the due date only following the `due` keyword
-		if match:
-			due_keyword = match.group(1)
+		if not ignore_due_date:
+			match = re.search(_due_pattern, phrase, re.IGNORECASE)
+			# Search for the due date only following the `due` keyword
+			if match:
+				due_keyword = match.group(1)
 
-			if match.group(2):
-				potential_date_phrase = match.group(2)
-		# Otherwise find a due date anywhere in the phrase
-		elif not prefs.explicit_keywords:
-			potential_date_phrase = phrase
+				if match.group(2):
+					potential_date_phrase = match.group(2)
+			# Otherwise find a due date anywhere in the phrase
+			elif not prefs.explicit_keywords:
+				potential_date_phrase = phrase
 
 		if potential_date_phrase:
 			dates = cal.nlp(potential_date_phrase)

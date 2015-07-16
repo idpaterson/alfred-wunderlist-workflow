@@ -90,7 +90,7 @@ def filter(args):
 		wf.add_item('Next Week', 'e.g. due next week', autocomplete=' %s ' % task.phrase_with(due_date='due next week'), icon=icons.NEXT_WEEK)
 		wf.add_item('Next Month', 'e.g. due next month', autocomplete=' %s ' % task.phrase_with(due_date='due next month'), icon=icons.CALENDAR)
 		wf.add_item('Next Year', 'e.g. due next year, due April 15', autocomplete=' %s ' % task.phrase_with(due_date='due next year'), icon=icons.CALENDAR)
-		wf.add_item('Remove due date', autocomplete=' ' + task.phrase_with(due_date=False), icon=icons.CANCEL)
+		wf.add_item('Remove due date', 'Add "not due" to fix accidental dates, or see wl:pref', autocomplete=' ' + task.phrase_with(due_date=False), icon=icons.CANCEL)
 
 	# Task has an unfinished reminder phrase
 	elif task.has_reminder_prompt:
