@@ -3,6 +3,7 @@ from wunderlist.util import workflow
 
 REMINDER_TIME_KEY = 'reminder_time'
 ICON_THEME_KEY = 'icon_theme'
+EXPLICIT_KEYWORDS_KEY = 'explicit_keywords'
 
 class Preferences(object):
 
@@ -24,8 +25,11 @@ class Preferences(object):
 
 		workflow().store_data('prefs', self._data)
 
-	def _get(self, key, type=str):
+	def _get(self, key, default=None, type=str):
 		value = self._data.get(key)
+
+		if value is None and default is not None:
+			value = default
 
 		return value
 
@@ -44,3 +48,11 @@ class Preferences(object):
 	@icon_theme.setter
 	def icon_theme(self, reminder_time):
 		self._set(ICON_THEME_KEY, reminder_time)
+
+	@property
+	def explicit_keywords(self):
+		return self._get(EXPLICIT_KEYWORDS_KEY, False)
+
+	@explicit_keywords.setter
+	def explicit_keywords(self, explicit_keywords):
+		self._set(EXPLICIT_KEYWORDS_KEY, explicit_keywords)

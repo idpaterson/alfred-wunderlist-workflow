@@ -77,13 +77,27 @@ def mock_lists_empty(mocker):
 	lists = []
 	mocker.patch('workflow.Workflow.stored_data', new=lambda *arg: lists)
 
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def mock_default_reminder_time(mocker):
 	"""
 	Returns the default reminder time specified above rather than the user's
 	preference
 	"""
 	mocker.patch('wunderlist.models.preferences.Preferences.reminder_time', new=_default_reminder_time)
+
+@pytest.fixture(autouse=True)
+def mock_default_explicit_keywords(mocker):
+	"""
+	Returns False for explicit_keywords rather than the user's preference
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.explicit_keywords', new=False)
+
+@pytest.fixture()
+def mock_disabled_explicit_keywords(mocker):
+	"""
+	Returns True for explicit_keywords rather than the user's preference
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.explicit_keywords', new=True)
 
 @pytest.fixture(autouse=True)
 def set_locale():
@@ -296,7 +310,21 @@ class TestDueDate():
 		phrase = '%s %s' % (title, due_phrase)
 		task = TaskParser(phrase)
 
-		assert_task(task, phrase=phrase, title=title, due_date=due_date)
+	def test_implicit_due_date(self):
+		title = 'a sample task'
+		due_phrase = 'tomorrow'
+		due_date = _tomorrow
+		phrase = '%s %s' % (title, due_phrase)
+		task = TaskParser(phrase)
+
+	@pytest.mark.usefixtures("mock_disabled_explicit_keywords")
+	def test_implicit_due_date_disabled_in_prefs(self):
+		due_phrase = 'tomorrow'
+		title = 'a sample task %s' % due_phrase
+		phrase = title
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title)
 
 	def test_due_next_year(self):
 		"""
@@ -399,6 +427,24 @@ class TestDueDate():
 		task = TaskParser(phrase)
 
 		assert_task(task, phrase=phrase, title=title, has_due_date_prompt=True, starred=True)
+
+	def test_implicit_due_date_disabled_in_task(self):
+		due_phrase = 'tomorrow'
+		title = 'a sample task %s' % due_phrase
+		not_due_phrase = 'not due'
+		phrase = '%s %s' % (title, not_due_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title)
+
+	def test_explicit_due_date_disabled_in_task(self):
+		due_phrase = 'due tomorrow'
+		title = 'a sample task %s' % due_phrase
+		not_due_phrase = 'not due'
+		phrase = '%s %s' % (title, not_due_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title)
 
 #
 # Recurrence
@@ -510,7 +556,6 @@ class TestReminders():
 
 		assert_task(task, phrase=phrase, title=title, reminder_date=reminder_date)
 
-	@pytest.mark.usefixtures("mock_default_reminder_time")
 	def test_reminder_implicitly_relative_to_today_no_time(self):
 		title = 'a sample task'
 		reminder_phrase = 'reminder'
@@ -531,7 +576,6 @@ class TestReminders():
 
 		assert_task(task, phrase=phrase, title=title, due_date=due_date, reminder_date=reminder_date)
 
-	@pytest.mark.usefixtures("mock_default_reminder_time")
 	def test_reminder_implicitly_relative_to_due_date_no_time(self):
 		title = 'a sample task'
 		due_date = _tomorrow
@@ -552,7 +596,6 @@ class TestReminders():
 
 		assert_task(task, phrase=phrase, title=title, reminder_date=reminder_date)
 
-	@pytest.mark.usefixtures("mock_default_reminder_time")
 	def test_reminder_explicit_date(self):
 		title = 'a sample task'
 		reminder_phrase = 'remind me Dec 13, 2014'

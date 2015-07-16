@@ -66,6 +66,7 @@ class TaskParser(object):
 		cal = parsedatetime_calendar()
 		wf = workflow()
 		lists = wf.stored_data('lists')
+		prefs = Preferences.current_prefs()
 
 		match = re.search(_star_pattern, phrase)
 		if match:
@@ -198,7 +199,7 @@ class TaskParser(object):
 			if match.group(2):
 				potential_date_phrase = match.group(2)
 		# Otherwise find a due date anywhere in the phrase
-		else:
+		elif not prefs.explicit_keywords:
 			potential_date_phrase = phrase
 
 		if potential_date_phrase:
@@ -249,7 +250,6 @@ class TaskParser(object):
 			# If a due date is set, a time-only reminder is relative to that
 			# date; otherwise if there is no due date it is relative to today
 			reference_date = self.due_date if self.due_date else date.today()
-			prefs = Preferences.current_prefs()
 
 			if reminder_info:
 				(dt, datetime_type, _, _, _) = reminder_info

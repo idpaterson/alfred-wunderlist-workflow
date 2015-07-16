@@ -57,6 +57,12 @@ def filter(args):
 		)
 
 		workflow().add_item(
+			'Require explicit due keyword',
+			'Requires the due keyword to avoid accidental due date extraction',
+			arg=':pref explicit_keywords', valid=True, icon=icons.TASK_COMPLETED if prefs.explicit_keywords else icons.TASK
+		)
+
+		workflow().add_item(
 			'Force sync',
 			'The workflow syncs automatically, but feel free to be forcible.',
 			arg=':pref sync', valid=True, icon=icons.SYNC
@@ -82,6 +88,15 @@ def commit(args):
 	if 'sync' in args:
 		from wunderlist.sync import sync
 		sync()
+	elif 'explicit_keywords' in args:
+		relaunch_alfred = True
+
+		prefs.explicit_keywords = not prefs.explicit_keywords
+
+		if prefs.explicit_keywords:
+			print 'Remember to use the "due" keyword'
+		else:
+			print 'Implicit due dates enabled (e.g. "Recycling tomorrow")'
 	elif 'reminder' in args:
 		relaunch_alfred = True
 		reminder_time = _parse_time(' '.join(args))
