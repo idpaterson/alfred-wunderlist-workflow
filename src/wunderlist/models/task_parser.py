@@ -128,13 +128,13 @@ class TaskParser(object):
 				match = re.search(_recurrence_by_date_pattern, phrase, re.IGNORECASE)
 				if match:
 					recurrence_phrase = match.group()
-					dates = cal.nlp(match.group(1))
+					dates = cal.nlp(match.group(1), version=2)
 
 					if dates:
 						# Only remove the first date following `every`
 						datetime_info = dates[0]
 						# Set due_date if a datetime was found and it is not time only
-						if datetime_info[1] != 2:
+						if datetime_info[1].hasDate:
 							self.due_date = datetime_info[0].date()
 							date_expression = datetime_info[4]
 
@@ -174,7 +174,7 @@ class TaskParser(object):
 		reminder_info = None
 		match = re.search(_reminder_pattern, phrase, re.IGNORECASE)
 		if match:
-			datetimes = cal.nlp(match.group(2))
+			datetimes = cal.nlp(match.group(2), version=2)
 
 			# If there is at least one date immediately following the reminder
 			# phrase use it as the reminder date
@@ -212,16 +212,13 @@ class TaskParser(object):
 				potential_date_phrase = phrase
 
 		if potential_date_phrase:
-			dates = cal.nlp(potential_date_phrase)
-
-			if not dates:
-				dates = cal.nlp(potential_date_phrase)
+			dates = cal.nlp(potential_date_phrase, version=2)
 
 			if dates:
 				# Only remove the first date following `due`
 				datetime_info = dates[0]
 				# Set due_date if a datetime was found and it is not time only
-				if datetime_info[1] != 2:
+				if datetime_info[1].hasDate:
 					self.due_date = datetime_info[0].date()
 
 					# Pull in any words between the `due` keyword and the
@@ -261,17 +258,18 @@ class TaskParser(object):
 			reference_date = self.due_date if self.due_date else date.today()
 
 			if reminder_info:
-				(dt, datetime_type, _, _, _) = reminder_info
+				(dt, datetime_context, _, _, _) = reminder_info
 
+				# Date and time; use as-is
+				if datetime_context.hasTime and datetime_context.hasDate:
+					self.reminder_date = dt
 				# Time only; set the reminder on the due day
-				if datetime_type == 2:
+				elif datetime_context.hasTime:
 					self.reminder_date = datetime.combine(reference_date, dt.time())
 				# Date only; set the default reminder time on that day
-				elif datetime_type == 1:
+				elif datetime_context.hasDate:
 					self.reminder_date = datetime.combine(dt.date(), prefs.reminder_time)
-				# Date and time; use as-is
-				else:
-					self.reminder_date = dt
+					
 			else:
 				self.reminder_date = datetime.combine(reference_date, prefs.reminder_time)
 		
