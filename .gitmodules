@@ -10,3 +10,6 @@
 [submodule "lib/requests"]
 	path = lib/requests
 	url = https://github.com/kennethreitz/requests.git
+[submodule "lib/dateutil"]
+	path = lib/dateutil
+	url = https://github.com/dateutil/dateutil.git

@@ -36,9 +36,12 @@ def route(args):
 	elif action == ':logout':
 		from wunderlist.handlers import logout
 		handler = logout
-	elif action == ':pref' or action == ':sync':
+	elif action == ':pref':
 		from wunderlist.handlers import preferences
 		handler = preferences
+	elif action == ':about':
+		from wunderlist.handlers import about
+		handler = about
 	# If the command starts with a space (no special keywords), the workflow
 	# creates a new task
 	elif command_string and command_string[0] == ' ':

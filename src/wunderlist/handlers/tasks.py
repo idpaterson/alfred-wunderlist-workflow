@@ -1,14 +1,16 @@
 # encoding: utf-8
 
 from wunderlist import icons
-from wunderlist.util import workflow
+from wunderlist.util import workflow, format_time
 from wunderlist.models.task_parser import TaskParser
+from wunderlist.models.preferences import Preferences
 from workflow.background import is_running
 from datetime import date
 from random import random
 
 _star = u'★'
 _recurrence = u'↻'
+_reminder = u'⏰'
 
 def _task(args):
 	return TaskParser(' '.join(args))
@@ -40,6 +42,21 @@ def filter(args):
 			subtitle.append('%s Daily' % (_recurrence))
 		else:
 			subtitle.append('%s %sly' % (_recurrence, task.recurrence_type.title()))
+
+	if task.reminder_date:
+		today = date.today()
+		if task.reminder_date.date() == today:
+			date_format = 'Today '
+		if task.reminder_date.year == today.year:
+			date_format = '%a, %b %d '
+		else:
+			date_format = '%b %d, %Y '
+
+		subtitle.append('%s %s at %s' % (
+			_reminder,
+			task.reminder_date.strftime(date_format),
+			format_time(task.reminder_date.time(), 'short'))
+		)
 
 	subtitle.append(task.title or 'Begin typing to add a new task')
 
@@ -73,7 +90,19 @@ def filter(args):
 		wf.add_item('Next Week', 'e.g. due next week', autocomplete=' %s ' % task.phrase_with(due_date='due next week'), icon=icons.NEXT_WEEK)
 		wf.add_item('Next Month', 'e.g. due next month', autocomplete=' %s ' % task.phrase_with(due_date='due next month'), icon=icons.CALENDAR)
 		wf.add_item('Next Year', 'e.g. due next year, due April 15', autocomplete=' %s ' % task.phrase_with(due_date='due next year'), icon=icons.CALENDAR)
-		wf.add_item('Remove due date', autocomplete=' ' + task.phrase_with(due_date=False), icon=icons.CANCEL)
+		wf.add_item('Remove due date', 'Add "not due" to fix accidental dates, or see wl:pref', autocomplete=' ' + task.phrase_with(due_date=False), icon=icons.CANCEL)
+
+	# Task has an unfinished reminder phrase
+	elif task.has_reminder_prompt:
+		prefs = Preferences.current_prefs()
+		default_reminder_time = format_time(prefs.reminder_time, 'short')
+		due_date_hint = ' on the due date' if task.due_date else ''
+		wf.add_item('Reminder at %s%s' % (default_reminder_time, due_date_hint), 'e.g. r %s' % default_reminder_time, autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at %s' % format_time(prefs.reminder_time, 'short')), icon=icons.REMINDER)
+		wf.add_item('At noon%s' % due_date_hint, 'e.g. reminder noon', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at noon'), icon=icons.REMINDER)
+		wf.add_item('At 8:00 PM%s' % due_date_hint, 'e.g. remind at 8:00 PM', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at 8:00pm'), icon=icons.REMINDER)
+		wf.add_item('At dinner%s' % due_date_hint, 'e.g. alarm at dinner', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me at dinner'), icon=icons.REMINDER)
+		wf.add_item('Today at 6:00 PM', 'e.g. remind me today at 6pm', autocomplete=' %s ' % task.phrase_with(reminder_date='remind me today at 6:00pm'), icon=icons.REMINDER)
+		wf.add_item('Remove reminder', autocomplete=' ' + task.phrase_with(reminder_date=False), icon=icons.CANCEL)
 
 	# Main menu for tasks
 	else:
@@ -88,6 +117,9 @@ def filter(args):
 		title = 'Change the recurrence' if task.recurrence_type else 'Make it a recurring task'
 		wf.add_item(title, '"every" followed by a unit of time, e.g. every 2 months; every year; every 4w', autocomplete=' ' + task.phrase_with(recurrence=True), icon=icons.RECURRENCE)
 
+		title = 'Change the reminder' if task.reminder_date else 'Set a reminder'
+		wf.add_item(title, '"remind me" followed by a time and/or date, e.g. remind me at noon; r 10am; alarm 8:45p', autocomplete=' ' + task.phrase_with(reminder_date=True), icon=icons.REMINDER)
+
 		if task.starred:
 			wf.add_item('Remove star', 'Remove * from the task', autocomplete=' ' + task.phrase_with(starred=False), icon=icons.STAR_REMOVE)
 		else:
@@ -100,9 +132,10 @@ def commit(args):
 
 	task = _task(args)
 
-	tasks.create_task(task.list_id, task.title, assignee_id=task.assignee_id, 
-		recurrence_type=task.recurrence_type, recurrence_count=task.recurrence_count, 
-		due_date=task.due_date, starred=task.starred, completed=task.completed
+	tasks.create_task(task.list_id, task.title, assignee_id=task.assignee_id,
+		recurrence_type=task.recurrence_type, recurrence_count=task.recurrence_count,
+		due_date=task.due_date, reminder_date=task.reminder_date, starred=task.starred,
+		completed=task.completed
 	)
 
 	# Output must be a UTF-8 encoded string

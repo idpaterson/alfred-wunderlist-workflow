@@ -23,6 +23,6 @@ def backgroundSync():
 		'/usr/bin/env',
 		'python',
 		workflow().workflowfile('alfred-wunderlist-workflow.py'),
-		':sync',
+		':pref sync',
 		'--commit'
 	])
