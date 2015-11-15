@@ -1,6 +1,7 @@
-from peewee import Model, SqliteDatabase, ForeignKeyField
+from peewee import Model, SqliteDatabase, ForeignKeyField, DateField, DateTimeField, TimeField
 from wunderlist.util import workflow
 from copy import copy
+import dateutil
 
 db = SqliteDatabase(workflow().datadir + '/wunderlist.db', threadlocals=True)
 
@@ -16,6 +17,8 @@ class BaseModel(Model):
 				fields[k[:-3]] = v
 			elif isinstance(v, ForeignKeyField):
 				fields[k + '_id'] = v
+			elif isinstance(v, (DateTimeField, DateField, TimeField)) and isinstance(fields[k], basestring):
+				fields[k] = dateutil.parse(v)
 
 		# Map each data property to the correct field
 		return {fields[k].name : v for (k,v) in data.iteritems() if k in fields}
