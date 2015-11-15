@@ -12,6 +12,8 @@ class Task(BaseModel):
 	completed_by = ForeignKeyField(User, related_name='completed_tasks', null=True)
 	starred = BooleanField(index=True, null=True)
 	due_date = DateField(index=True, null=True)
+	recurrence_type = CharField(null=True)
+	recurrence_count = IntegerField(null=True)
 	assignee = ForeignKeyField(User, related_name='assigned_tasks', null=True)
 	order = IntegerField(index=True, null=True)
 	revision = IntegerField()
@@ -59,6 +61,16 @@ class Task(BaseModel):
 			.where(cls.title.contains(query))
 			.order_by(List.order.asc(), cls.due_date.asc())
 		)
+
+	@property
+	def reminder_date(self):
+		for reminder in self.reminders:
+			return reminder.date
+		return None
+
+	@property
+	def list_title(self):
+		return self.list.title
 
 	def _sync_children(self):
 		from hashtag import Hashtag

@@ -4,6 +4,8 @@ from wunderlist import icons
 from wunderlist.util import workflow, format_time
 from wunderlist.models.task_parser import TaskParser
 from wunderlist.models.preferences import Preferences
+from wunderlist.models.task import Task
+from wunderlist.models.reminder import Reminder
 from workflow.background import is_running
 from datetime import date
 from random import random
@@ -15,10 +17,8 @@ _reminder = u'⏰'
 def _task(args):
 	return TaskParser(' '.join(args))
 
-def filter(args):
-	task = _task(args)
+def task_subtitle(task):
 	subtitle = []
-	wf = workflow()
 
 	if task.starred:
 		subtitle.append(_star)
@@ -58,7 +58,17 @@ def filter(args):
 			format_time(task.reminder_date.time(), 'short'))
 		)
 
-	subtitle.append(task.title or 'Begin typing to add a new task')
+	subtitle.append(task.title)
+
+	return '   '.join(subtitle)
+
+def filter(args):
+	task = _task(args)
+	subtitle = task_subtitle(task)
+	wf = workflow()
+
+	if not task.title:
+		subtitle = 'Begin typing to add a new task'
 
 	if task.has_list_prompt:
 		lists = wf.stored_data('lists')
@@ -106,7 +116,7 @@ def filter(args):
 
 	# Main menu for tasks
 	else:
-		wf.add_item(task.list_title + u' – create a new task...', '   '.join(subtitle), arg='--stored-query', valid=task.title != '', icon=icons.TASK)
+		wf.add_item(task.list_title + u' – create a new task...', subtitle, arg='--stored-query', valid=task.title != '', icon=icons.TASK)
 
 		title = 'Change list' if task.list_title else 'Select a list'
 		wf.add_item(title, 'Prefix the task, e.g. Automotive: ' + task.title, autocomplete=' ' + task.phrase_with(list_title=True), icon=icons.LIST)
@@ -124,6 +134,10 @@ def filter(args):
 			wf.add_item('Remove star', 'Remove * from the task', autocomplete=' ' + task.phrase_with(starred=False), icon=icons.STAR_REMOVE)
 		else:
 			wf.add_item('Star', 'End the task with * (asterisk)', autocomplete=' ' + task.phrase_with(starred=True), icon=icons.STAR)
+
+		if task.phrase:
+			for t in Task.search(task.phrase):
+				wf.add_item('Incomplete task in ' + t.list.title, task_subtitle(t), autocomplete=' ' + task.phrase_with(starred=True), icon=icons.TASK)
 
 		wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
 
