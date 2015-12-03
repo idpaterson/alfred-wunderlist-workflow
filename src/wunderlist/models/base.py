@@ -41,8 +41,7 @@ class BaseModel(Model):
 				# If the revision is different, sync any children, then update the db
 				if instance.revision != update_item['revision']:
 					instance._sync_children()
-					if instance.revision != update_item['revision']:
-						cls.update(**update_item).where(cls.id == instance.id).execute()
+					cls.update(**update_item).where(cls.id == instance.id).execute()
 
 				del update_items[instance.id]
 			# The model does not exist anymore

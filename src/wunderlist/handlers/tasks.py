@@ -66,11 +66,27 @@ def filter(args):
 	task = _task(args)
 	subtitle = task_subtitle(task)
 	wf = workflow()
+	matching_hashtags = []
 
 	if not task.title:
 		subtitle = 'Begin typing to add a new task'
 
-	if task.has_list_prompt:
+	# Preload matching hashtags into a list so that we can get the length
+	if task.has_hashtag_prompt:
+		from wunderlist.models.hashtag import Hashtag
+
+		hashtags = Hashtag.select().where(Hashtag.tag.contains(task.hashtag_prompt))
+
+		for hashtag in hashtags:
+			matching_hashtags.append(hashtag)
+
+	# Show hashtag prompt if there is more than one matching hashtag or the
+	# hashtag being typed does not exactly match the single matching hashtag
+	if task.has_hashtag_prompt and len(matching_hashtags) > 0 and (len(matching_hashtags) > 1 or task.hashtag_prompt != matching_hashtags[0].tag):
+		for hashtag in matching_hashtags:
+			wf.add_item(hashtag.tag[1:], '', autocomplete=' ' + task.phrase_with(hashtag=hashtag.tag) + ' ', icon=icons.HASHTAG)
+
+	elif task.has_list_prompt:
 		lists = wf.stored_data('lists')
 		if lists:
 			for list in lists:

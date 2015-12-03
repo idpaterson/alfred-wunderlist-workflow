@@ -26,15 +26,17 @@ class Task(BaseModel):
 
 		instances = []
 
-		try:
-			instances = cls.select().where(cls.list == list.id)
-		except:
-			pass
-
 		tasks_data = tasks.tasks(list.id, completed=False)
 		tasks_data += tasks.tasks(list.id, completed=True)
 		tasks_data += tasks.tasks(list.id, completed=False, subtasks=True)
 		tasks_data += tasks.tasks(list.id, completed=True, subtasks=True)
+
+		try:
+			# Include all tasks thought to be in the list, plus any additional
+			# tasks referenced in the data (task may have been moved to a different list)
+			instances = cls.select().where((cls.list == list.id) | (cls.id in [task['id'] for task in tasks_data]))
+		except:
+			pass
 
 		cls._perform_updates(instances, tasks_data)
 
