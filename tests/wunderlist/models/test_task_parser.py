@@ -457,6 +457,15 @@ class TestDueDate():
 
 		assert_task(task, phrase=phrase, title=title)
 
+	def test_explicit_due_date_with_time_disabled_in_task(self):
+		due_phrase = 'due at 4pm tomorrow'
+		title = 'a sample task %s' % due_phrase
+		not_due_phrase = 'not due'
+		phrase = '%s %s' % (title, not_due_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title)
+
 #
 # Recurrence
 # 
@@ -580,6 +589,17 @@ class TestReminders():
 		title = 'a sample task'
 		due_date = _tomorrow
 		due_phrase = 'due tomorrow'
+		reminder_phrase = 'alarm at 8:00a'
+		reminder_date = datetime.combine(due_date, time(8, 0, 0))
+		phrase = '%s %s %s' % (title, due_phrase, reminder_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, due_date=due_date, reminder_date=reminder_date)
+
+	def test_explicit_reminder_overrides_due_date_with_time(self):
+		title = 'a sample task'
+		due_date = _tomorrow
+		due_phrase = 'due tomorrow at noon'
 		reminder_phrase = 'alarm at 8:00a'
 		reminder_date = datetime.combine(due_date, time(8, 0, 0))
 		phrase = '%s %s %s' % (title, due_phrase, reminder_phrase)
