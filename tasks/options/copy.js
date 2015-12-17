@@ -15,6 +15,15 @@ module.exports = {
 			},
 			{
 				expand: true,
+				cwd: '<%= paths.lib %>/dateutil',
+				dest: '<%= paths.dist_lib %>',
+				src: [
+					'dateutil/**/*.py',
+					'!dateutil/tests/**/*'
+				]
+			},
+			{
+				expand: true,
 				cwd: '<%= paths.lib %>/peewee',
 				dest: '<%= paths.dist_lib %>',
 				src: [

@@ -19,3 +19,39 @@ def workflow():
 		)
 
 	return _workflow
+
+def parsedatetime_calendar():
+	from parsedatetime import Calendar, Constants
+
+	return Calendar(parsedatetime_constants())
+
+def parsedatetime_constants():
+	import locale
+	from parsedatetime import Constants
+
+	loc = locale.getlocale(locale.LC_TIME)[0]
+
+	if not loc:
+		# In case the LC_* environment variables are misconfigured, catch
+		# an exception that may be thrown
+		try:
+			loc = locale.getdefaultlocale()[0]
+		except:
+			loc = 'en_US'
+
+	return Constants(loc)
+
+def format_time(time, format):
+	c = parsedatetime_constants()
+
+	expr = c.locale.timeFormats[format]
+	expr = (expr
+		.replace('HH', '%H')
+		.replace('h', '%I')
+		.replace('mm', '%M')
+		.replace('ss', '%S')
+		.replace('a', '%p')
+		.replace('z', '%Z')
+		.replace('v', '%z'))
+
+	return time.strftime(expr).lstrip('0')

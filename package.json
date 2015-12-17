@@ -1,6 +1,6 @@
 {
   "name": "alfred-wunderlist-workflow",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "dependencies": {},
   "private": true,
   "devDependencies": {
@@ -11,9 +11,10 @@
     "grunt-contrib-compass": "~1.0.1",
     "grunt-contrib-compress": "~0.13.0",
     "grunt-contrib-copy": "~0.8.0",
-    "grunt-contrib-imagemin": "~0.9.3",
+    "grunt-contrib-imagemin": "~1.0.0",
     "grunt-contrib-jshint": "~0.11.0",
     "grunt-contrib-symlink": "~0.3.0",
+    "grunt-contrib-watch": "~0.6.1",
     "grunt-newer": "~1.1.0",
     "grunt-pylint": "~1.0.0",
     "grunt-shell": "~1.1.2",

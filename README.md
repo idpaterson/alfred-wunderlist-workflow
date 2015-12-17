@@ -27,7 +27,7 @@ The welcome screen appears when you've typed `wl` (and nothing else). Special co
 
 Add your first task! As you type, the workflow will pick out due dates and recurrence intervals in just about any format you could think of. Just write naturally, the due date, recurrence, and task text are updated in Alfred as you type.
 
-![Task with due date and recurrence](https://cloud.githubusercontent.com/assets/507058/7895424/dd0e1ca6-065a-11e5-92c4-3d48ad0949cb.png)
+![Task with due date and recurrence](https://cloud.githubusercontent.com/assets/507058/11858336/bbcb7c1a-a42e-11e5-85f6-414aa82fcbbb.png)
 
 Use the menus to configure your task until you become a power user capable of typing everything manually. It's so worthwhile to be able to drop tasks into Wunderlist in under a second.
 
@@ -36,18 +36,48 @@ Use the menus to configure your task until you become a power user capable of ty
 ### Adding tasks to a specific list
 
 To select a list, type it first followed by a colon or use the Change list menu item. No need to type the full list name, as long as you see the correct list in Alfred a few letters is usually sufficient.
-![List by substring matching](https://cloud.githubusercontent.com/assets/507058/7895439/cc89462a-065b-11e5-89e9-8b1dfa52ac44.png)
+![List by substring matching](https://cloud.githubusercontent.com/assets/507058/11858365/e43c56d8-a42e-11e5-9ec6-4494579525a0.png)
+
+### Reminders
+
+Wunderlist uses alerts to remind you about tasks that are due, either on the due date or in advance. To set a reminder, either include a time with your due date or use an explicit reminder phrase like *remind me at 3:00pm on June 11*). 
+
+#### Examples
+
+> **wl Pay DoubleCash credit card bill monthly June 26th remind me June 22**<br/>
+![wl Pay DoubleCash credit card bill monthly June 26th remind me June 22](https://cloud.githubusercontent.com/assets/507058/8271997/4779e33e-1800-11e5-91f4-55867bf1473a.png)
+
+> **wl Make a New Year's resolution reminder: Jan 1 at midnight**<br/>
+![wl Make a New Year's resolution reminder: Jan 1 at midnight](https://cloud.githubusercontent.com/assets/507058/8272030/c21fa028-1801-11e5-812a-fc66e4b9a232.png)
+
+> **wl weekly meeting notes r 8am due 1d**<br/>
+![wl weekly meeting notes r 8am due 1d](https://cloud.githubusercontent.com/assets/507058/8272020/5b49fd8a-1801-11e5-9d27-9851a8385bdc.png)
+
+> **wl Laundry remind me**<br/>
+![wl Laundry remind me](https://cloud.githubusercontent.com/assets/507058/8272070/6c15c502-1803-11e5-9a17-ed65b1a98f20.png)
+
+> **wl Ask about app icon at dinner tomorrow**<br/>
+![wl Ask about app icon at dinner tomorrow](https://cloud.githubusercontent.com/assets/507058/11858195/5593905a-a42d-11e5-8e66-9b27afb31f23.png)
+
+#### When is the reminder?
+
+You can set a custom default reminder time from the workflow preferences screen, otherwise when a time is not specified the reminder will be set for 9am.
+
+|  Reminder phrase includes |          Task without due date           |               Task with due date               |
+| ------------------------- | ---------------------------------------- | ---------------------------------------------- |
+| **Time only**             | Reminder today at the specified time     | Reminder on the due date at the specified time |
+| **Neither time nor date** | Default time (9am) today                 | Default time (9am) on the due date             |
+| **Date and time**         | Exact date and time entered              | Exact date and time entered                    |
+| **Date only**             | Default time (9am) on the specified date | Default time (9am) on the specified date       |
 
 ### In sync
 
 The workflow stays in sync with Wunderlist, so your lists (and tasks, in a later release) will be up-to-date and searchable. You can use the menu to select a list after typing the task. Just created a list in the Wunderlist app? No worries, it will show up in the workflow.
-![List option](https://cloud.githubusercontent.com/assets/507058/7895446/1c1996c2-065c-11e5-9a8b-4e6cbd694ab9.png)
-![List menu](https://cloud.githubusercontent.com/assets/507058/7895447/1d87f486-065c-11e5-9cf5-781d32a5c36c.png)
 
 ### Hints
 
 Read the text below menu option and you'll be on your way to power user status – most menu items include helpful tips about how to apply a setting without navigating the menu. Finally, if you're using a dark theme it's probably a good idea to switch to light icons. Just go in through the main menu or jump straight to `wl:pref`
-![Preferences](https://cloud.githubusercontent.com/assets/507058/7895453/719187fe-065c-11e5-938d-023368a7f67b.png)
+![Preferences](https://cloud.githubusercontent.com/assets/507058/11858379/094c9be0-a42f-11e5-93d5-3591e8f99ed4.png)
 
 
 Security
@@ -87,4 +117,5 @@ Much of the natural language date processing is powered by [parsedatetime](https
 Alternatives
 ------------
 
+* Wunderlist itself! The 6Wunderkinder team has been incorporating many of the features found in this workflow directly into the app so that you can enjoy the convenience of natural language due dates and reminders across all platforms.
 * [Wunderlist-3-Alfred](https://github.com/camgnostic/Wunderlist-3-Alfred) by [camgnostic](https://github.com/camgnostic)
