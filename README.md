@@ -44,24 +44,24 @@ Wunderlist uses alerts to remind you about tasks that are due, either on the due
 
 #### Examples
 
-> **wl Pay DoubleCash credit card bill monthly June 26th remind me June 22**
+> **wl Pay DoubleCash credit card bill monthly June 26th remind me June 22**<br/>
 ![wl Pay DoubleCash credit card bill monthly June 26th remind me June 22](https://cloud.githubusercontent.com/assets/507058/8271997/4779e33e-1800-11e5-91f4-55867bf1473a.png)
 
-> **wl Make a New Year's resolution reminder: Jan 1 at midnight**
+> **wl Make a New Year's resolution reminder: Jan 1 at midnight**<br/>
 ![wl Make a New Year's resolution reminder: Jan 1 at midnight](https://cloud.githubusercontent.com/assets/507058/8272030/c21fa028-1801-11e5-812a-fc66e4b9a232.png)
 
-> **wl weekly meeting notes r 8am due 1d**
+> **wl weekly meeting notes r 8am due 1d**<br/>
 ![wl weekly meeting notes r 8am due 1d](https://cloud.githubusercontent.com/assets/507058/8272020/5b49fd8a-1801-11e5-9d27-9851a8385bdc.png)
 
-> **wl Laundry remind me**
+> **wl Laundry remind me**<br/>
 ![wl Laundry remind me](https://cloud.githubusercontent.com/assets/507058/8272070/6c15c502-1803-11e5-9a17-ed65b1a98f20.png)
 
-> **wl Ask about app icon at dinner tomorrow**
+> **wl Ask about app icon at dinner tomorrow**<br/>
 ![wl Ask about app icon at dinner tomorrow](https://cloud.githubusercontent.com/assets/507058/11858195/5593905a-a42d-11e5-8e66-9b27afb31f23.png)
 
 #### When is the reminder?
 
-You can set a custom default reminder time, otherwise when a time is not specified the reminder will be set for 9am.
+You can set a custom default reminder time from the workflow preferences screen, otherwise when a time is not specified the reminder will be set for 9am.
 
 |  Reminder phrase includes |          Task without due date           |               Task with due date               |
 | ------------------------- | ---------------------------------------- | ---------------------------------------------- |
