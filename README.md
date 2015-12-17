@@ -38,6 +38,38 @@ Use the menus to configure your task until you become a power user capable of ty
 To select a list, type it first followed by a colon or use the Change list menu item. No need to type the full list name, as long as you see the correct list in Alfred a few letters is usually sufficient.
 ![List by substring matching](https://cloud.githubusercontent.com/assets/507058/7895439/cc89462a-065b-11e5-89e9-8b1dfa52ac44.png)
 
+### Reminders
+
+Wunderlist uses alerts to remind you about tasks that are due, either on the due date or in advance. To set a reminder, either include a time with your due date or use an explicit reminder phrase like *remind me at 3:00pm on June 11*). 
+
+#### Examples
+
+> **wl Pay DoubleCash credit card bill monthly June 26th remind me June 22**
+![wl Pay DoubleCash credit card bill monthly June 26th remind me June 22](https://cloud.githubusercontent.com/assets/507058/8271997/4779e33e-1800-11e5-91f4-55867bf1473a.png)
+
+> **wl Make a New Year's resolution reminder: Jan 1 at midnight**
+![wl Make a New Year's resolution reminder: Jan 1 at midnight](https://cloud.githubusercontent.com/assets/507058/8272030/c21fa028-1801-11e5-812a-fc66e4b9a232.png)
+
+> **wl weekly meeting notes r 8am due 1d**
+![wl weekly meeting notes r 8am due 1d](https://cloud.githubusercontent.com/assets/507058/8272020/5b49fd8a-1801-11e5-9d27-9851a8385bdc.png)
+
+> **wl Laundry remind me**
+![wl Laundry remind me](https://cloud.githubusercontent.com/assets/507058/8272070/6c15c502-1803-11e5-9a17-ed65b1a98f20.png)
+
+> **wl Ask about app icon at dinner tomorrow**
+![wl Ask about app icon at dinner tomorrow](https://cloud.githubusercontent.com/assets/507058/11858195/5593905a-a42d-11e5-8e66-9b27afb31f23.png)
+
+#### When is the reminder?
+
+You can set a custom default reminder time, otherwise when a time is not specified the reminder will be set for 9am.
+
+|  Reminder phrase includes |          Task without due date           |               Task with due date               |
+| ------------------------- | ---------------------------------------- | ---------------------------------------------- |
+| **Time only**             | Reminder today at the specified time     | Reminder on the due date at the specified time |
+| **Neither time nor date** | Default time (9am) today                 | Default time (9am) on the due date             |
+| **Date and time**         | Exact date and time entered              | Exact date and time entered                    |
+| **Date only**             | Default time (9am) on the specified date | Default time (9am) on the specified date       |
+
 ### In sync
 
 The workflow stays in sync with Wunderlist, so your lists (and tasks, in a later release) will be up-to-date and searchable. You can use the menu to select a list after typing the task. Just created a list in the Wunderlist app? No worries, it will show up in the workflow.
