@@ -76,7 +76,9 @@ The workflow stays in sync with Wunderlist, so your lists (and tasks, in a later
 
 ### Hints
 
-Read the text below menu option and you'll be on your way to power user status – most menu items include helpful tips about how to apply a setting without navigating the menu. Finally, if you're using a dark theme it's probably a good idea to switch to light icons. Just go in through the main menu or jump straight to `wl:pref`
+Read the text below menu option and you'll be on your way to power user status – most menu items include helpful tips about how to apply a setting without navigating the menu.
+
+If you notice any problems or want to see what changed in the latest version, jump to the *About* screen from the main menu or type `wl:about`. You will also find several preferences to customize the behavior of the workflow at `wl:pref` or the *Preferences* item on the welcome screen.
 ![Preferences](https://cloud.githubusercontent.com/assets/507058/11858379/094c9be0-a42f-11e5-93d5-3591e8f99ed4.png)
 
 
