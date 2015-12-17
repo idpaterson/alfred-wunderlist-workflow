@@ -20,7 +20,7 @@ Features you'll love
 The workflow provides an easy guided experience with tips along the way that will help you become a power user. 
 
 The welcome screen appears when you've typed `wl` (and nothing else). Special commands are in the form `wl:command` with no space; once you type a space after `wl ` you're in task entry mode (at least for now, this is a bit harsh).
-![Welcome screen](https://cloud.githubusercontent.com/assets/507058/7895432/791fe76e-065b-11e5-854c-5a0b29efab61.png)
+![Welcome screen](https://cloud.githubusercontent.com/assets/507058/11870946/fffcff2e-a499-11e5-8528-5cfa0778dfed.png)
 
 
 ### Adding tasks with due dates and recurrence
