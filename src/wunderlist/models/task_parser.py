@@ -233,6 +233,10 @@ class TaskParser(object):
 					if due_date_phrase_match:
 						self._due_date_phrase = due_date_phrase_match.group()
 						phrase = phrase.replace(self._due_date_phrase, '', 1)
+
+					# If the due date specifies a time, set it as the reminder
+					if datetime_info[1].hasTime:
+						self.reminder_date = datetime_info[0]
 				# Just a time component
 				else:
 					due_keyword = None

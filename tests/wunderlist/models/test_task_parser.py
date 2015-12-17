@@ -20,6 +20,7 @@ _lists = [
 ]
 
 _default_reminder_time = time(9, 0, 0)
+_noon = time(12, 0, 0)
 _12_13_14 = date(2014, 12, 13)
 _today = date.today()
 _tomorrow = date.today() + timedelta(days=1)
@@ -383,19 +384,29 @@ class TestDueDate():
 
 		assert_task(task, phrase=phrase, title=title, due_date=due_date)
 
-	def test_due_date_ignores_time(self):
+	def test_due_date_ignores_time_only(self):
 		title = 'a sample task due 4:00'
 		phrase = title
 		task = TaskParser(phrase)
 
 		assert_task(task, phrase=phrase, title=title)
 
-	def test_due_date_ignores_time_no_keyword(self):
+	def test_due_date_ignores_time_only_no_keyword(self):
 		title = 'a sample task 4:00'
 		phrase = title
 		task = TaskParser(phrase)
 
 		assert_task(task, phrase=phrase, title=title)
+
+	def test_due_date_with_time_sets_reminder(self):
+		title = 'a sample task'
+		due_phrase = 'due 12/13/14 at noon'
+		due_date = _12_13_14
+		reminder_date = datetime.combine(due_date, _noon)
+		phrase = '%s %s' % (title, due_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, due_date=due_date, reminder_date=reminder_date)
 
 	def test_due_keyword_without_date(self):
 		title = 'We are due for some rain'
@@ -439,6 +450,15 @@ class TestDueDate():
 
 	def test_explicit_due_date_disabled_in_task(self):
 		due_phrase = 'due tomorrow'
+		title = 'a sample task %s' % due_phrase
+		not_due_phrase = 'not due'
+		phrase = '%s %s' % (title, not_due_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title)
+
+	def test_explicit_due_date_with_time_disabled_in_task(self):
+		due_phrase = 'due at 4pm tomorrow'
 		title = 'a sample task %s' % due_phrase
 		not_due_phrase = 'not due'
 		phrase = '%s %s' % (title, not_due_phrase)
@@ -569,6 +589,17 @@ class TestReminders():
 		title = 'a sample task'
 		due_date = _tomorrow
 		due_phrase = 'due tomorrow'
+		reminder_phrase = 'alarm at 8:00a'
+		reminder_date = datetime.combine(due_date, time(8, 0, 0))
+		phrase = '%s %s %s' % (title, due_phrase, reminder_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, due_date=due_date, reminder_date=reminder_date)
+
+	def test_explicit_reminder_overrides_due_date_with_time(self):
+		title = 'a sample task'
+		due_date = _tomorrow
+		due_phrase = 'due tomorrow at noon'
 		reminder_phrase = 'alarm at 8:00a'
 		reminder_date = datetime.combine(due_date, time(8, 0, 0))
 		phrase = '%s %s %s' % (title, due_phrase, reminder_phrase)
