@@ -8,6 +8,9 @@ import locale
 # Up to 8 words (sheesh!) followed by a colon
 _list_title_pattern = r'^((?:[^\s:]+ *){0,8}):'
 
+# The word "in" followed optionally by "list"
+_infix_list_keyword_pattern = r'\bin\s+(list\s+)?'
+
 # `every N units` optionally preceded by `repeat`
 _recurrence_pattern = r'(?:\brepeat(?:ing|s)?:? )?(?:\bevery *(\d*) *((?:day|week|month|year|d|w|m|y|da|wk|mo|yr)s?\b)?|(daily|weekly|monthly|yearly|annually))'
 _recurrence_by_date_pattern = r'(?:\brepeat:? )?\bevery *((?:\S+ *){0,2})'
@@ -24,6 +27,9 @@ _star_pattern = r'\*$'
 
 # Tabs or multiple consecutive spaces
 _whitespace_cleanup_pattern = r'\t|\s{2,}'
+
+# Split words ignoring leading and trailing punctuation
+_word_separator_pattern = r'\W*\s+\W*'
 
 # Maps first letter to the API recurrence type
 _recurrence_types = {
@@ -64,6 +70,7 @@ class TaskParser(object):
 		self._parse()
 
 	def _parse(self):
+		cls = type(self)
 		phrase = self.phrase
 		cal = parsedatetime_calendar()
 		wf = workflow()
@@ -104,15 +111,6 @@ class TaskParser(object):
 			if self.list_title or self.has_list_prompt:
 				self._list_phrase = match.group()
 				phrase = phrase[:match.start()] + phrase[match.end():]
-
-		if not self.list_title:
-			if lists:
-				inbox = lists[0]
-				self.list_id = inbox['id']
-				self.list_title = inbox['title']
-			else:
-				self.list_id = 0
-				self.list_title = 'Inbox'
 
 		# Parse and remove the recurrence phrase first so that any dates do
 		# not interfere with the due date
@@ -269,16 +267,91 @@ class TaskParser(object):
 					self.reminder_date = dt
 				# Time only; set the reminder on the due day
 				elif datetime_context.hasTime:
-					self.reminder_date = datetime.combine(reference_date, dt.time())
+					self.reminder_date = cls.reminder_date_combine(reference_date, dt)
 				# Date only; set the default reminder time on that day
 				elif datetime_context.hasDate:
-					self.reminder_date = datetime.combine(dt.date(), prefs.reminder_time)
+					self.reminder_date = cls.reminder_date_combine(dt)
 					
 			else:
-				self.reminder_date = datetime.combine(reference_date, prefs.reminder_time)
+				self.reminder_date = cls.reminder_date_combine(reference_date)
+
+		# Look for a list title at the end of the remaining phrase, like
+		# "in list Office"
+		if not self.list_title:
+			matches = re.finditer(_infix_list_keyword_pattern, phrase, re.IGNORECASE)
+			for match in matches:
+				subphrase = phrase[match.end():]
+
+				# Just a couple characters are too likely to result in a false
+				# positive, but allow it if the letters are capitalized
+				if len(subphrase) > 2 or subphrase == subphrase.upper():
+					matching_lists = wf.filter(
+						subphrase,
+						lists,
+						lambda l:l['title'],
+						# Ignore MATCH_ALLCHARS which is expensive and inaccurate
+						match_on=MATCH_ALL ^ MATCH_ALLCHARS
+					)
+
+					# Take the first match as the desired list
+					if matching_lists:
+						self.list_id = matching_lists[0]['id']
+						self.list_title = matching_lists[0]['title']
+						self._list_phrase = match.group() + subphrase
+						phrase = phrase[:match.start()]
+						break
+
+		# No list parsed, assign to inbox
+		if not self.list_title:
+			if lists:
+				inbox = lists[0]
+				self.list_id = inbox['id']
+				self.list_title = inbox['title']
+			else:
+				self.list_id = 0
+				self.list_title = 'Inbox'
 		
+		# Set an automatic reminder when there is a due date without a
+		# specified reminder
+		if self.due_date and not self.reminder_date and prefs.automatic_reminders:
+			self.reminder_date = cls.reminder_date_combine(self.due_date)
+
 		# Condense extra whitespace remaining in the task title after parsing
 		self.title = re.sub(_whitespace_cleanup_pattern, ' ', phrase).strip()
+
+	@classmethod
+	def reminder_date_combine(cls, date_component, time_component=None):
+		"""
+		Returns a datetime based on the date portion of the date_component and
+		the time portion of the time_component with special handling for an
+		unspecified time_component. Based on the user preferences, a None
+		time_component will result in either the default reminder time or an
+		adjustment based on the current time if the reminder date is today.
+		"""
+		prefs = Preferences.current_prefs()
+
+		if isinstance(date_component, datetime):
+			date_component = date_component.date()
+
+		# Set a dynamic reminder date if due today
+		if date_component == date.today() and time_component is None and prefs.reminder_today_offset:
+			adjusted_now = datetime.now()
+			adjusted_now -= timedelta(seconds=adjusted_now.second, microseconds=adjusted_now.microsecond)
+			time_component = adjusted_now + prefs.reminder_today_offset_timedelta
+
+			# "Round" to nearest 5 minutes, e.g. from :01 to :05, :44 to :45,
+			# :50 to :50
+			time_component += timedelta(minutes=(5 - time_component.minute % 5) % 5)
+
+		# Default an unspecified time component on any day other than today to
+		# the default reminder time
+		if time_component is None:
+			time_component = prefs.reminder_time
+
+		if isinstance(time_component, datetime):
+			time_component = time_component.time()
+
+		return datetime.combine(date_component, time_component)
 
 	def phrase_with(self, title=None, list_title=None, due_date=None, recurrence=None, reminder_date=None, starred=None):
 		components = []

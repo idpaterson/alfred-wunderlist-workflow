@@ -22,6 +22,8 @@ class Root(BaseModel):
 
 	def _sync_children(self):
 		from list import List
+		from preferences import Preferences
 
+		Preferences.sync()
 		List.sync()
 		User.sync()

@@ -27,7 +27,7 @@ def filter(args):
 		today = date.today()
 		if task.due_date == today:
 			date_format = 'Today'
-		if task.due_date.year == today.year:
+		elif task.due_date.year == today.year:
 			date_format = '%a, %b %d'
 		else:
 			date_format = '%b %d, %Y'
@@ -46,11 +46,13 @@ def filter(args):
 	if task.reminder_date:
 		today = date.today()
 		if task.reminder_date.date() == today:
-			date_format = 'Today '
-		if task.reminder_date.year == today.year:
-			date_format = '%a, %b %d '
+			date_format = 'Today'
+		elif task.reminder_date.date() == task.due_date:
+			date_format = 'On due date'
+		elif task.reminder_date.year == today.year:
+			date_format = '%a, %b %d'
 		else:
-			date_format = '%b %d, %Y '
+			date_format = '%b %d, %Y'
 
 		subtitle.append('%s %s at %s' % (
 			_reminder,

@@ -20,6 +20,7 @@ _lists = [
 ]
 
 _default_reminder_time = time(9, 0, 0)
+_default_reminder_today_offset = time(1, 0, 0)
 _noon = time(12, 0, 0)
 _12_13_14 = date(2014, 12, 13)
 _today = date.today()
@@ -87,6 +88,27 @@ def mock_default_reminder_time(mocker):
 	mocker.patch('wunderlist.models.preferences.Preferences.reminder_time', new=_default_reminder_time)
 
 @pytest.fixture(autouse=True)
+def mock_default_reminder_today_offset(mocker):
+	"""
+	Use default 1 hour time offset
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.reminder_today_offset', new=_default_reminder_today_offset)
+
+@pytest.fixture()
+def mock_2_hour_reminder_today_offset(mocker):
+	"""
+	Use 2 hours rather than the default 1 hour time offset
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.reminder_today_offset', new=time(2, 0, 0))
+
+@pytest.fixture()
+def mock_disabled_reminder_today_offset(mocker):
+	"""
+	Use None to disable the offset and always use the default reminder time
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.reminder_today_offset', new=None)
+
+@pytest.fixture(autouse=True)
 def mock_default_explicit_keywords(mocker):
 	"""
 	Returns False for explicit_keywords rather than the user's preference
@@ -99,6 +121,20 @@ def mock_disabled_explicit_keywords(mocker):
 	Returns True for explicit_keywords rather than the user's preference
 	"""
 	mocker.patch('wunderlist.models.preferences.Preferences.explicit_keywords', new=True)
+
+@pytest.fixture(autouse=True)
+def mock_disabled_automatic_reminders(mocker):
+	"""
+	Returns False for automatic_reminders rather than the user's preference
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.automatic_reminders', new=False)
+
+@pytest.fixture()
+def mock_enabled_automatic_reminders(mocker):
+	"""
+	Returns True for automatic_reminders rather than the user's preference
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.automatic_reminders', new=True)
 
 @pytest.fixture(autouse=True)
 def set_locale():
@@ -179,6 +215,71 @@ class TestBasics():
 		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
 
 #
+# Combining reminder dates
+#
+
+class TestReminderDateCombine():
+
+	def test_date_and_time(self):
+		date_component = _12_13_14
+		time_component = _noon
+		reminder_date = TaskParser.reminder_date_combine(date_component, time_component)
+
+		assert reminder_date == datetime.combine(date_component, time_component)
+
+	def test_date_and_time_as_datetimes(self):
+		date_component = datetime.combine(_12_13_14, _default_reminder_time)
+		time_component = datetime.combine(_today, _noon)
+		reminder_date = TaskParser.reminder_date_combine(date_component, time_component)
+
+		assert reminder_date == datetime.combine(date_component.date(), time_component.time())
+
+	def test_default_time_not_today(self):
+		date_component = _tomorrow
+		reminder_date = TaskParser.reminder_date_combine(date_component)
+
+		assert reminder_date == datetime.combine(date_component, _default_reminder_time)
+
+	def test_default_time_today(self):
+		date_component = _today
+		now = datetime.now()
+		reminder_date = TaskParser.reminder_date_combine(date_component)
+
+		assert reminder_date.date() == date_component
+		assert reminder_date.microsecond == 0
+		assert reminder_date.second == 0
+		assert reminder_date.minute % 5 == 0
+		assert reminder_date.hour == (now + timedelta(hours=1)).hour
+
+		# Rounded up to the nearest 5 minute mark
+		assert reminder_date.minute == (now + timedelta(minutes=(5 - now.minute % 5) % 5)).minute
+
+	@pytest.mark.usefixtures("mock_2_hour_reminder_today_offset")
+	def test_default_time_today_custom_offset(self):
+		date_component = _today
+		now = datetime.now()
+		reminder_date = TaskParser.reminder_date_combine(date_component)
+
+		assert reminder_date.date() == date_component
+		assert reminder_date.microsecond == 0
+		assert reminder_date.second == 0
+		assert reminder_date.minute % 5 == 0
+		assert reminder_date.hour == (now + timedelta(hours=2)).hour
+
+		# Rounded up to the nearest 5 minute mark
+		assert reminder_date.minute == (now + timedelta(minutes=(5 - now.minute % 5) % 5)).minute
+
+
+	@pytest.mark.usefixtures("mock_disabled_reminder_today_offset")
+	def test_default_time_today_disabled_offset(self):
+		date_component = _today
+		now = datetime.now()
+		reminder_date = TaskParser.reminder_date_combine(date_component)
+
+		assert reminder_date.date() == date_component
+		assert reminder_date.time() == _default_reminder_time
+
+#
 # Lists
 #
 
@@ -188,6 +289,14 @@ class TestLists():
 		target_list = _single_word_list
 		title = 'a sample task'
 		phrase = '%s: %s' % (target_list, title) # Finances: a sample task
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
+
+	def test_infix_list_name_exact_match(self):
+		target_list = _single_word_list
+		title = 'a sample task'
+		phrase = '%s in %s' % (title, target_list) # a sample task in Finances
 		task = TaskParser(phrase)
 
 		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
@@ -224,6 +333,25 @@ class TestLists():
 
 		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
 
+	def test_infix_list_initials(self):
+		target_list = _multi_word_list
+		title = 'a sample task'
+		phrase = '%s in list %s' % (title, initials(target_list)) # a sample task in list SL
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
+
+	def test_infix_list_initials_ignored_if_lowercase(self):
+		"""
+		Fewer than 3 characters should be ignored unless uppercase
+		"""
+		target_list = _multi_word_list
+		title = 'a sample task'
+		phrase = '%s in %s' % (title, initials(target_list).lower()) # a sample task in sl
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=phrase)
+
 	def test_list_name_case_insensitive_match(self):
 		target_list = _single_word_list
 		title = 'a sample task'
@@ -240,8 +368,30 @@ class TestLists():
 
 		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
 
+	def test_infix_list_name_containing_infix_keyword(self):
+		"""
+		Very contrived, but the point is that if a list contains "in" we need
+		to match the entire phrase that was meant to be the list keyword,
+		rather than matching a part of the list and leaving a part of the list
+		in the task title
+		"""
+		target_list = _diacritic_list
+		list_phrase = 'in jard in eria'
+		title = 'a sample task'
+		phrase = '%s: %s' % (_diacritic_list_insensitive, title) # Jardineria: a sample task (no accent)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
+
 	def test_ignores_unknown_list_name(self):
 		title = 'not a list: a sample task'
+		phrase = title
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title)
+
+	def test_ignores_unknown_infix_list_name(self):
+		title = 'a sample task in not a list'
 		phrase = title
 		task = TaskParser(phrase)
 
@@ -253,6 +403,13 @@ class TestLists():
 		task = TaskParser(phrase)
 
 		assert_task(task, phrase=phrase, title=title, has_list_prompt=True)
+
+	def test_infix_list_does_not_prompt(self):
+		title = 'a sample task in'
+		phrase = '%s ' % (title)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=title, title=title, has_list_prompt=False)
 	
 #
 # Due date
@@ -579,7 +736,7 @@ class TestReminders():
 	def test_reminder_implicitly_relative_to_today_no_time(self):
 		title = 'a sample task'
 		reminder_phrase = 'reminder'
-		reminder_date = datetime.combine(_today, _default_reminder_time)
+		reminder_date = TaskParser.reminder_date_combine(_today) # Adds 1hr and rounds up to nearest 5m mark
 		phrase = '%s %s' % (title, reminder_phrase)
 		task = TaskParser(phrase)
 
@@ -648,6 +805,39 @@ class TestReminders():
 
 		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list), due_date=due_date, reminder_date=reminder_date)
 
+	@pytest.mark.usefixtures("mock_enabled_automatic_reminders")
+	def test_automatic_reminder_with_due_date(self):
+		title = 'a sample task'
+		due_date = _tomorrow
+		due_phrase = 'due tomorrow'
+		reminder_date = datetime.combine(due_date, _default_reminder_time)
+		phrase = '%s %s' % (title, due_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, due_date=due_date, reminder_date=reminder_date)
+
+	@pytest.mark.usefixtures("mock_enabled_automatic_reminders")
+	def test_explicit_reminder_overrides_automatic_reminder(self):
+		title = 'a sample task'
+		due_date = _tomorrow
+		due_phrase = 'due tomorrow'
+		reminder_phrase = 'r 8am'
+		reminder_date = datetime.combine(due_date, time(8, 0, 0))
+		phrase = '%s %s %s' % (title, due_phrase, reminder_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, due_date=due_date, reminder_date=reminder_date)
+
+	@pytest.mark.usefixtures("mock_enabled_automatic_reminders")
+	def test_due_date_with_time_overrides_automatic_reminder(self):
+		title = 'a sample task'
+		due_date = _tomorrow
+		due_phrase = 'due 8:00 tomorrow'
+		reminder_date = datetime.combine(due_date, time(8, 0, 0))
+		phrase = '%s %s' % (title, due_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, due_date=due_date, reminder_date=reminder_date)
 #
 # Star
 #

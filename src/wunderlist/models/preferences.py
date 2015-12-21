@@ -1,13 +1,33 @@
-from datetime import time
+from datetime import time, timedelta
 from wunderlist.util import workflow
 
 REMINDER_TIME_KEY = 'reminder_time'
 ICON_THEME_KEY = 'icon_theme'
 EXPLICIT_KEYWORDS_KEY = 'explicit_keywords'
+AUTOMATIC_REMINDERS_KEY = 'automatic_reminders'
+REMINDER_TODAY_OFFSET_KEY = 'reminder_today_offset'
 
 class Preferences(object):
 
 	_current_prefs = None
+
+	@classmethod
+	def sync(cls):
+		from wunderlist.api import settings
+
+		prefs = cls.current_prefs()
+
+		# Only set the default values once, otherwise allow them to be managed
+		# in the workflow
+		if prefs._get(AUTOMATIC_REMINDERS_KEY, None) is None:
+			prefs.reminder_today_offset = time(1, 0, 0)
+
+			for s in settings.settings():
+				if s['key'] == 'automatic_reminders':
+					# In case the value, currently "on" or "off" is changed to
+					# boolean this logic will still work
+					prefs.automatic_reminders = s['value'] and s['value'] != 'off'
+					break
 
 	@classmethod
 	def current_prefs(cls):
@@ -42,6 +62,20 @@ class Preferences(object):
 		self._set(REMINDER_TIME_KEY, reminder_time)
 
 	@property
+	def reminder_today_offset(self):
+		return self._get(REMINDER_TODAY_OFFSET_KEY, None)
+
+	@reminder_today_offset.setter
+	def reminder_today_offset(self, reminder_today_offset):
+		self._set(REMINDER_TODAY_OFFSET_KEY, reminder_today_offset)
+
+	@property
+	def reminder_today_offset_timedelta(self):
+		reminder_today_offset = self.reminder_today_offset
+
+		return timedelta(hours=reminder_today_offset.hour, minutes=reminder_today_offset.minute)
+
+	@property
 	def icon_theme(self):
 		return self._get(ICON_THEME_KEY)
 
@@ -56,3 +90,11 @@ class Preferences(object):
 	@explicit_keywords.setter
 	def explicit_keywords(self, explicit_keywords):
 		self._set(EXPLICIT_KEYWORDS_KEY, explicit_keywords)
+
+	@property
+	def automatic_reminders(self):
+		return self._get(AUTOMATIC_REMINDERS_KEY, False)
+
+	@automatic_reminders.setter
+	def automatic_reminders(self, automatic_reminders):
+		self._set(AUTOMATIC_REMINDERS_KEY, automatic_reminders)
