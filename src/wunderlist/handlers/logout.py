@@ -17,5 +17,7 @@ def filter(args):
 
 def commit(args):
 	auth.deauthorize()
+	util.workflow().clear_data()
+	util.workflow().clear_cache()
 
 	print 'You are now logged out'
