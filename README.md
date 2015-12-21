@@ -38,6 +38,20 @@ Use the menus to configure your task until you become a power user capable of ty
 To select a list, type it first followed by a colon or use the Change list menu item. No need to type the full list name, as long as you see the correct list in Alfred a few letters is usually sufficient.
 ![List by substring matching](https://cloud.githubusercontent.com/assets/507058/11858365/e43c56d8-a42e-11e5-9ec6-4494579525a0.png)
 
+You can also select a list *after* typing your task with the "in" keyword. To avoid false positives you will need to use all-caps in order to match a list by typing fewer than 3 characters.
+
+#### Examples
+
+> <strong>wl h:Fix the broken step saturday morning*</strong><br/>
+![wl h:Fix the broken step saturday morning*](https://cloud.githubusercontent.com/assets/507058/11939350/90d6001a-a7ef-11e5-9823-3273f611599c.png)
+
+> **wl Buy clicky keyboard in shopping due sat**<br/>
+![Buy clicky keyboard in sho due sat](https://cloud.githubusercontent.com/assets/507058/11939279/ffefa6f0-a7ee-11e5-9b7f-f5b1d55747a0.png)
+
+> **wl Rearrange file cabinet tomorrow in WO**<br/>
+![wl Rearrange file cabinet tomorrow in WO](https://cloud.githubusercontent.com/assets/507058/11939280/0244f108-a7ef-11e5-8d0d-726bb5e773d5.png)
+
+
 ### Reminders
 
 Wunderlist uses alerts to remind you about tasks that are due, either on the due date or in advance. To set a reminder, either include a time with your due date or use an explicit reminder phrase like *remind me at 3:00pm on June 11*). 
@@ -63,12 +77,16 @@ Wunderlist uses alerts to remind you about tasks that are due, either on the due
 
 You can set a custom default reminder time from the workflow preferences screen, otherwise when a time is not specified the reminder will be set for 9am.
 
-|  Reminder phrase includes |          Task without due date           |               Task with due date               |
-| ------------------------- | ---------------------------------------- | ---------------------------------------------- |
-| **Time only**             | Reminder today at the specified time     | Reminder on the due date at the specified time |
-| **Neither time nor date** | Default time (9am) today                 | Default time (9am) on the due date             |
-| **Date and time**         | Exact date and time entered              | Exact date and time entered                    |
-| **Date only**             | Default time (9am) on the specified date | Default time (9am) on the specified date       |
+|  Reminder phrase includes |           Task without due date            |               Task with due date               |
+| ------------------------- | ------------------------------------------ | ---------------------------------------------- |
+| **Time only**             | Reminder today at the specified time       | Reminder on the due date at the specified time |
+| **Neither time nor date** | Today, 1 hour from the current time*       | Default time (9am) on the due date**            |
+| **Date and time**         | Exact date and time entered                | Exact date and time entered                    |
+| **Date only**             | Default time (9am) on the specified date** | Default time (9am) on the specified date**     |
+
+\* By default, reminders for the current day will be set to 1 hour from the current time. You can change this offset in the workflow preferences.
+
+\*\* The default time can be changed in the workflow preferences. If the specified date is today, your reminder date offset preference will be used instead.
 
 ### In sync
 
@@ -79,13 +97,15 @@ The workflow stays in sync with Wunderlist, so your lists (and tasks, in a later
 Read the text below menu option and you'll be on your way to power user status – most menu items include helpful tips about how to apply a setting without navigating the menu.
 
 If you notice any problems or want to see what changed in the latest version, jump to the *About* screen from the main menu or type `wl:about`. You will also find several preferences to customize the behavior of the workflow at `wl:pref` or the *Preferences* item on the welcome screen.
-![Preferences](https://cloud.githubusercontent.com/assets/507058/11858379/094c9be0-a42f-11e5-93d5-3591e8f99ed4.png)
+![Preferences](https://cloud.githubusercontent.com/assets/507058/11939113/c132fd14-a7ed-11e5-8fd1-9e3727acee26.png)
 
 
 Security
 -----------
 
-Your Wunderlist password is never made available to the workflow or stored in any way. Instead, when you log in through the Wunderlist portal you are asked to authorize the workflow to access your account. You can log out at any time through the `wl:pref` preferences screen.
+Your Wunderlist password is never made available to the workflow or stored in any way. Instead, when you log in through the Wunderlist portal you are asked to authorize the workflow to access your account. 
+
+You can log out at any time through the `wl:pref` preferences screen. Upon logging out, all caches, synced data, and workflow preferences are removed. To revert to the default workflow settings simply log out then log back in.
 
 Limitations
 -----------
@@ -96,9 +116,7 @@ Limitations
 Contributing
 ------------
 
-So you want to help make this workflow better? That's great! <!-- Oops, the Python version does not have documentation yet.
-Please see [the documentation](http://idpaterson.github.io/alfred-wunderlist-workflow/) for an introduction to the structure of this workflow.
--->After cloning the repository, run `npm install && grunt` to build the workflow. Open the Wunderlist-symlinked.alfredworkflow file to install a copy in Alfred that will update whenever you rebuild the workflow. After making a change, simply run `grunt build` to update the workflow then use Alfred to test. Using this process, the workflow is kept up-to-date while you work.
+So you want to help make this workflow better? That's great! After cloning the repository, run `npm install && grunt` to build the workflow. Open the Wunderlist-symlinked.alfredworkflow file to install a copy in Alfred that will update whenever you rebuild the workflow. After making a change, simply run `grunt build` to update the workflow then use Alfred to test. Using this process, the workflow is kept up-to-date while you work.
 
 Always run through the semi-automated tests to ensure that your change does not cause issues elsewhere. When possible, add corresponding tests for your contributions.
 
