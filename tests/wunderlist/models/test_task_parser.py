@@ -20,6 +20,7 @@ _lists = [
 ]
 
 _default_reminder_time = time(9, 0, 0)
+_default_reminder_today_offset = time(1, 0, 0)
 _noon = time(12, 0, 0)
 _12_13_14 = date(2014, 12, 13)
 _today = date.today()
@@ -85,6 +86,27 @@ def mock_default_reminder_time(mocker):
 	preference
 	"""
 	mocker.patch('wunderlist.models.preferences.Preferences.reminder_time', new=_default_reminder_time)
+
+@pytest.fixture(autouse=True)
+def mock_default_reminder_today_offset(mocker):
+	"""
+	Use default 1 hour time offset
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.reminder_today_offset', new=_default_reminder_today_offset)
+
+@pytest.fixture()
+def mock_2_hour_reminder_today_offset(mocker):
+	"""
+	Use 2 hours rather than the default 1 hour time offset
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.reminder_today_offset', new=time(2, 0, 0))
+
+@pytest.fixture()
+def mock_disabled_reminder_today_offset(mocker):
+	"""
+	Use None to disable the offset and always use the default reminder time
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.reminder_today_offset', new=None)
 
 @pytest.fixture(autouse=True)
 def mock_default_explicit_keywords(mocker):
@@ -191,6 +213,71 @@ class TestBasics():
 		task = TaskParser(phrase)
 
 		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
+
+#
+# Combining reminder dates
+#
+
+class TestReminderDateCombine():
+
+	def test_date_and_time(self):
+		date_component = _12_13_14
+		time_component = _noon
+		reminder_date = TaskParser.reminder_date_combine(date_component, time_component)
+
+		assert reminder_date == datetime.combine(date_component, time_component)
+
+	def test_date_and_time_as_datetimes(self):
+		date_component = datetime.combine(_12_13_14, _default_reminder_time)
+		time_component = datetime.combine(_today, _noon)
+		reminder_date = TaskParser.reminder_date_combine(date_component, time_component)
+
+		assert reminder_date == datetime.combine(date_component.date(), time_component.time())
+
+	def test_default_time_not_today(self):
+		date_component = _tomorrow
+		reminder_date = TaskParser.reminder_date_combine(date_component)
+
+		assert reminder_date == datetime.combine(date_component, _default_reminder_time)
+
+	def test_default_time_today(self):
+		date_component = _today
+		now = datetime.now()
+		reminder_date = TaskParser.reminder_date_combine(date_component)
+
+		assert reminder_date.date() == date_component
+		assert reminder_date.microsecond == 0
+		assert reminder_date.second == 0
+		assert reminder_date.minute % 5 == 0
+		assert reminder_date.hour == (now + timedelta(hours=1)).hour
+
+		# Rounded up to the nearest 5 minute mark
+		assert reminder_date.minute == (now + timedelta(minutes=(5 - now.minute % 5) % 5)).minute
+
+	@pytest.mark.usefixtures("mock_2_hour_reminder_today_offset")
+	def test_default_time_today_custom_offset(self):
+		date_component = _today
+		now = datetime.now()
+		reminder_date = TaskParser.reminder_date_combine(date_component)
+
+		assert reminder_date.date() == date_component
+		assert reminder_date.microsecond == 0
+		assert reminder_date.second == 0
+		assert reminder_date.minute % 5 == 0
+		assert reminder_date.hour == (now + timedelta(hours=2)).hour
+
+		# Rounded up to the nearest 5 minute mark
+		assert reminder_date.minute == (now + timedelta(minutes=(5 - now.minute % 5) % 5)).minute
+
+
+	@pytest.mark.usefixtures("mock_disabled_reminder_today_offset")
+	def test_default_time_today_disabled_offset(self):
+		date_component = _today
+		now = datetime.now()
+		reminder_date = TaskParser.reminder_date_combine(date_component)
+
+		assert reminder_date.date() == date_component
+		assert reminder_date.time() == _default_reminder_time
 
 #
 # Lists
@@ -593,7 +680,7 @@ class TestReminders():
 	def test_reminder_implicitly_relative_to_today_no_time(self):
 		title = 'a sample task'
 		reminder_phrase = 'reminder'
-		reminder_date = datetime.combine(_today, _default_reminder_time)
+		reminder_date = TaskParser.reminder_date_combine(_today) # Adds 1hr and rounds up to nearest 5m mark
 		phrase = '%s %s' % (title, reminder_phrase)
 		task = TaskParser(phrase)
 

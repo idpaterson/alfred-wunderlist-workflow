@@ -64,6 +64,7 @@ class TaskParser(object):
 		self._parse()
 
 	def _parse(self):
+		cls = type(self)
 		phrase = self.phrase
 		cal = parsedatetime_calendar()
 		wf = workflow()
@@ -269,21 +270,55 @@ class TaskParser(object):
 					self.reminder_date = dt
 				# Time only; set the reminder on the due day
 				elif datetime_context.hasTime:
-					self.reminder_date = datetime.combine(reference_date, dt.time())
+					self.reminder_date = cls.reminder_date_combine(reference_date, dt)
 				# Date only; set the default reminder time on that day
 				elif datetime_context.hasDate:
-					self.reminder_date = datetime.combine(dt.date(), prefs.reminder_time)
+					self.reminder_date = cls.reminder_date_combine(dt)
 					
 			else:
-				self.reminder_date = datetime.combine(reference_date, prefs.reminder_time)
+				self.reminder_date = cls.reminder_date_combine(reference_date)
 		
 		# Set an automatic reminder when there is a due date without a
 		# specified reminder
 		if self.due_date and not self.reminder_date and prefs.automatic_reminders:
-			self.reminder_date = datetime.combine(self.due_date, prefs.reminder_time)
+			self.reminder_date = cls.reminder_date_combine(self.due_date)
 
 		# Condense extra whitespace remaining in the task title after parsing
 		self.title = re.sub(_whitespace_cleanup_pattern, ' ', phrase).strip()
+
+	@classmethod
+	def reminder_date_combine(cls, date_component, time_component=None):
+		"""
+		Returns a datetime based on the date portion of the date_component and
+		the time portion of the time_component with special handling for an
+		unspecified time_component. Based on the user preferences, a None
+		time_component will result in either the default reminder time or an
+		adjustment based on the current time if the reminder date is today.
+		"""
+		prefs = Preferences.current_prefs()
+
+		if isinstance(date_component, datetime):
+			date_component = date_component.date()
+
+		# Set a dynamic reminder date if due today
+		if date_component == date.today() and time_component is None and prefs.reminder_today_offset:
+			adjusted_now = datetime.now()
+			adjusted_now -= timedelta(seconds=adjusted_now.second, microseconds=adjusted_now.microsecond)
+			time_component = adjusted_now + prefs.reminder_today_offset_timedelta
+
+			# "Round" to nearest 5 minutes, e.g. from :01 to :05, :44 to :45,
+			# :50 to :50
+			time_component += timedelta(minutes=(5 - time_component.minute % 5) % 5)
+
+		# Default an unspecified time component on any day other than today to
+		# the default reminder time
+		if time_component is None:
+			time_component = prefs.reminder_time
+
+		if isinstance(time_component, datetime):
+			time_component = time_component.time()
+
+		return datetime.combine(date_component, time_component)
 
 	def phrase_with(self, title=None, list_title=None, due_date=None, recurrence=None, reminder_date=None, starred=None):
 		components = []
