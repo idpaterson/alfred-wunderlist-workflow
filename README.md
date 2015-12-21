@@ -20,6 +20,7 @@ Features you'll love
 The workflow provides an easy guided experience with tips along the way that will help you become a power user. 
 
 The welcome screen appears when you've typed `wl` (and nothing else). Special commands are in the form `wl:command` with no space; once you type a space after `wl ` you're in task entry mode (at least for now, this is a bit harsh).
+
 ![Welcome screen](https://cloud.githubusercontent.com/assets/507058/11870946/fffcff2e-a499-11e5-8528-5cfa0778dfed.png)
 
 
@@ -36,6 +37,7 @@ Use the menus to configure your task until you become a power user capable of ty
 ### Adding tasks to a specific list
 
 To select a list, type it first followed by a colon or use the Change list menu item. No need to type the full list name, as long as you see the correct list in Alfred a few letters is usually sufficient.
+
 ![List by substring matching](https://cloud.githubusercontent.com/assets/507058/11858365/e43c56d8-a42e-11e5-9ec6-4494579525a0.png)
 
 You can also select a list *after* typing your task with the "in" keyword. To avoid false positives you will need to use all-caps in order to match a list by typing fewer than 3 characters.
@@ -97,6 +99,7 @@ The workflow stays in sync with Wunderlist, so your lists (and tasks, in a later
 Read the text below menu option and you'll be on your way to power user status – most menu items include helpful tips about how to apply a setting without navigating the menu.
 
 If you notice any problems or want to see what changed in the latest version, jump to the *About* screen from the main menu or type `wl:about`. You will also find several preferences to customize the behavior of the workflow at `wl:pref` or the *Preferences* item on the welcome screen.
+
 ![Preferences](https://cloud.githubusercontent.com/assets/507058/11939113/c132fd14-a7ed-11e5-8fd1-9e3727acee26.png)
 
 
