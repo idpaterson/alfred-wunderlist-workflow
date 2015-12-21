@@ -6,16 +6,31 @@ from wunderlist.util import workflow, parsedatetime_calendar, parsedatetime_cons
 from wunderlist import icons
 
 def _parse_time(phrase):
-	from datetime import time
+	from datetime import date, time
 
 	cal = parsedatetime_calendar()
 
-	datetime_info = cal.parse(phrase)
+	# Use a sourceTime so that time expressions are relative to 00:00:00
+	# rather than the current time
+	datetime_info = cal.parse(phrase, sourceTime=date.today().timetuple())
 
 	# Ensure that only a time was provided and not a date
 	if datetime_info[1] == 2:
 		return time(*datetime_info[0][3:5])
 	return None
+
+def _format_time_offset(t):
+	if t is None:
+		return 'disabled'
+
+	offset = []
+
+	if t.hour > 0:
+		offset.append('%sh' % t.hour)
+	if t.minute > 0:
+		offset.append('%sm' % t.minute)
+
+	return ' '.join(offset)
 
 def filter(args):
 	prefs = Preferences.current_prefs()
@@ -40,6 +55,48 @@ def filter(args):
 			'Cancel',
 			autocomplete=':pref', icon=icons.BACK
 		)
+	elif 'reminder_today' in args:
+		reminder_today_offset = _parse_time(' '.join(args))
+
+		if reminder_today_offset is not None:
+			workflow().add_item(
+				'Set a custom reminder offset',
+				u'⏰ now + %s' % _format_time_offset(reminder_today_offset),
+				arg=' '.join(args), valid=True, icon=icons.REMINDER
+			)
+		else:
+			workflow().add_item(
+				'Type a custom reminder offset',
+				'Use the formats hh:mm or 2h 5m',
+				valid=False, icon=icons.REMINDER
+			)
+
+		workflow().add_item(
+			'30 minutes',
+			arg=':pref reminder_today 30m', valid=True, icon=icons.REMINDER
+		)
+
+		workflow().add_item(
+			'1 hour',
+			'(default)',
+			arg=':pref reminder_today 1h', valid=True, icon=icons.REMINDER
+		)
+
+		workflow().add_item(
+			'90 minutes',
+			arg=':pref reminder_today 90m', valid=True, icon=icons.REMINDER
+		)
+
+		workflow().add_item(
+			'Always use the default reminder time',
+			'Avoids adjusting the reminder based on the current date',
+			arg=':pref reminder_today disabled', valid=True, icon=icons.CANCEL
+		)
+
+		workflow().add_item(
+			'Cancel',
+			autocomplete=':pref', icon=icons.BACK
+		)
 	else:
 		current_user = User.get()
 
@@ -54,6 +111,12 @@ def filter(args):
 			'Default reminder time',
 			u'⏰ %s    Reminders without a specific time will be set to this time' % format_time(prefs.reminder_time, 'short'),
 			autocomplete=':pref reminder ', icon=icons.REMINDER
+		)
+
+		workflow().add_item(
+			'Default reminder when due today',
+			u'⏰ %s    Default reminder time for tasks due today is %s' % (_format_time_offset(prefs.reminder_today_offset), 'relative to the current time' if prefs.reminder_today_offset else 'always %s' % format_time(prefs.reminder_time, 'short')),
+			autocomplete=':pref reminder_today ', icon=icons.REMINDER
 		)
 
 		workflow().add_item(
@@ -111,6 +174,16 @@ def commit(args):
 			prefs.reminder_time = reminder_time
 
 			print 'Reminders will now default to %s' % format_time(reminder_time, 'short')
+	elif 'reminder_today' in args:
+		relaunch_alfred = True
+		reminder_today_offset = None
+
+		if not ('disabled' in args):
+			reminder_today_offset = _parse_time(' '.join(args))
+
+		prefs.reminder_today_offset = reminder_today_offset
+
+		print 'The offset for current-day reminders is now %s' % _format_time_offset(reminder_today_offset)
 	elif 'automatic_reminders' in args:
 		relaunch_alfred = True
 
