@@ -277,6 +277,11 @@ class TaskParser(object):
 			else:
 				self.reminder_date = datetime.combine(reference_date, prefs.reminder_time)
 		
+		# Set an automatic reminder when there is a due date without a
+		# specified reminder
+		if self.due_date and not self.reminder_date and prefs.automatic_reminders:
+			self.reminder_date = datetime.combine(self.due_date, prefs.reminder_time)
+
 		# Condense extra whitespace remaining in the task title after parsing
 		self.title = re.sub(_whitespace_cleanup_pattern, ' ', phrase).strip()
 

@@ -101,6 +101,20 @@ def mock_disabled_explicit_keywords(mocker):
 	mocker.patch('wunderlist.models.preferences.Preferences.explicit_keywords', new=True)
 
 @pytest.fixture(autouse=True)
+def mock_disabled_automatic_reminders(mocker):
+	"""
+	Returns False for automatic_reminders rather than the user's preference
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.automatic_reminders', new=False)
+
+@pytest.fixture()
+def mock_enabled_automatic_reminders(mocker):
+	"""
+	Returns True for automatic_reminders rather than the user's preference
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.automatic_reminders', new=True)
+
+@pytest.fixture(autouse=True)
 def set_locale():
 	"""
 	Ensures an en-US locale
@@ -648,6 +662,39 @@ class TestReminders():
 
 		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list), due_date=due_date, reminder_date=reminder_date)
 
+	@pytest.mark.usefixtures("mock_enabled_automatic_reminders")
+	def test_automatic_reminder_with_due_date(self):
+		title = 'a sample task'
+		due_date = _tomorrow
+		due_phrase = 'due tomorrow'
+		reminder_date = datetime.combine(due_date, _default_reminder_time)
+		phrase = '%s %s' % (title, due_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, due_date=due_date, reminder_date=reminder_date)
+
+	@pytest.mark.usefixtures("mock_enabled_automatic_reminders")
+	def test_explicit_reminder_overrides_automatic_reminder(self):
+		title = 'a sample task'
+		due_date = _tomorrow
+		due_phrase = 'due tomorrow'
+		reminder_phrase = 'r 8am'
+		reminder_date = datetime.combine(due_date, time(8, 0, 0))
+		phrase = '%s %s %s' % (title, due_phrase, reminder_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, due_date=due_date, reminder_date=reminder_date)
+
+	@pytest.mark.usefixtures("mock_enabled_automatic_reminders")
+	def test_due_date_with_time_overrides_automatic_reminder(self):
+		title = 'a sample task'
+		due_date = _tomorrow
+		due_phrase = 'due 8:00 tomorrow'
+		reminder_date = datetime.combine(due_date, time(8, 0, 0))
+		phrase = '%s %s' % (title, due_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, due_date=due_date, reminder_date=reminder_date)
 #
 # Star
 #
