@@ -57,6 +57,12 @@ def filter(args):
 		)
 
 		workflow().add_item(
+			'Automatically set a reminder on the due date',
+			u'Sets a default reminder for tasks with a due date.',
+			arg=':pref automatic_reminders', valid=True, icon=icons.TASK_COMPLETED if prefs.automatic_reminders else icons.TASK
+		)
+
+		workflow().add_item(
 			'Require explicit due keyword',
 			'Requires the due keyword to avoid accidental due date extraction',
 			arg=':pref explicit_keywords', valid=True, icon=icons.TASK_COMPLETED if prefs.explicit_keywords else icons.TASK
@@ -105,6 +111,15 @@ def commit(args):
 			prefs.reminder_time = reminder_time
 
 			print 'Reminders will now default to %s' % format_time(reminder_time, 'short')
+	elif 'automatic_reminders' in args:
+		relaunch_alfred = True
+
+		prefs.automatic_reminders = not prefs.automatic_reminders
+
+		if prefs.automatic_reminders:
+			print 'A reminder will automatically be set for due tasks'
+		else:
+			print 'A reminder will not be added automatically'
 	elif 'retheme' in args:
 		relaunch_alfred = True
 		prefs.icon_theme = 'light' if icons.icon_theme() == 'dark' else 'dark'
