@@ -192,6 +192,14 @@ class TestLists():
 
 		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
 
+	def test_infix_list_name_exact_match(self):
+		target_list = _single_word_list
+		title = 'a sample task'
+		phrase = '%s in %s' % (title, target_list) # a sample task in Finances
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
+
 	def test_list_name_diacritic_exact_match(self):
 		target_list = _diacritic_list
 		title = 'a sample task'
@@ -224,6 +232,25 @@ class TestLists():
 
 		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
 
+	def test_infix_list_initials(self):
+		target_list = _multi_word_list
+		title = 'a sample task'
+		phrase = '%s in list %s' % (title, initials(target_list)) # a sample task in list SL
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
+
+	def test_infix_list_initials_ignored_if_lowercase(self):
+		"""
+		Fewer than 3 characters should be ignored unless uppercase
+		"""
+		target_list = _multi_word_list
+		title = 'a sample task'
+		phrase = '%s in %s' % (title, initials(target_list).lower()) # a sample task in sl
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=phrase)
+
 	def test_list_name_case_insensitive_match(self):
 		target_list = _single_word_list
 		title = 'a sample task'
@@ -240,8 +267,30 @@ class TestLists():
 
 		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
 
+	def test_infix_list_name_containing_infix_keyword(self):
+		"""
+		Very contrived, but the point is that if a list contains "in" we need
+		to match the entire phrase that was meant to be the list keyword,
+		rather than matching a part of the list and leaving a part of the list
+		in the task title
+		"""
+		target_list = _diacritic_list
+		list_phrase = 'in jard in eria'
+		title = 'a sample task'
+		phrase = '%s: %s' % (_diacritic_list_insensitive, title) # Jardineria: a sample task (no accent)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
+
 	def test_ignores_unknown_list_name(self):
 		title = 'not a list: a sample task'
+		phrase = title
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title)
+
+	def test_ignores_unknown_infix_list_name(self):
+		title = 'a sample task in not a list'
 		phrase = title
 		task = TaskParser(phrase)
 
@@ -253,6 +302,13 @@ class TestLists():
 		task = TaskParser(phrase)
 
 		assert_task(task, phrase=phrase, title=title, has_list_prompt=True)
+
+	def test_infix_list_does_not_prompt(self):
+		title = 'a sample task in'
+		phrase = '%s ' % (title)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=title, title=title, has_list_prompt=False)
 	
 #
 # Due date
