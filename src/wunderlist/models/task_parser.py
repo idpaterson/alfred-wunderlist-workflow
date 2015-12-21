@@ -8,6 +8,9 @@ import locale
 # Up to 8 words (sheesh!) followed by a colon
 _list_title_pattern = r'^((?:[^\s:]+ *){0,8}):'
 
+# The word "in" followed optionally by "list"
+_infix_list_keyword_pattern = r'\bin\s+(list\s+)?'
+
 # `every N units` optionally preceded by `repeat`
 _recurrence_pattern = r'(?:\brepeat(?:ing|s)?:? )?(?:\bevery *(\d*) *((?:day|week|month|year|d|w|m|y|da|wk|mo|yr)s?\b)?|(daily|weekly|monthly|yearly|annually))'
 _recurrence_by_date_pattern = r'(?:\brepeat:? )?\bevery *((?:\S+ *){0,2})'
@@ -24,6 +27,9 @@ _star_pattern = r'\*$'
 
 # Tabs or multiple consecutive spaces
 _whitespace_cleanup_pattern = r'\t|\s{2,}'
+
+# Split words ignoring leading and trailing punctuation
+_word_separator_pattern = r'\W*\s+\W*'
 
 # Maps first letter to the API recurrence type
 _recurrence_types = {
@@ -105,15 +111,6 @@ class TaskParser(object):
 			if self.list_title or self.has_list_prompt:
 				self._list_phrase = match.group()
 				phrase = phrase[:match.start()] + phrase[match.end():]
-
-		if not self.list_title:
-			if lists:
-				inbox = lists[0]
-				self.list_id = inbox['id']
-				self.list_title = inbox['title']
-			else:
-				self.list_id = 0
-				self.list_title = 'Inbox'
 
 		# Parse and remove the recurrence phrase first so that any dates do
 		# not interfere with the due date
@@ -277,6 +274,42 @@ class TaskParser(object):
 					
 			else:
 				self.reminder_date = cls.reminder_date_combine(reference_date)
+
+		# Look for a list title at the end of the remaining phrase, like
+		# "in list Office"
+		if not self.list_title:
+			matches = re.finditer(_infix_list_keyword_pattern, phrase, re.IGNORECASE)
+			for match in matches:
+				subphrase = phrase[match.end():]
+
+				# Just a couple characters are too likely to result in a false
+				# positive, but allow it if the letters are capitalized
+				if len(subphrase) > 2 or subphrase == subphrase.upper():
+					matching_lists = wf.filter(
+						subphrase,
+						lists,
+						lambda l:l['title'],
+						# Ignore MATCH_ALLCHARS which is expensive and inaccurate
+						match_on=MATCH_ALL ^ MATCH_ALLCHARS
+					)
+
+					# Take the first match as the desired list
+					if matching_lists:
+						self.list_id = matching_lists[0]['id']
+						self.list_title = matching_lists[0]['title']
+						self._list_phrase = match.group() + subphrase
+						phrase = phrase[:match.start()]
+						break
+
+		# No list parsed, assign to inbox
+		if not self.list_title:
+			if lists:
+				inbox = lists[0]
+				self.list_id = inbox['id']
+				self.list_title = inbox['title']
+			else:
+				self.list_id = 0
+				self.list_title = 'Inbox'
 		
 		# Set an automatic reminder when there is a due date without a
 		# specified reminder
