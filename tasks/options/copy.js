@@ -24,6 +24,14 @@ module.exports = {
 			},
 			{
 				expand: true,
+				cwd: '<%= paths.lib %>/futures',
+				dest: '<%= paths.dist_lib %>',
+				src: [
+					'concurrent/**/*'
+				]
+			},
+			{
+				expand: true,
 				cwd: '<%= paths.lib %>/peewee',
 				dest: '<%= paths.dist_lib %>',
 				src: [
