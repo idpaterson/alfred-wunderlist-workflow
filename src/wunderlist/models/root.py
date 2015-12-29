@@ -22,8 +22,10 @@ class Root(BaseModel):
 
 	def _sync_children(self):
 		from list import List
+		from preferences import Preferences
 		from reminder import Reminder
 
+		Preferences.sync()
 		List.sync()
 		User.sync()
 		Reminder.sync()
