@@ -23,22 +23,35 @@ class Task(BaseModel):
 	@classmethod
 	def sync_tasks_in_list(cls, list):
 		from wunderlist.api import tasks
-
+		from hashtag import Hashtag
+		from concurrent import futures
 		instances = []
+		tasks_data = []
+		task_positions = tasks.task_positions(list.id)
 
-		tasks_data = tasks.tasks(list.id, completed=False)
-		tasks_data += tasks.tasks(list.id, completed=True)
-		tasks_data += tasks.tasks(list.id, completed=False, subtasks=True)
-		tasks_data += tasks.tasks(list.id, completed=True, subtasks=True)
+		with futures.ThreadPoolExecutor(max_workers=4) as executor:
+			jobs = (
+				executor.submit(tasks.tasks, list.id, completed=False, positions=task_positions),
+				executor.submit(tasks.tasks, list.id, completed=True, positions=task_positions),
+				executor.submit(tasks.tasks, list.id, completed=False, subtasks=True, positions=task_positions),
+				executor.submit(tasks.tasks, list.id, completed=True, subtasks=True, positions=task_positions)
+			)
+
+			for job in futures.as_completed(jobs):
+				tasks_data += job.result()
 
 		try:
 			# Include all tasks thought to be in the list, plus any additional
 			# tasks referenced in the data (task may have been moved to a different list)
-			instances = cls.select().where((cls.list == list.id) | (cls.id in [task['id'] for task in tasks_data]))
+			instances = cls.select().where(cls.task.is_null() & (cls.list == list.id) | (cls.id.in_([task['id'] for task in tasks_data])))
 		except:
 			pass
 
-		cls._perform_updates(instances, tasks_data)
+		all_instances = cls._perform_updates(instances, tasks_data)
+
+		Hashtag.sync_hashtags_in_tasks(all_instances)
+
+		return None
 
 	@classmethod
 	def due_today(cls):
@@ -73,11 +86,6 @@ class Task(BaseModel):
 	@property
 	def list_title(self):
 		return self.list.title
-
-	def _sync_children(self):
-		from hashtag import Hashtag
-
-		Hashtag.sync_hashtags_in_task(self)
 
 	class Meta:
 		order_by = ('order', 'id')

@@ -3,7 +3,7 @@ import wunderlist.api.base as api
 
 NO_CHANGE = '!nochange!'
 
-def tasks(list_id, order='display', completed=False, subtasks=False):
+def tasks(list_id, order='display', completed=False, subtasks=False, positions=None):
 	req = api.get(('subtasks' if subtasks else 'tasks'), {
 		'list_id': int(list_id),
 		'completed': completed
@@ -11,7 +11,8 @@ def tasks(list_id, order='display', completed=False, subtasks=False):
 	tasks = req.json()
 
 	if order == 'display':
-		positions = task_positions(list_id)
+		if positions is None:
+			positions = task_positions(list_id)
 
 		def position(task):
 			try:
@@ -29,17 +30,20 @@ def tasks(list_id, order='display', completed=False, subtasks=False):
 def task_positions(list_id):
 	positions = []
 
-	req = api.get('task_positions', { 'list_id': list_id })
-	info = req.json()
+	from concurrent import futures
 
-	if len(info):
-		positions += info[0]['values']
+	with futures.ThreadPoolExecutor(max_workers=2) as executor:
+		jobs = (
+			executor.submit(api.get, 'task_positions', {'list_id': list_id}),
+			executor.submit(api.get, 'subtask_positions', {'list_id': list_id})
+		)
 
-	req = api.get('subtask_positions', { 'list_id': list_id })
-	info = req.json()
+		for job in futures.as_completed(jobs):
+			req = job.result()
+			data = req.json()
 
-	if len(info):
-		positions += info[0]['values']
+			if len(data) > 0:
+				positions += data[0]['values']
 
 	return positions
 

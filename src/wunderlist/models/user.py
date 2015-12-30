@@ -19,3 +19,5 @@ class User(BaseModel):
 			pass
 
 		cls._perform_updates([instance], [user.user()])
+		
+		return None
