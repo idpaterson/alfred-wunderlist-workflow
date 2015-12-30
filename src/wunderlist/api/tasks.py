@@ -86,7 +86,7 @@ def update_task(id, revision, title=NO_CHANGE, assignee_id=NO_CHANGE, recurrence
 	remove = []
 	changes = {
 		'title': title,
-		'assignee_id': int(assignee_id),
+		'assignee_id': assignee_id,
 		'recurrence_type': recurrence_type,
 		'recurrence_count': recurrence_count,
 		'due_date': due_date,
@@ -106,7 +106,7 @@ def update_task(id, revision, title=NO_CHANGE, assignee_id=NO_CHANGE, recurrence
 	if params:
 		params['revision'] = revision
 
-		req = api.patch('tasks/' + id, params)
+		req = api.patch('tasks/%d' % id, params)
 		info = req.json()
 
 		return info
