@@ -3,7 +3,7 @@ from base import BaseModel
 
 class User(BaseModel):
 	id = PrimaryKeyField()
-	name = CharField()
+	name = TextField()
 	revision = IntegerField()
 	created_at = DateTimeField()
 

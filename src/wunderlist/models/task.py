@@ -7,7 +7,7 @@ class Task(BaseModel):
 	id = PrimaryKeyField()
 	list = ForeignKeyField(List, null=True, related_name='tasks')
 	task = ForeignKeyField('self', null=True, related_name='subtasks')
-	title = CharField(index=True)
+	title = TextField(index=True)
 	completed_at = DateTimeField(null=True)
 	completed_by = ForeignKeyField(User, related_name='completed_tasks', null=True)
 	starred = BooleanField(index=True, null=True)

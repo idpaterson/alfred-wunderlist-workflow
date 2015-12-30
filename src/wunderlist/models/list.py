@@ -4,7 +4,7 @@ from wunderlist.util import workflow
 
 class List(BaseModel):
 	id = PrimaryKeyField()
-	title = CharField(index=True)
+	title = TextField(index=True)
 	list_type = CharField()
 	public = BooleanField()
 	completed_count = IntegerField(default=0)
