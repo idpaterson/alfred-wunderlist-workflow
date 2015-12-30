@@ -5,6 +5,20 @@ from dateutil import parser
 
 db = SqliteDatabase(workflow().datadir + '/wunderlist.db', threadlocals=True)
 
+def _balance_keys_for_insert(values):
+	all_keys = set()
+	for v in values:
+		all_keys.update(v)
+
+	balanced_values = []
+	for v in values:
+		balanced = {}
+		for k in all_keys:
+			balanced[k] = v.get(k)
+		balanced_values.append(balanced)
+
+	return balanced_values
+
 class BaseModel(Model):
 
 	@classmethod
@@ -38,32 +52,42 @@ class BaseModel(Model):
 		from concurrent import futures
 
 		# Map of id to the normalized item
-		update_items = { item['id']:cls._api2model(item) for item in update_items }
+		update_items = {item['id']: cls._api2model(item) for item in update_items}
 		all_instances = []
 
 		with futures.ThreadPoolExecutor(max_workers=4) as executor:
-			with db.transaction():
-				for instance in model_instances:
-					if not instance:
-						continue
-					if instance.id in update_items:
-						update_item = update_items[instance.id]
-						all_instances.append(instance)
-
-						# If the revision is different, sync any children, then update the db
-						if instance.revision != update_item['revision']:
-							executor.submit(instance._sync_children)
-							cls.update(**update_item).where(cls.id == instance.id).execute()
-
-						del update_items[instance.id]
-					# The model does not exist anymore
-					else:
-						instance.delete_instance()
-
-				for update_item in update_items.values():
-					instance = cls.create(**update_item)
-					executor.submit(instance._sync_children)
+			for instance in model_instances:
+				if not instance:
+					continue
+				if instance.id in update_items:
+					update_item = update_items[instance.id]
 					all_instances.append(instance)
+
+					# If the revision is different, sync any children, then update the db
+					if instance.revision != update_item['revision']:
+						executor.submit(instance._sync_children)
+						cls.update(**update_item).where(cls.id == instance.id).execute()
+
+					del update_items[instance.id]
+				# The model does not exist anymore
+				else:
+					instance.delete_instance()
+
+			# Bulk insert and retrieve
+			new_values = update_items.values()
+			# Insert in batches
+			for i in xrange(0, len(new_values), 500):
+				inserted_chunk = _balance_keys_for_insert(new_values[i:i + 500])
+			
+				cls.insert_many(inserted_chunk).execute()
+
+				inserted_ids = map(lambda i: i['id'], inserted_chunk)
+				inserted_instances = cls.select().where(cls.id.in_(inserted_ids))
+
+				for instance in inserted_instances:
+					executor.submit(instance._sync_children)
+			
+				all_instances += inserted_instances
 
 		return all_instances
 
