@@ -1,7 +1,7 @@
 from peewee import Model, SqliteDatabase, ForeignKeyField, DateField, DateTimeField, TimeField
 from wunderlist.util import workflow
 from copy import copy
-import dateutil
+from dateutil import parser
 
 db = SqliteDatabase(workflow().datadir + '/wunderlist.db', threadlocals=True)
 
@@ -11,17 +11,23 @@ class BaseModel(Model):
 	def _api2model(cls, data):
 		fields = copy(cls._meta.fields)
 
-		# Map relationships, e.g. from user_id to user
-		for (k,v) in cls._meta.fields.iteritems():
-			if k.endswith('_id'):
-				fields[k[:-3]] = v
-			elif isinstance(v, ForeignKeyField):
-				fields[k + '_id'] = v
-			elif isinstance(v, (DateTimeField, DateField, TimeField)) and isinstance(fields[k], basestring):
-				fields[k] = dateutil.parse(v)
+		# Map relationships, e.g. from user_id to user's
+		for (field_name, field) in cls._meta.fields.iteritems():
+			if field_name.endswith('_id'):
+				fields[field_name[:-3]] = field
+			elif isinstance(field, ForeignKeyField):
+				fields[field_name + '_id'] = field
 
 		# Map each data property to the correct field
-		return {fields[k].name : v for (k,v) in data.iteritems() if k in fields}
+		model_data = {}
+		for (k, v) in data.iteritems():
+			if k in fields:
+				if isinstance(fields[k], (DateTimeField, DateField, TimeField)):
+					model_data[fields[k].name] = parser.parse(v)
+				else:
+					model_data[fields[k].name] = v
+
+		return model_data
 
 	@classmethod
 	def sync(cls):
