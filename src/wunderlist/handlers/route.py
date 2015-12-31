@@ -59,6 +59,8 @@ def route(args):
 
 			if workflow().update_available:
 				update_data = workflow().cached_data('__workflow_update_status', max_age=0)
-				workflow().add_item('An update is available!', 'Update the Wunderlist workflow from version __VERSION__ to %s' % update_data.get('version'), arg=':about update', valid=True, icon=icons.DOWNLOAD)
+
+				if '__VERSION__' != update_data.get('version'):
+					workflow().add_item('An update is available!', 'Update the Wunderlist workflow from version __VERSION__ to %s' % update_data.get('version'), arg=':about update', valid=True, icon=icons.DOWNLOAD)
 
 			workflow().send_feedback()

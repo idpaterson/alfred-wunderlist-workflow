@@ -20,6 +20,7 @@ Features you'll love
 The workflow provides an easy guided experience with tips along the way that will help you become a power user. 
 
 The welcome screen appears when you've typed `wl` (and nothing else). Special commands are in the form `wl:command` with no space; once you type a space after `wl ` you're in task entry mode (at least for now, this is a bit harsh).
+
 ![Welcome screen](https://cloud.githubusercontent.com/assets/507058/11870946/fffcff2e-a499-11e5-8528-5cfa0778dfed.png)
 
 
@@ -36,20 +37,24 @@ Use the menus to configure your task until you become a power user capable of ty
 ### Adding tasks to a specific list
 
 To select a list, type it first followed by a colon or use the Change list menu item. No need to type the full list name, as long as you see the correct list in Alfred a few letters is usually sufficient.
+
 ![List by substring matching](https://cloud.githubusercontent.com/assets/507058/11858365/e43c56d8-a42e-11e5-9ec6-4494579525a0.png)
 
 You can also select a list *after* typing your task with the "in" keyword. To avoid false positives you will need to use all-caps in order to match a list by typing fewer than 3 characters.
 
 #### Examples
 
-> <strong>wl h:Fix the broken step saturday morning*</strong><br/>
-![wl h:Fix the broken step saturday morning*](https://cloud.githubusercontent.com/assets/507058/11939350/90d6001a-a7ef-11e5-9823-3273f611599c.png)
+> <strong>wl h:Fix the broken step saturday morning*</strong>
+>
+> ![wl h:Fix the broken step saturday morning*](https://cloud.githubusercontent.com/assets/507058/11939350/90d6001a-a7ef-11e5-9823-3273f611599c.png)
+>
+> **wl Buy clicky keyboard in shopping due sat**
+>
+> ![Buy clicky keyboard in sho due sat](https://cloud.githubusercontent.com/assets/507058/11939279/ffefa6f0-a7ee-11e5-9b7f-f5b1d55747a0.png)
 
-> **wl Buy clicky keyboard in shopping due sat**<br/>
-![Buy clicky keyboard in sho due sat](https://cloud.githubusercontent.com/assets/507058/11939279/ffefa6f0-a7ee-11e5-9b7f-f5b1d55747a0.png)
-
-> **wl Rearrange file cabinet tomorrow in WO**<br/>
-![wl Rearrange file cabinet tomorrow in WO](https://cloud.githubusercontent.com/assets/507058/11939280/0244f108-a7ef-11e5-8d0d-726bb5e773d5.png)
+> **wl Rearrange file cabinet tomorrow in WO**
+>
+> ![wl Rearrange file cabinet tomorrow in WO](https://cloud.githubusercontent.com/assets/507058/11939280/0244f108-a7ef-11e5-8d0d-726bb5e773d5.png)
 
 
 ### Reminders
@@ -58,20 +63,25 @@ Wunderlist uses alerts to remind you about tasks that are due, either on the due
 
 #### Examples
 
-> **wl Pay DoubleCash credit card bill monthly June 26th remind me June 22**<br/>
-![wl Pay DoubleCash credit card bill monthly June 26th remind me June 22](https://cloud.githubusercontent.com/assets/507058/8271997/4779e33e-1800-11e5-91f4-55867bf1473a.png)
-
-> **wl Make a New Year's resolution reminder: Jan 1 at midnight**<br/>
-![wl Make a New Year's resolution reminder: Jan 1 at midnight](https://cloud.githubusercontent.com/assets/507058/8272030/c21fa028-1801-11e5-812a-fc66e4b9a232.png)
-
-> **wl weekly meeting notes r 8am due 1d**<br/>
-![wl weekly meeting notes r 8am due 1d](https://cloud.githubusercontent.com/assets/507058/8272020/5b49fd8a-1801-11e5-9d27-9851a8385bdc.png)
-
-> **wl Laundry remind me**<br/>
-![wl Laundry remind me](https://cloud.githubusercontent.com/assets/507058/8272070/6c15c502-1803-11e5-9a17-ed65b1a98f20.png)
-
-> **wl Ask about app icon at dinner tomorrow**<br/>
-![wl Ask about app icon at dinner tomorrow](https://cloud.githubusercontent.com/assets/507058/11858195/5593905a-a42d-11e5-8e66-9b27afb31f23.png)
+> **wl Pay DoubleCash credit card bill monthly June 26th remind me June 22**
+>
+> ![wl Pay DoubleCash credit card bill monthly June 26th remind me June 22](https://cloud.githubusercontent.com/assets/507058/8271997/4779e33e-1800-11e5-91f4-55867bf1473a.png)
+>
+> **wl Make a New Year's resolution reminder: Jan 1 at midnight**
+>
+> ![wl Make a New Year's resolution reminder: Jan 1 at midnight](https://cloud.githubusercontent.com/assets/507058/8272030/c21fa028-1801-11e5-812a-fc66e4b9a232.png)
+>
+> **wl weekly meeting notes r 8am due 1d**
+>
+> ![wl weekly meeting notes r 8am due 1d](https://cloud.githubusercontent.com/assets/507058/8272020/5b49fd8a-1801-11e5-9d27-9851a8385bdc.png)
+>
+> **wl Laundry remind me**
+>
+> ![wl Laundry remind me](https://cloud.githubusercontent.com/assets/507058/8272070/6c15c502-1803-11e5-9a17-ed65b1a98f20.png)
+>
+> **wl Ask about app icon at dinner tomorrow**
+>
+> ![wl Ask about app icon at dinner tomorrow](https://cloud.githubusercontent.com/assets/507058/11858195/5593905a-a42d-11e5-8e66-9b27afb31f23.png)
 
 #### When is the reminder?
 
@@ -97,6 +107,7 @@ The workflow stays in sync with Wunderlist, so your lists (and tasks, in a later
 Read the text below menu option and you'll be on your way to power user status – most menu items include helpful tips about how to apply a setting without navigating the menu.
 
 If you notice any problems or want to see what changed in the latest version, jump to the *About* screen from the main menu or type `wl:about`. You will also find several preferences to customize the behavior of the workflow at `wl:pref` or the *Preferences* item on the welcome screen.
+
 ![Preferences](https://cloud.githubusercontent.com/assets/507058/11939113/c132fd14-a7ed-11e5-8fd1-9e3727acee26.png)
 
 

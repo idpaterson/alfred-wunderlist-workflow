@@ -3,7 +3,7 @@
 
 module.exports = function(grunt) {
 	grunt.registerTask('build', [
-		'newer:copy:dist',
+		'copy:dist',
 		'newer:imagemin:dist',
 		'newer:symlink:workflow',
 		'replace',
