@@ -1,4 +1,4 @@
-from peewee import PrimaryKeyField, CharField, BooleanField, IntegerField, DateTimeField
+from peewee import PrimaryKeyField, CharField, BooleanField, IntegerField, DateTimeField, TextField
 from base import BaseModel
 from wunderlist.util import workflow
 
