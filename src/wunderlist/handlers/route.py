@@ -28,8 +28,13 @@ def route(args):
 		action = command[0]
 
 	if not is_authorized():
-		from wunderlist.handlers import login
-		handler = login
+		# Allow updating the workflow while logged out
+		if command_string == ':about update':
+			from wunderlist.handlers import about
+			handler = about
+		else:
+			from wunderlist.handlers import login
+			handler = login
 	elif action == ':list':
 		from wunderlist.handlers import lists
 		handler = lists
