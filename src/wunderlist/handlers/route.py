@@ -27,14 +27,12 @@ def route(args):
 	if command:
 		action = command[0]
 
-	if not is_authorized():
-		# Allow updating the workflow while logged out
-		if command_string == ':about update':
-			from wunderlist.handlers import about
-			handler = about
-		else:
-			from wunderlist.handlers import login
-			handler = login
+	if action == ':about':
+		from wunderlist.handlers import about
+		handler = about
+	elif not is_authorized():
+		from wunderlist.handlers import login
+		handler = login
 	elif action == ':list':
 		from wunderlist.handlers import lists
 		handler = lists
@@ -44,9 +42,6 @@ def route(args):
 	elif action == ':pref':
 		from wunderlist.handlers import preferences
 		handler = preferences
-	elif action == ':about':
-		from wunderlist.handlers import about
-		handler = about
 	# If the command starts with a space (no special keywords), the workflow
 	# creates a new task
 	elif command_string and command_string[0] == ' ':

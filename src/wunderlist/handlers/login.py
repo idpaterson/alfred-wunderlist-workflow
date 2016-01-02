@@ -1,33 +1,50 @@
-from wunderlist import util, auth, icons
+# encoding: utf-8
+
+from wunderlist import auth, icons
+from wunderlist.util import workflow
 import re
 
 def filter(args):
-	workflow = util.workflow()
-	started_auth = workflow.stored_data('auth')
-	manual_verification_url = re.search(r'http://\S+', ' '.join(args))
+	started_auth = workflow().stored_data('auth')
+	getting_help = len(args) > 1
 
-	if not (started_auth and manual_verification_url):
-		workflow.add_item(
+	if not getting_help:
+		workflow().add_item(
 			'Please log in',
 			'Authorize Alfred Wunderlist Workflow to use your Wunderlist account',
-			valid=True,
-			icon=icons.ACCOUNT
+			valid=True, icon=icons.ACCOUNT
 		)
 
 	# If the auth process has started, allow user to paste a key manually
 	if started_auth:
-		workflow.add_item(
-			'Having trouble?',
-			'Paste the full http://localhost:6200 URL from your browser then press the return key to continue',
-			autocomplete=None if manual_verification_url else ' http://localhost:6200/?',
-			arg=manual_verification_url.group() if manual_verification_url else None,
-			valid=manual_verification_url,
-			icon=icons.HELP
+		if getting_help:
+			workflow().add_item(
+				'A "localhost" page appeared in my web browser',
+				u'Paste the full link from your browser into Alfred then press return, wl http://localhost:6200/…',
+				arg=' '.join(args), valid=True, icon=icons.LINK
+			)
+			workflow().add_item(
+				'Other issues?',
+				'See outstanding issues and report your own bugs or feedback',
+				arg=':about issues', valid=True, icon=icons.HELP
+			)
+		else:
+			workflow().add_item(
+				'Having trouble?',
+				'Did you see an error after logging in to Wunderlist?',
+				autocomplete=' ', valid=False, icon=icons.HELP
+			)
+
+	if not getting_help:
+		workflow().add_item(
+			'About',
+			'Learn about the workflow and get support',
+			autocomplete=':about ',
+			icon=icons.INFO
 		)
 
 def commit(args):
-	workflow = util.workflow()
-	started_auth = workflow.stored_data('auth')
+	started_auth = workflow().stored_data('auth')
 	manual_verification_url = re.search(r'http://\S+', ' '.join(args))
 
 	if started_auth and manual_verification_url:
