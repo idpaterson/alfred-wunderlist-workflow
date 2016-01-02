@@ -5,8 +5,7 @@ from wunderlist.util import workflow
 import re
 
 def filter(args):
-	started_auth = workflow().stored_data('auth')
-	getting_help = len(args) > 1
+	getting_help = ':help' in args
 
 	if not getting_help:
 		workflow().add_item(
@@ -16,24 +15,27 @@ def filter(args):
 		)
 
 	# If the auth process has started, allow user to paste a key manually
-	if started_auth:
-		if getting_help:
-			workflow().add_item(
-				'A "localhost" page appeared in my web browser',
-				u'Paste the full link from your browser into Alfred then press return, wl http://localhost:6200/…',
-				arg=' '.join(args), valid=True, icon=icons.LINK
-			)
-			workflow().add_item(
-				'Other issues?',
-				'See outstanding issues and report your own bugs or feedback',
-				arg=':about issues', valid=True, icon=icons.HELP
-			)
-		else:
-			workflow().add_item(
-				'Having trouble?',
-				'Did you see an error after logging in to Wunderlist?',
-				autocomplete=' ', valid=False, icon=icons.HELP
-			)
+	if getting_help:
+		workflow().add_item(
+			'A "localhost" page appeared in my web browser',
+			u'Paste the full link from your browser above then press return, wl:help http://localhost:6200/…',
+			arg=' '.join(args), valid=True, icon=icons.LINK
+		)
+		workflow().add_item(
+			'I need to log in to a different account',
+			'Go to wunderlist.com in your browser and sign out of your account first',
+			arg=':about wunderlist', valid=True, icon=icons.ACCOUNT
+		)
+		workflow().add_item(
+			'Other issues?',
+			'See outstanding issues and report your own bugs or feedback',
+			arg=':about issues', valid=True, icon=icons.HELP
+		)
+	else:
+		workflow().add_item(
+			'Having trouble?',
+			autocomplete=':help ', valid=False, icon=icons.HELP
+		)
 
 	if not getting_help:
 		workflow().add_item(
@@ -44,11 +46,11 @@ def filter(args):
 		)
 
 def commit(args):
-	started_auth = workflow().stored_data('auth')
-	manual_verification_url = re.search(r'http://\S+', ' '.join(args))
+	command = ' '.join(args).strip()
+	manual_verification_url = re.search(r'localhost\S+', command)
 
-	if started_auth and manual_verification_url:
-		auth_status = auth.handle_authorization_url(manual_verification_url.group())
+	if manual_verification_url:
+		auth_status = auth.handle_authorization_url('http://' + manual_verification_url.group())
 
 		if auth_status is True:
 			# Reopen the workflow
@@ -56,5 +58,5 @@ def commit(args):
 			subprocess.call(['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl'])
 		elif not auth_status:
 			print 'Invalid or expired URL, please try again'
-	else:
+	elif not command:
 		auth.authorize()
