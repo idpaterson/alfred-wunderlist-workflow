@@ -31,11 +31,12 @@ def commit(args):
 			print 'The workflow is being updated'
 		else:
 			print 'You already have the latest workflow version'
-	elif 'changelog' in args:
+	else:
 		import webbrowser
 
-		webbrowser.open('https://github.com/idpaterson/alfred-wunderlist-workflow/releases/tag/__VERSION__')
-	elif 'issues' in args:
-		import webbrowser
-
-		webbrowser.open('https://github.com/idpaterson/alfred-wunderlist-workflow/issues')
+		if 'changelog' in args:
+			webbrowser.open('https://github.com/idpaterson/alfred-wunderlist-workflow/releases/tag/__VERSION__')
+		elif 'wunderlist' in args:
+			webbrowser.open('https://www.wunderlist.com/')
+		elif 'issues' in args:
+			webbrowser.open('https://github.com/idpaterson/alfred-wunderlist-workflow/issues')

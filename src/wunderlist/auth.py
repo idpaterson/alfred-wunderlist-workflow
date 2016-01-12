@@ -6,6 +6,8 @@ def authorize():
 	import urllib
 	import webbrowser
 
+	workflow().store_data('auth', 'started')
+
 	state = new_oauth_state()
 	data = urllib.urlencode({
 		'client_id': config.WL_CLIENT_ID,
@@ -29,6 +31,30 @@ def deauthorize():
 
 def is_authorized():
 	return oauth_token() is not None
+
+def handle_authorization_url(url):
+	import urlparse
+
+	# Parse query data & params to find out what was passed
+	parsed_url = urlparse.urlparse(url)
+	params = urlparse.parse_qs(parsed_url.query)
+
+	# request is either for a file to be served up or our test
+	if 'code' in params and validate_oauth_state(params['state'][0]):
+		# Request a token based on the code
+		resolve_oauth_token(params['code'][0])
+		workflow().store_data('auth', None)
+
+		print 'You are now logged in'
+		return True
+	elif 'error' in params:
+		workflow().store_data('auth', 'Error: %s' % params['error'])
+
+		print 'Please try again later'
+		return params['error']
+
+	# Not a valid URL
+	return False
 
 def oauth_token():
 	try:
@@ -80,27 +106,20 @@ def await_token():
 
 	import SimpleHTTPServer
 	import SocketServer
-	import urlparse
 
 	class OAuthTokenResponseHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
 		def do_GET(self):
-			# Parse query data & params to find out what was passed
-			parsed_url = urlparse.urlparse(self.path)
-			params = urlparse.parse_qs(parsed_url.query)
+			auth_status = handle_authorization_url(self.path)
 
-			# request is either for a file to be served up or our test
-			if 'code' in params and validate_oauth_state(params['state'][0]):
-				print 'You are now logged in'
-				self.path = 'www/authorize.html'
-				resolve_oauth_token(params['code'][0])
-			elif 'error' in params:
-				print 'Please try again later'
-				self.path = 'www/decline.html'
-			else:
+			if not auth_status:
 				self.path = 'www/' + self.path
+			elif auth_status is True:
+				self.path = 'www/authorize.html'
+			else:
+				self.path = 'www/decline.html'
 
-			SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self);
+			SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
 			# Reopen the workflow
 			import subprocess
@@ -110,4 +129,3 @@ def await_token():
 
 	server.timeout = config.OAUTH_TIMEOUT
 	server.handle_request()
-
