@@ -1,5 +1,10 @@
+from wunderlist.models.preferences import Preferences
+from datetime import datetime
+
 def sync():
 	from wunderlist.models import base, root, list, task, user, hashtag, reminder
+
+	Preferences.current_prefs().last_sync = datetime.now()
 
 	base.BaseModel._meta.database.create_tables([
 		root.Root,
@@ -27,3 +32,11 @@ def backgroundSync():
 		':pref sync',
 		'--commit'
 	])
+
+def backgroundSyncIfNecessary():
+	last_sync = Preferences.current_prefs().last_sync
+
+	# Avoid syncing on every keystroke, backgroundSync will also prevent
+	# multiple concurrent syncs
+	if last_sync is None or (datetime.now() - last_sync).total_seconds() > 2:
+		backgroundSync()
