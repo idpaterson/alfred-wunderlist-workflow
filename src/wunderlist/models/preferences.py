@@ -6,6 +6,7 @@ ICON_THEME_KEY = 'icon_theme'
 EXPLICIT_KEYWORDS_KEY = 'explicit_keywords'
 AUTOMATIC_REMINDERS_KEY = 'automatic_reminders'
 REMINDER_TODAY_OFFSET_KEY = 'reminder_today_offset'
+LAST_SYNC_KEY = 'last_sync'
 
 class Preferences(object):
 
@@ -98,3 +99,11 @@ class Preferences(object):
 	@automatic_reminders.setter
 	def automatic_reminders(self, automatic_reminders):
 		self._set(AUTOMATIC_REMINDERS_KEY, automatic_reminders)
+
+	@property
+	def last_sync(self):
+		return self._get(LAST_SYNC_KEY, None)
+
+	@last_sync.setter
+	def last_sync(self, last_sync):
+		self._set(LAST_SYNC_KEY, last_sync)

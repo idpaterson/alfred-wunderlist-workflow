@@ -3,12 +3,17 @@ import requests
 from wunderlist.auth import oauth_token
 from wunderlist import config
 
-def _request_headers():
-	token = oauth_token()
+_oauth_token = None
 
-	if token:
+def _request_headers():
+	global _oauth_token
+	
+	if not _oauth_token:
+		_oauth_token = oauth_token()
+
+	if _oauth_token:
 		return {
-			'x-access-token': token,
+			'x-access-token': _oauth_token,
 			'x-client-id': config.WL_CLIENT_ID,
 			'content-type': 'application/json'
 		}

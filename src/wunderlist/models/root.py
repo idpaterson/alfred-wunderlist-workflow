@@ -20,10 +20,36 @@ class Root(BaseModel):
 
 		cls._perform_updates([instance], [root.root()])
 
-	def _sync_children(self):
-		from list import List
-		from preferences import Preferences
+		return None
 
-		Preferences.sync()
-		List.sync()
-		User.sync()
+	def _sync_children(self):
+		from concurrent import futures
+		from hashtag import Hashtag
+
+		with futures.ThreadPoolExecutor(max_workers=2) as executor:
+			jobs = (
+				executor.submit(_sync_user),
+				executor.submit(_sync_lists),
+				executor.submit(_sync_preferences),
+				executor.submit(_sync_reminders)
+			)
+
+		Hashtag.sync()
+
+def _sync_user():
+	User.sync()
+
+def _sync_lists():
+	from list import List
+
+	List.sync()
+
+def _sync_preferences():
+	from preferences import Preferences
+
+	Preferences.sync()
+
+def _sync_reminders():
+	from reminder import Reminder
+
+	Reminder.sync()

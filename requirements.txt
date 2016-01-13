@@ -1,3 +1,4 @@
-Alfred-Workflow==1.11.1
+Alfred-Workflow==1.14
 parsedatetime==1.4
-peewee==2.4.7
+peewee==2.7.2
+futures==3.0.3

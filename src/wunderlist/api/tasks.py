@@ -3,28 +3,49 @@ import wunderlist.api.base as api
 
 NO_CHANGE = '!nochange!'
 
-def tasks(list_id, order='display', completed=False):
-	req = api.get('tasks', { 
+def tasks(list_id, order='display', completed=False, subtasks=False, positions=None):
+	req = api.get(('subtasks' if subtasks else 'tasks'), {
 		'list_id': int(list_id),
 		'completed': completed
 	})
 	tasks = req.json()
 
 	if order == 'display':
-		positions = task_positions(list_id)
+		if positions is None:
+			positions = task_positions(list_id)
 
 		def position(task):
-			return positions.index(task['id'])
+			try:
+				return positions.index(task['id'])
+			except:
+				return 1e99
 
 		tasks.sort(key=position)
+
+	for (index, task) in enumerate(tasks):
+		task['order'] = index
 
 	return tasks
 
 def task_positions(list_id):
-	req = api.get('task_positions', { 'list_id': list_id })
-	info = req.json()
+	positions = []
 
-	return info[0]['values']
+	from concurrent import futures
+
+	with futures.ThreadPoolExecutor(max_workers=2) as executor:
+		jobs = (
+			executor.submit(api.get, 'task_positions', {'list_id': list_id}),
+			executor.submit(api.get, 'subtask_positions', {'list_id': list_id})
+		)
+
+		for job in futures.as_completed(jobs):
+			req = job.result()
+			data = req.json()
+
+			if len(data) > 0:
+				positions += data[0]['values']
+
+	return positions
 
 def task(id):
 	req = api.get('tasks/' + id)
@@ -65,7 +86,7 @@ def update_task(id, revision, title=NO_CHANGE, assignee_id=NO_CHANGE, recurrence
 	remove = []
 	changes = {
 		'title': title,
-		'assignee_id': int(assignee_id),
+		'assignee_id': assignee_id,
 		'recurrence_type': recurrence_type,
 		'recurrence_count': recurrence_count,
 		'due_date': due_date,
@@ -85,7 +106,7 @@ def update_task(id, revision, title=NO_CHANGE, assignee_id=NO_CHANGE, recurrence
 	if params:
 		params['revision'] = revision
 
-		req = api.patch('tasks/' + id, params)
+		req = api.patch('tasks/%d' % id, params)
 		info = req.json()
 
 		return info

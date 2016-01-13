@@ -22,6 +22,8 @@ _due_pattern = r'(\bdue:?\b\s*)(.*)'
 
 _not_due_pattern = r'not? due( date)?'
 
+_hashtag_prompt_pattern = r'(?:^|\s)(#\S*)$'
+
 # An asterisk at the end of the phrase
 _star_pattern = r'\*$'
 
@@ -50,6 +52,7 @@ class TaskParser(object):
 	recurrence_type = None
 	recurrence_count = None
 	reminder_date = None
+	hashtag_prompt = None
 	assignee_id = None
 	starred = False
 	completed = False
@@ -58,6 +61,7 @@ class TaskParser(object):
 	has_due_date_prompt = False
 	has_recurrence_prompt = False
 	has_reminder_prompt = False
+	has_hashtag_prompt = False
 
 	_list_phrase = None
 	_due_date_phrase = None
@@ -77,6 +81,11 @@ class TaskParser(object):
 		lists = wf.stored_data('lists')
 		prefs = Preferences.current_prefs()
 		ignore_due_date = False
+
+		match = re.search(_hashtag_prompt_pattern, phrase)
+		if match:
+			self.hashtag_prompt = match.group(1)
+			self.has_hashtag_prompt = True
 
 		match = re.search(_star_pattern, phrase)
 		if match:
@@ -353,7 +362,7 @@ class TaskParser(object):
 
 		return datetime.combine(date_component, time_component)
 
-	def phrase_with(self, title=None, list_title=None, due_date=None, recurrence=None, reminder_date=None, starred=None):
+	def phrase_with(self, title=None, list_title=None, due_date=None, recurrence=None, reminder_date=None, hashtag=None, starred=None):
 		components = []
 
 		# Retain the current list
@@ -376,6 +385,10 @@ class TaskParser(object):
 			components.append(title)
 		elif self.title:
 			components.append(self.title)
+
+		# Remove the hashtag prompt
+		if hashtag and self.has_hashtag_prompt and (title or self.title):
+			components[-1] = components[-1].rsplit(self.hashtag_prompt, 1)[0]
 
 		# Retain the current due date
 		if due_date is None:
@@ -419,6 +432,13 @@ class TaskParser(object):
 		else:
 			pass
 
+		# Add the hashtag
+		if hashtag:
+			components.append(hashtag)
+		# Removes the star
+		else:
+			pass
+
 		# Retain the current star status
 		if starred is None:
 			if self._starred_phrase:
@@ -429,6 +449,9 @@ class TaskParser(object):
 		# Removes the star
 		else:
 			pass
+
+		# Remove any empty string components, often a blank title
+		components = filter(bool, components)
 
 		phrase = ' '.join(components)
 		phrase = re.sub(_whitespace_cleanup_pattern, ' ', phrase)

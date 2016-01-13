@@ -3,7 +3,7 @@ from base import BaseModel
 
 class User(BaseModel):
 	id = PrimaryKeyField()
-	name = CharField()
+	name = TextField()
 	revision = IntegerField()
 	created_at = DateTimeField()
 
@@ -19,3 +19,5 @@ class User(BaseModel):
 			pass
 
 		cls._perform_updates([instance], [user.user()])
+		
+		return None

@@ -13,3 +13,6 @@
 [submodule "lib/dateutil"]
 	path = lib/dateutil
 	url = https://github.com/dateutil/dateutil.git
+[submodule "lib/futures"]
+	path = lib/futures
+	url = https://github.com/agronholm/pythonfutures.git

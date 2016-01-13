@@ -4,6 +4,8 @@ from wunderlist import icons
 from wunderlist.util import workflow, format_time
 from wunderlist.models.task_parser import TaskParser
 from wunderlist.models.preferences import Preferences
+from wunderlist.models.task import Task
+from wunderlist.models.reminder import Reminder
 from workflow.background import is_running
 from datetime import date
 from random import random
@@ -15,10 +17,8 @@ _reminder = u'⏰'
 def _task(args):
 	return TaskParser(' '.join(args))
 
-def filter(args):
-	task = _task(args)
+def task_subtitle(task):
 	subtitle = []
-	wf = workflow()
 
 	if task.starred:
 		subtitle.append(_star)
@@ -60,9 +60,35 @@ def filter(args):
 			format_time(task.reminder_date.time(), 'short'))
 		)
 
-	subtitle.append(task.title or 'Begin typing to add a new task')
+	subtitle.append(task.title)
 
-	if task.has_list_prompt:
+	return '   '.join(subtitle)
+
+def filter(args):
+	task = _task(args)
+	subtitle = task_subtitle(task)
+	wf = workflow()
+	matching_hashtags = []
+
+	if not task.title:
+		subtitle = 'Begin typing to add a new task'
+
+	# Preload matching hashtags into a list so that we can get the length
+	if task.has_hashtag_prompt:
+		from wunderlist.models.hashtag import Hashtag
+
+		hashtags = Hashtag.select().where(Hashtag.id.contains(task.hashtag_prompt))
+
+		for hashtag in hashtags:
+			matching_hashtags.append(hashtag)
+
+	# Show hashtag prompt if there is more than one matching hashtag or the
+	# hashtag being typed does not exactly match the single matching hashtag
+	if task.has_hashtag_prompt and len(matching_hashtags) > 0 and (len(matching_hashtags) > 1 or task.hashtag_prompt != matching_hashtags[0].id):
+		for hashtag in matching_hashtags:
+			wf.add_item(hashtag.id[1:], '', autocomplete=' ' + task.phrase_with(hashtag=hashtag.id) + ' ', icon=icons.HASHTAG)
+
+	elif task.has_list_prompt:
 		lists = wf.stored_data('lists')
 		if lists:
 			for list in lists:
@@ -108,7 +134,7 @@ def filter(args):
 
 	# Main menu for tasks
 	else:
-		wf.add_item(task.list_title + u' – create a new task...', '   '.join(subtitle), arg='--stored-query', valid=task.title != '', icon=icons.TASK)
+		wf.add_item(task.list_title + u' – create a new task...', subtitle, arg='--stored-query', valid=task.title != '', icon=icons.TASK)
 
 		title = 'Change list' if task.list_title else 'Select a list'
 		wf.add_item(title, 'Prefix the task, e.g. Automotive: ' + task.title, autocomplete=' ' + task.phrase_with(list_title=True), icon=icons.LIST)
@@ -127,18 +153,38 @@ def filter(args):
 		else:
 			wf.add_item('Star', 'End the task with * (asterisk)', autocomplete=' ' + task.phrase_with(starred=True), icon=icons.STAR)
 
+		conditions = None
+
+		for arg in args:
+			if len(arg) > 1:
+				conditions = conditions | Task.title.contains(arg)
+
+		for t in Task.select().where(Task.completed_at.is_null() & Task.list.is_null(False) & conditions):
+			wf.add_item(u'%s – %s' % (t.list_title, t.title), task_subtitle(t), arg=' --toggle %s' % t.id, valid=True, icon=icons.TASK_COMPLETED if t.completed_at else icons.TASK)
+
 		wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
 
 def commit(args):
 	from wunderlist.api import tasks
 
-	task = _task(args)
+	if '--toggle' in args:
+		task_id = args[2]
+		task = Task.get(Task.id == task_id)
 
-	tasks.create_task(task.list_id, task.title, assignee_id=task.assignee_id,
-		recurrence_type=task.recurrence_type, recurrence_count=task.recurrence_count,
-		due_date=task.due_date, reminder_date=task.reminder_date, starred=task.starred,
-		completed=task.completed
-	)
+		if task.completed_at:
+			tasks.update_task(task.id, task.revision, completed=False)
+			print 'The task was marked incomplete'
+		else:
+			tasks.update_task(task.id, task.revision, completed=True)
+			print 'The task was marked complete'
+	else:
+		task = _task(args)
 
-	# Output must be a UTF-8 encoded string
-	print ('The task was added to ' + task.list_title).encode('utf-8')
+		tasks.create_task(task.list_id, task.title, assignee_id=task.assignee_id,
+			recurrence_type=task.recurrence_type, recurrence_count=task.recurrence_count,
+			due_date=task.due_date, reminder_date=task.reminder_date, starred=task.starred,
+			completed=task.completed
+		)
+
+		# Output must be a UTF-8 encoded string
+		print ('The task was added to ' + task.list_title).encode('utf-8')
