@@ -35,7 +35,9 @@ def route(args):
 		handler = login
 	elif action == ':list':
 		from wunderlist.handlers import lists
-		handler = lists
+	elif action == ':search':
+		from wunderlist.handlers import search
+		handler = search
 	elif action == ':logout':
 		from wunderlist.handlers import logout
 		handler = logout

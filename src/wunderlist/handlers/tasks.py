@@ -153,38 +153,16 @@ def filter(args):
 		else:
 			wf.add_item('Star', 'End the task with * (asterisk)', autocomplete=' ' + task.phrase_with(starred=True), icon=icons.STAR)
 
-		conditions = None
-
-		for arg in args:
-			if len(arg) > 1:
-				conditions = conditions | Task.title.contains(arg)
-
-		for t in Task.select().where(Task.completed_at.is_null() & Task.list.is_null(False) & conditions):
-			wf.add_item(u'%s – %s' % (t.list_title, t.title), task_subtitle(t), arg=' --toggle %s' % t.id, valid=True, icon=icons.TASK_COMPLETED if t.completed_at else icons.TASK)
-
 		wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
 
 def commit(args):
-	from wunderlist.api import tasks
+	task = _task(args)
 
-	if '--toggle' in args:
-		task_id = args[2]
-		task = Task.get(Task.id == task_id)
+	tasks.create_task(task.list_id, task.title, assignee_id=task.assignee_id,
+		recurrence_type=task.recurrence_type, recurrence_count=task.recurrence_count,
+		due_date=task.due_date, reminder_date=task.reminder_date, starred=task.starred,
+		completed=task.completed
+	)
 
-		if task.completed_at:
-			tasks.update_task(task.id, task.revision, completed=False)
-			print 'The task was marked incomplete'
-		else:
-			tasks.update_task(task.id, task.revision, completed=True)
-			print 'The task was marked complete'
-	else:
-		task = _task(args)
-
-		tasks.create_task(task.list_id, task.title, assignee_id=task.assignee_id,
-			recurrence_type=task.recurrence_type, recurrence_count=task.recurrence_count,
-			due_date=task.due_date, reminder_date=task.reminder_date, starred=task.starred,
-			completed=task.completed
-		)
-
-		# Output must be a UTF-8 encoded string
-		print ('The task was added to ' + task.list_title).encode('utf-8')
+	# Output must be a UTF-8 encoded string
+	print ('The task was added to ' + task.list_title).encode('utf-8')
