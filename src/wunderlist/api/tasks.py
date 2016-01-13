@@ -100,6 +100,9 @@ def update_task(id, revision, title=NO_CHANGE, assignee_id=NO_CHANGE, recurrence
 		elif value != NO_CHANGE:
 			params[key] = value
 
+	if due_date:
+		params['due_date'] = due_date.strftime('%Y-%m-%d')
+
 	if remove:
 		params['remove'] = remove
 
