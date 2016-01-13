@@ -14,7 +14,7 @@ def filter(args):
 		autocomplete='', icon=icons.BACK
 	)
 
-def commit(args):
+def commit(args, modifier=None):
 	from wunderlist.api import lists
 	from wunderlist.sync import backgroundSync
 

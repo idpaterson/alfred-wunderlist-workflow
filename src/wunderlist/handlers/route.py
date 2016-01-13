@@ -55,7 +55,12 @@ def route(args):
 
 	if handler:
 		if '--commit' in args:
-			handler.commit(command)
+			modifier = re.search(r'--(alt|cmd|ctrl|fn|shift)\b', ' '.join(args))
+
+			if modifier:
+				modifier = modifier.group(1)
+
+			handler.commit(command, modifier)
 		else:
 			handler.filter(command)
 

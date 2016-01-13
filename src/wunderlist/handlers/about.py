@@ -25,7 +25,7 @@ def filter(args):
 		autocomplete='', icon=icons.BACK
 	)
 
-def commit(args):
+def commit(args, modifier=None):
 	if 'update' in args:
 		if workflow().start_update():
 			print 'The workflow is being updated'
