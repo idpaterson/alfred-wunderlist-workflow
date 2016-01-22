@@ -156,6 +156,8 @@ def filter(args):
 		wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
 
 def commit(args, modifier=None):
+	from wunderlist.api import tasks
+
 	task = _task(args)
 
 	tasks.create_task(task.list_id, task.title, assignee_id=task.assignee_id,
