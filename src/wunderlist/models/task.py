@@ -3,6 +3,13 @@ from wunderlist.models.base import BaseModel
 from wunderlist.models.list import List
 from wunderlist.models.user import User
 
+_days_by_recurrence_type = {
+	'day': 1,
+	'week': 7,
+	'month': 30.43,
+	'year': 365
+}
+
 class Task(BaseModel):
 	id = PrimaryKeyField()
 	list = ForeignKeyField(List, null=True, related_name='tasks')
@@ -84,8 +91,21 @@ class Task(BaseModel):
 		return None
 
 	@property
+	def overdue_times(self):
+		if self.recurrence_type is None:
+			return 0
+
+		from datetime import date
+
+		recurrence_days = _days_by_recurrence_type[self.recurrence_type]
+		overdue_time = date.today() - self.due_date
+		return int(overdue_time.days / recurrence_days)
+
+	@property
 	def list_title(self):
-		return self.list.title
+		if self.list:
+			return self.list.title
+		return None
 
 	class Meta:
 		order_by = ('order', 'id')

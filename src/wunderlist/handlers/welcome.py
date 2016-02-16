@@ -11,6 +11,12 @@ def filter(args):
 	)
 
 	workflow().add_item(
+		'Due today',
+		autocomplete=':due ',
+		icon=icons.TODAY
+	)
+
+	workflow().add_item(
 		'Update tasks',
 		autocomplete=':search ',
 		icon=icons.SEARCH

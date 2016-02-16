@@ -7,6 +7,8 @@ from datetime import date
 import re
 
 _star = u'★'
+_overdue_1x = u'⚠️'
+_overdue_2x = u'❗️'
 _recurrence = u'↻'
 _reminder = u'⏰'
 
@@ -17,12 +19,12 @@ def _task(args):
 
 def task_subtitle(task):
 	subtitle = []
+	today = date.today()
 
 	if task.starred:
 		subtitle.append(_star)
 
 	if task.due_date:
-		today = date.today()
 		if task.due_date == today:
 			date_format = 'Today'
 		elif task.due_date.year == today.year:
@@ -41,8 +43,13 @@ def task_subtitle(task):
 		else:
 			subtitle.append('%s %sly' % (_recurrence, task.recurrence_type.title()))
 
+	overdue_times = task.overdue_times
+	if overdue_times > 1:
+		subtitle.insert(0, u'%s %dX OVERDUE!' % (_overdue_2x, overdue_times))
+	elif overdue_times == 1:
+		subtitle.insert(0, u'%s OVERDUE!' % (_overdue_1x))
+
 	if False and task.reminder_date:
-		today = date.today()
 		if task.reminder_date.date() == today:
 			date_format = 'Today'
 		elif task.reminder_date.date() == task.due_date:
@@ -53,7 +60,7 @@ def task_subtitle(task):
 			date_format = '%b %d, %Y'
 
 		subtitle.append('%s %s at %s' % (
-			_reminder,
+			_reminder,	
 			task.reminder_date.strftime(date_format),
 			format_time(task.reminder_date.time(), 'short'))
 		)
@@ -63,45 +70,29 @@ def task_subtitle(task):
 	return '   '.join(subtitle)
 
 def filter(args):
-	query = ' '.join(args[1:])
 	wf = workflow()
-	matching_hashtags = []
 
-	if not query:
-		wf.add_item('Begin typing to search tasks', '', icon=icons.SEARCH)
+	conditions = None
 
-	hashtag_match = re.search(_hashtag_prompt_pattern, query)
-	if hashtag_match:
-		from wunderlist.models.hashtag import Hashtag
+	for arg in args[1:]:
+		if len(arg) > 1:
+			conditions = conditions | Task.title.contains(arg)
 
-		hashtag_prompt = hashtag_match.group()
-		hashtags = Hashtag.select().where(Hashtag.id.contains(hashtag_prompt))
+	if conditions is None:
+		conditions = True
 
-		for hashtag in hashtags:
-			# If there is an exact match, do not show hashtags
-			if hashtag.id.lower() == hashtag_prompt.lower():
-				matching_hashtags = []
-				break
+	tasks = Task.select().where(
+		Task.completed_at.is_null() &
+		(Task.due_date <= date.today()) &
+		Task.list.is_null(False) &
+		conditions
+	).order_by(Task.due_date.asc())
+	tasks = sorted(tasks, key=lambda t: -t.overdue_times)
 
-			matching_hashtags.append(hashtag)
+	for t in tasks:
+		wf.add_item(u'%s – %s' % (t.list_title, t.title), task_subtitle(t), autocomplete=':task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed_at else icons.TASK)
 
-	# Show hashtag prompt if there is more than one matching hashtag or the
-	# hashtag being typed does not exactly match the single matching hashtag
-	if len(matching_hashtags) > 0:
-		for hashtag in matching_hashtags:
-			wf.add_item(hashtag.id[1:], '', autocomplete=u':search %s %s ' % (query[:hashtag_match.start()], hashtag.id), icon=icons.HASHTAG)
-
-	else:
-		conditions = None
-
-		for arg in args:
-			if len(arg) > 1:
-				conditions = conditions | Task.title.contains(arg)
-
-		for t in Task.select().where(Task.completed_at.is_null() & Task.list.is_null(False) & conditions):
-			wf.add_item(u'%s – %s' % (t.list_title, t.title), task_subtitle(t), autocomplete=':task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed_at else icons.TASK)
-
-		wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
+	wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
 
 def commit(args, modifier=None):
 	pass
