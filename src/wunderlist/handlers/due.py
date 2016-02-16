@@ -3,7 +3,7 @@
 from wunderlist import icons
 from wunderlist.util import workflow, format_time
 from wunderlist.models.task import Task
-from datetime import date
+from datetime import date, timedelta
 import re
 
 _star = u'★'
@@ -83,7 +83,7 @@ def filter(args):
 
 	tasks = Task.select().where(
 		Task.completed_at.is_null() &
-		(Task.due_date <= date.today()) &
+		(Task.due_date < date.today() + timedelta(days=1)) &
 		Task.list.is_null(False) &
 		conditions
 	).order_by(Task.due_date.asc())
