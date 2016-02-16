@@ -3,6 +3,8 @@
 from wunderlist import icons
 from wunderlist.util import workflow, format_time
 from wunderlist.models.task import Task
+from wunderlist.models.list import List
+from wunderlist.models.preferences import Preferences
 from datetime import date, timedelta
 import re
 
@@ -71,6 +73,7 @@ def task_subtitle(task):
 
 def filter(args):
 	wf = workflow()
+	prefs = Preferences.current_prefs()
 
 	conditions = None
 
@@ -86,8 +89,18 @@ def filter(args):
 		(Task.due_date < date.today() + timedelta(days=1)) &
 		Task.list.is_null(False) &
 		conditions
-	).order_by(Task.due_date.asc())
-	tasks = sorted(tasks, key=lambda t: -t.overdue_times)
+	)
+
+	for key in prefs.due_order:
+		if key == 'due':
+			tasks = tasks.order_by(Task.due_date.asc())
+		elif key == 'list':
+			tasks = tasks.join(List).order_by(List.order.asc())
+		elif key == 'task':
+			tasks = tasks.order_by(Task.order.asc())
+
+	if 'times_overdue' in prefs.due_order:
+		tasks = sorted(tasks, key=lambda t: -t.overdue_times)
 
 	for t in tasks:
 		wf.add_item(u'%s – %s' % (t.list_title, t.title), task_subtitle(t), autocomplete=':task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed_at else icons.TASK)
