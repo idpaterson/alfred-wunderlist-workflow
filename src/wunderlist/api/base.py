@@ -56,5 +56,5 @@ def delete(path, data=None):
 	return requests.delete(
 		config.WL_API_BASE_URL + '/' + path,
 		headers=headers,
-		data=json.dumps(data)
+		params=data
 	)

@@ -52,6 +52,11 @@ def filter(args):
 
 		wf.add_item(u'List – %s' % task.list_title, 'Move to a different list', autocomplete=' '.join(args + ['list']), icon=icons.LIST)
 
+		if task.recurrence_type and not task.completed_at:
+			wf.add_item('Delete', 'Delete this task and cancel recurrence', arg=' '.join(args + ['delete']), valid=True, icon=icons.TRASH)
+		else:
+			wf.add_item('Delete', 'Delete this task', arg=' '.join(args + ['delete']), valid=True, icon=icons.TRASH)
+
 		wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
 
 def commit(args, modifier=None):
@@ -74,3 +79,8 @@ def commit(args, modifier=None):
 			tasks.update_task(task.id, task.revision, completed=True, due_date=due_date)
 			print 'The task was marked complete'
 
+	elif action == 'delete':
+		if tasks.delete_task(task.id, task.revision):
+			print 'The task was deleted'
+		else:
+			print 'Please try again'

@@ -22,7 +22,7 @@ def route(args):
 	elif args:
 		command_string = args[0]
 
-	command = command_string.split(' ')
+	command = re.split(r' +', command_string)
 
 	if command:
 		action = command[0]
