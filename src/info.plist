@@ -6,6 +6,17 @@
 	<string>com.ipaterson.alfred.wunderlist</string>
 	<key>connections</key>
 	<dict>
+		<key>04F93A0A-3529-4878-A556-4FFAE7559C9E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A28E28AD-30A4-4578-87C2-E258E3948B63</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>0F2D229C-18BA-4E40-A81D-D796A6E159BC</key>
 		<array>
 			<dict>
@@ -17,11 +28,44 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>2EB55D85-E0D7-4643-9902-C1000F324FA5</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>04F93A0A-3529-4878-A556-4FFAE7559C9E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>91EE0A17-B8DF-4DA4-8D65-D7D4116B27C0</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A28E28AD-30A4-4578-87C2-E258E3948B63</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>CB67A7A4-2A1F-4905-990C-5BD07FD51C1C</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
 				<string>0F2D229C-18BA-4E40-A81D-D796A6E159BC</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>D3D5543D-913D-4240-8133-180DBD72AE70</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>91EE0A17-B8DF-4DA4-8D65-D7D4116B27C0</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -53,6 +97,8 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
@@ -67,6 +113,31 @@
 			<string>39540B6D-5AA4-4427-BA63-42256009EE5F</string>
 			<key>version</key>
 			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>CB67A7A4-2A1F-4905-990C-5BD07FD51C1C</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -135,31 +206,6 @@ echo "{query}" &gt; .query
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>action</key>
-				<integer>0</integer>
-				<key>argument</key>
-				<integer>0</integer>
-				<key>hotkey</key>
-				<integer>0</integer>
-				<key>hotmod</key>
-				<integer>0</integer>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>0</integer>
-				<key>relatedAppsMode</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
-			<key>uid</key>
-			<string>CB67A7A4-2A1F-4905-990C-5BD07FD51C1C</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -180,6 +226,8 @@ echo "{query}" &gt; .query
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
@@ -195,25 +243,234 @@ echo "{query}" &gt; .query
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>from workflow import Workflow
+
+wf = Workflow(
+	capture_args=False
+)
+wf.save_password('test1-20160203', "{query}")
+
+print "Set the value to {query}"</string>
+				<key>type</key>
+				<integer>3</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>91EE0A17-B8DF-4DA4-8D65-D7D4116B27C0</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>keyword</key>
+				<string>test1</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>script</key>
+				<string>from workflow import Workflow
+
+wf = Workflow(
+	capture_args=False
+)
+try:
+	value = wf.get_password('test1-20160203')
+except:
+	value = None
+
+wf.add_item('Set keychain value', 'Current value: %s' % value, arg="{query}", valid=True)
+
+wf.send_feedback()</string>
+				<key>title</key>
+				<string>Waiting...</string>
+				<key>type</key>
+				<integer>3</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>D3D5543D-913D-4240-8133-180DBD72AE70</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>test2</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>script</key>
+				<string>from workflow import Workflow
+
+wf = Workflow(
+	capture_args=False
+)
+wf.save_password('test2-20160203', 'test2')
+try:
+	value = wf.get_password('test2-20160203')
+except:
+	value = None
+
+wf.add_item('Keychain value', 'Current value: %s' % value, valid=False)
+
+wf.send_feedback()</string>
+				<key>title</key>
+				<string>Waiting...</string>
+				<key>type</key>
+				<integer>3</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>A4B4BC01-CC53-44CC-976E-BB77937E7AC3</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>from workflow import Workflow
+
+wf = Workflow(
+	capture_args=False
+)
+wf.save_password('test3b-20160203', "{query}")
+
+print "Set the value to {query}"</string>
+				<key>type</key>
+				<integer>3</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>04F93A0A-3529-4878-A556-4FFAE7559C9E</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>test3</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>script</key>
+				<string>from workflow import Workflow
+
+wf = Workflow(
+	capture_args=False
+)
+wf.save_password('test3a-20160203', 'test3')
+try:
+	value = wf.get_password('test3b-20160203')
+except:
+	value = None
+
+wf.add_item('Set keychain value', 'Current value: %s' % value, arg="{query}", valid=True)
+
+wf.send_feedback()</string>
+				<key>title</key>
+				<string>Waiting...</string>
+				<key>type</key>
+				<integer>3</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>2EB55D85-E0D7-4643-9902-C1000F324FA5</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Readme</string>
 	<key>uidata</key>
 	<dict>
+		<key>04F93A0A-3529-4878-A556-4FFAE7559C9E</key>
+		<dict>
+			<key>ypos</key>
+			<real>610</real>
+		</dict>
 		<key>0F2D229C-18BA-4E40-A81D-D796A6E159BC</key>
 		<dict>
 			<key>ypos</key>
 			<real>130</real>
+		</dict>
+		<key>2EB55D85-E0D7-4643-9902-C1000F324FA5</key>
+		<dict>
+			<key>ypos</key>
+			<real>610</real>
 		</dict>
 		<key>39540B6D-5AA4-4427-BA63-42256009EE5F</key>
 		<dict>
 			<key>ypos</key>
 			<real>10</real>
 		</dict>
+		<key>91EE0A17-B8DF-4DA4-8D65-D7D4116B27C0</key>
+		<dict>
+			<key>ypos</key>
+			<real>370</real>
+		</dict>
 		<key>A28E28AD-30A4-4578-87C2-E258E3948B63</key>
 		<dict>
 			<key>ypos</key>
 			<real>130</real>
+		</dict>
+		<key>A4B4BC01-CC53-44CC-976E-BB77937E7AC3</key>
+		<dict>
+			<key>ypos</key>
+			<real>490</real>
 		</dict>
 		<key>B17D3A8B-97D1-4CB1-AA34-48754A1CC6F3</key>
 		<dict>
@@ -224,6 +481,11 @@ echo "{query}" &gt; .query
 		<dict>
 			<key>ypos</key>
 			<real>130</real>
+		</dict>
+		<key>D3D5543D-913D-4240-8133-180DBD72AE70</key>
+		<dict>
+			<key>ypos</key>
+			<real>370</real>
 		</dict>
 		<key>E0AE4F8B-253B-4EFD-B568-E9A2A46AA0C7</key>
 		<dict>
