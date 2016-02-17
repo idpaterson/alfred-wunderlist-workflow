@@ -53,7 +53,7 @@ def filter(args):
 
 		workflow().add_item(
 			'Cancel',
-			autocomplete=':pref', icon=icons.BACK
+			autocomplete='-pref', icon=icons.BACK
 		)
 	elif 'reminder_today' in args:
 		reminder_today_offset = _parse_time(' '.join(args))
@@ -73,29 +73,29 @@ def filter(args):
 
 		workflow().add_item(
 			'30 minutes',
-			arg=':pref reminder_today 30m', valid=True, icon=icons.REMINDER
+			arg='-pref reminder_today 30m', valid=True, icon=icons.REMINDER
 		)
 
 		workflow().add_item(
 			'1 hour',
 			'(default)',
-			arg=':pref reminder_today 1h', valid=True, icon=icons.REMINDER
+			arg='-pref reminder_today 1h', valid=True, icon=icons.REMINDER
 		)
 
 		workflow().add_item(
 			'90 minutes',
-			arg=':pref reminder_today 90m', valid=True, icon=icons.REMINDER
+			arg='-pref reminder_today 90m', valid=True, icon=icons.REMINDER
 		)
 
 		workflow().add_item(
 			'Always use the default reminder time',
 			'Avoids adjusting the reminder based on the current date',
-			arg=':pref reminder_today disabled', valid=True, icon=icons.CANCEL
+			arg='-pref reminder_today disabled', valid=True, icon=icons.CANCEL
 		)
 
 		workflow().add_item(
 			'Cancel',
-			autocomplete=':pref', icon=icons.BACK
+			autocomplete='-pref', icon=icons.BACK
 		)
 	else:
 		current_user = User.get()
@@ -104,43 +104,43 @@ def filter(args):
 			workflow().add_item(
 				'Sign out',
 				'You are logged in as ' + current_user.name,
-				autocomplete=':logout', icon=icons.CANCEL
+				autocomplete='-logout', icon=icons.CANCEL
 			)
 
 		workflow().add_item(
 			'Default reminder time',
 			u'⏰ %s    Reminders without a specific time will be set to this time' % format_time(prefs.reminder_time, 'short'),
-			autocomplete=':pref reminder ', icon=icons.REMINDER
+			autocomplete='-pref reminder ', icon=icons.REMINDER
 		)
 
 		workflow().add_item(
 			'Default reminder when due today',
 			u'⏰ %s    Default reminder time for tasks due today is %s' % (_format_time_offset(prefs.reminder_today_offset), 'relative to the current time' if prefs.reminder_today_offset else 'always %s' % format_time(prefs.reminder_time, 'short')),
-			autocomplete=':pref reminder_today ', icon=icons.REMINDER
+			autocomplete='-pref reminder_today ', icon=icons.REMINDER
 		)
 
 		workflow().add_item(
 			'Automatically set a reminder on the due date',
 			u'Sets a default reminder for tasks with a due date.',
-			arg=':pref automatic_reminders', valid=True, icon=icons.TASK_COMPLETED if prefs.automatic_reminders else icons.TASK
+			arg='-pref automatic_reminders', valid=True, icon=icons.TASK_COMPLETED if prefs.automatic_reminders else icons.TASK
 		)
 
 		workflow().add_item(
 			'Require explicit due keyword',
 			'Requires the due keyword to avoid accidental due date extraction',
-			arg=':pref explicit_keywords', valid=True, icon=icons.TASK_COMPLETED if prefs.explicit_keywords else icons.TASK
+			arg='-pref explicit_keywords', valid=True, icon=icons.TASK_COMPLETED if prefs.explicit_keywords else icons.TASK
 		)
 
 		workflow().add_item(
 			'Force sync',
 			'The workflow syncs automatically, but feel free to be forcible.',
-			arg=':pref sync', valid=True, icon=icons.SYNC
+			arg='-pref sync', valid=True, icon=icons.SYNC
 		)
 
 		workflow().add_item(
 			'Switch theme',
 			'Toggle between light and dark icons',
-			arg=':pref retheme',
+			arg='-pref retheme',
 			valid=True,
 			icon=icons.PAINTBRUSH
 		)
@@ -201,4 +201,4 @@ def commit(args, modifier=None):
 
 	if relaunch_alfred:
 		import subprocess
-		subprocess.call(['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl:pref'])
+		subprocess.call(['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl-pref'])

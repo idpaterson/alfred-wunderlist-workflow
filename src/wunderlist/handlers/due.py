@@ -106,7 +106,7 @@ def filter(args):
 			# Remove the sort command syntax. This is not done as a commit
 			# action in the event that resetting the Alfred query does not
 			# work due to accessibility settings.
-			run_in_background('launch_alfred', ['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl:due'])
+			run_in_background('launch_alfred', ['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl-due'])
 
 			# If resetting the alfred query does not work, make sure that the
 			# due tasks are not searched by the sort command
@@ -115,9 +115,9 @@ def filter(args):
 		# Show sort options
 		else:
 			for i, order_info in enumerate(_due_orders):
-				wf.add_item(order_info['title'], order_info['subtitle'], autocomplete=':due sort %d' % (i + 1), icon=icons.OPTION_SELECTED if order_info['due_order'] == prefs.due_order else icons.OPTION)
+				wf.add_item(order_info['title'], order_info['subtitle'], autocomplete='-due sort %d' % (i + 1), icon=icons.OPTION_SELECTED if order_info['due_order'] == prefs.due_order else icons.OPTION)
 
-			wf.add_item('Back', autocomplete=':due ', icon=icons.BACK)
+			wf.add_item('Back', autocomplete='-due ', icon=icons.BACK)
 
 			return
 
@@ -151,9 +151,9 @@ def filter(args):
 		tasks = sorted(tasks, key=lambda t: -t.overdue_times)
 
 	for t in tasks:
-		wf.add_item(u'%s – %s' % (t.list_title, t.title), task_subtitle(t), autocomplete=':task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed_at else icons.TASK)
+		wf.add_item(u'%s – %s' % (t.list_title, t.title), task_subtitle(t), autocomplete='-task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed_at else icons.TASK)
 
-	wf.add_item(u'Sort order', 'Change the display order of due tasks', autocomplete=':due sort', icon=icons.SORT)
+	wf.add_item(u'Sort order', 'Change the display order of due tasks', autocomplete='-due sort', icon=icons.SORT)
 
 	wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
 

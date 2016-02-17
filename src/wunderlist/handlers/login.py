@@ -24,24 +24,24 @@ def filter(args):
 		workflow().add_item(
 			'I need to log in to a different account',
 			'Go to wunderlist.com in your browser and sign out of your account first',
-			arg=':about wunderlist', valid=True, icon=icons.ACCOUNT
+			arg='-about wunderlist', valid=True, icon=icons.ACCOUNT
 		)
 		workflow().add_item(
 			'Other issues?',
 			'See outstanding issues and report your own bugs or feedback',
-			arg=':about issues', valid=True, icon=icons.HELP
+			arg='-about issues', valid=True, icon=icons.HELP
 		)
 	else:
 		workflow().add_item(
 			'Having trouble?',
-			autocomplete=':help ', valid=False, icon=icons.HELP
+			autocomplete='-help ', valid=False, icon=icons.HELP
 		)
 
 	if not getting_help:
 		workflow().add_item(
 			'About',
 			'Learn about the workflow and get support',
-			autocomplete=':about ',
+			autocomplete='-about ',
 			icon=icons.INFO
 		)
 
