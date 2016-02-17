@@ -101,7 +101,14 @@ def filter(args):
 		for t in Task.select().where(Task.completed_at.is_null() & Task.list.is_null(False) & conditions):
 			wf.add_item(u'%s – %s' % (t.list_title, t.title), task_subtitle(t), autocomplete='-task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed_at else icons.TASK)
 
+		wf.add_item('Let\'s discuss this screen', 'Do you need to search completed tasks, tasks by list, date, etc?', arg=' '.join(args + ['discuss']), valid=True, icon=icons.DISCUSS)
+
 		wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
 
 def commit(args, modifier=None):
-	pass
+	action = args[1]
+
+	if action == 'discuss':
+		import webbrowser
+
+		webbrowser.open('https://github.com/idpaterson/alfred-wunderlist-workflow/issues/95')
