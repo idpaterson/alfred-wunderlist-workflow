@@ -95,6 +95,7 @@ def filter(args):
 	command = args[1] if len(args) > 1 else None
 
 	if command == 'sort':
+		# Apply selected sort option
 		if len(args) > 2:
 			index = int(args[2])
 			order_info = _due_orders[index - 1]
@@ -102,11 +103,16 @@ def filter(args):
 
 			from workflow.background import run_in_background
 
-			# Only runs if another sync is not already in progress
-			run_in_background('sync', ['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl:due'])
+			# Remove the sort command syntax. This is not done as a commit
+			# action in the event that resetting the Alfred query does not
+			# work due to accessibility settings.
+			run_in_background('launch_alfred', ['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl:due'])
 
+			# If resetting the alfred query does not work, make sure that the
+			# due tasks are not searched by the sort command
 			args = []
 			command = None
+		# Show sort options
 		else:
 			for i, order_info in enumerate(_due_orders):
 				wf.add_item(order_info['title'], order_info['subtitle'], autocomplete=':due sort %d' % (i + 1), icon=icons.OPTION_SELECTED if order_info['due_order'] == prefs.due_order else icons.OPTION)
@@ -117,6 +123,7 @@ def filter(args):
 
 	conditions = None
 
+	# Build task title query based on the args
 	for arg in args[1:]:
 		if len(arg) > 1:
 			conditions = conditions | Task.title.contains(arg)
@@ -131,6 +138,7 @@ def filter(args):
 		conditions
 	)
 
+	# Sort the tasks according to user preference
 	for key in prefs.due_order:
 		if key == 'due_date':
 			tasks = tasks.order_by(Task.due_date.asc())
