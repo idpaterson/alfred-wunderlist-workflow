@@ -1,6 +1,6 @@
 {
   "name": "alfred-wunderlist-workflow",
-  "version": "0.5.2",
+  "version": "0.6.0-alpha.1",
   "dependencies": {},
   "private": true,
   "devDependencies": {}
