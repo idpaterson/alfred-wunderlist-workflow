@@ -15,7 +15,7 @@ def filter(args):
 		icon=icons.CANCEL
 	)
 
-def commit(args):
+def commit(args, modifier=None):
 	auth.deauthorize()
 	util.workflow().clear_data()
 	util.workflow().clear_cache()

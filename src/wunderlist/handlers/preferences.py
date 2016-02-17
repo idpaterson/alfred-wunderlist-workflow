@@ -150,7 +150,7 @@ def filter(args):
 			autocomplete='', icon=icons.BACK
 		)
 
-def commit(args):
+def commit(args, modifier=None):
 	prefs = Preferences.current_prefs()
 	relaunch_alfred = False
 

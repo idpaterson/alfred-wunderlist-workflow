@@ -10,7 +10,83 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
+				<string>55076087-BED3-4ED8-A573-23050597BC2B</string>
+				<key>modifiers</key>
+				<integer>131072</integer>
+				<key>modifiersubtext</key>
+				<string>No special behavior for the Shift key</string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>39540B6D-5AA4-4427-BA63-42256009EE5F</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string>No special behavior for the Alt key</string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
 				<string>E0AE4F8B-253B-4EFD-B568-E9A2A46AA0C7</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>B17D3A8B-97D1-4CB1-AA34-48754A1CC6F3</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string>No special behavior for the Cmd key</string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>6B21F0AC-FBEB-4269-A007-F3FB0A8D11DE</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>No special behavior for the Ctrl key</string>
+			</dict>
+		</array>
+		<key>39540B6D-5AA4-4427-BA63-42256009EE5F</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A28E28AD-30A4-4578-87C2-E258E3948B63</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>55076087-BED3-4ED8-A573-23050597BC2B</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A28E28AD-30A4-4578-87C2-E258E3948B63</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>6B21F0AC-FBEB-4269-A007-F3FB0A8D11DE</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A28E28AD-30A4-4578-87C2-E258E3948B63</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>B17D3A8B-97D1-4CB1-AA34-48754A1CC6F3</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A28E28AD-30A4-4578-87C2-E258E3948B63</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -53,6 +129,28 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>export LC_CTYPE="$(defaults read -g AppleLocale).UTF-8"
+/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --shift</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>55076087-BED3-4ED8-A573-23050597BC2B</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
@@ -67,6 +165,31 @@
 			<string>39540B6D-5AA4-4427-BA63-42256009EE5F</string>
 			<key>version</key>
 			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>CB67A7A4-2A1F-4905-990C-5BD07FD51C1C</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -135,31 +258,6 @@ echo "{query}" &gt; .query
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>action</key>
-				<integer>0</integer>
-				<key>argument</key>
-				<integer>0</integer>
-				<key>hotkey</key>
-				<integer>0</integer>
-				<key>hotmod</key>
-				<integer>0</integer>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>0</integer>
-				<key>relatedAppsMode</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
-			<key>uid</key>
-			<string>CB67A7A4-2A1F-4905-990C-5BD07FD51C1C</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -180,6 +278,8 @@ echo "{query}" &gt; .query
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
@@ -195,6 +295,26 @@ echo "{query}" &gt; .query
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>export LC_CTYPE="$(defaults read -g AppleLocale).UTF-8"
+/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --ctrl</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>6B21F0AC-FBEB-4269-A007-F3FB0A8D11DE</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Readme</string>
@@ -203,32 +323,42 @@ echo "{query}" &gt; .query
 		<key>0F2D229C-18BA-4E40-A81D-D796A6E159BC</key>
 		<dict>
 			<key>ypos</key>
-			<real>130</real>
+			<real>210</real>
 		</dict>
 		<key>39540B6D-5AA4-4427-BA63-42256009EE5F</key>
 		<dict>
 			<key>ypos</key>
+			<real>110</real>
+		</dict>
+		<key>55076087-BED3-4ED8-A573-23050597BC2B</key>
+		<dict>
+			<key>ypos</key>
 			<real>10</real>
+		</dict>
+		<key>6B21F0AC-FBEB-4269-A007-F3FB0A8D11DE</key>
+		<dict>
+			<key>ypos</key>
+			<real>410</real>
 		</dict>
 		<key>A28E28AD-30A4-4578-87C2-E258E3948B63</key>
 		<dict>
 			<key>ypos</key>
-			<real>130</real>
+			<real>210</real>
 		</dict>
 		<key>B17D3A8B-97D1-4CB1-AA34-48754A1CC6F3</key>
 		<dict>
 			<key>ypos</key>
-			<real>250</real>
+			<real>310</real>
 		</dict>
 		<key>CB67A7A4-2A1F-4905-990C-5BD07FD51C1C</key>
 		<dict>
 			<key>ypos</key>
-			<real>130</real>
+			<real>210</real>
 		</dict>
 		<key>E0AE4F8B-253B-4EFD-B568-E9A2A46AA0C7</key>
 		<dict>
 			<key>ypos</key>
-			<real>130</real>
+			<real>210</real>
 		</dict>
 	</dict>
 	<key>webaddress</key>

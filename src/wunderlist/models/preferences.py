@@ -7,6 +7,7 @@ EXPLICIT_KEYWORDS_KEY = 'explicit_keywords'
 AUTOMATIC_REMINDERS_KEY = 'automatic_reminders'
 REMINDER_TODAY_OFFSET_KEY = 'reminder_today_offset'
 LAST_SYNC_KEY = 'last_sync'
+DUE_ORDER_KEY = 'due_order'
 
 class Preferences(object):
 
@@ -107,3 +108,11 @@ class Preferences(object):
 	@last_sync.setter
 	def last_sync(self, last_sync):
 		self._set(LAST_SYNC_KEY, last_sync)
+
+	@property
+	def due_order(self):
+		return self._get(DUE_ORDER_KEY, ['order', 'due_date', 'list.order', 'overdue_times'])
+
+	@due_order.setter
+	def due_order(self, due_order):
+		self._set(DUE_ORDER_KEY, due_order)

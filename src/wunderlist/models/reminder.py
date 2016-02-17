@@ -5,9 +5,11 @@ from wunderlist.models.task import Task
 class Reminder(BaseModel):
 	id = PrimaryKeyField()
 	task = ForeignKeyField(Task, null=True, related_name='reminders')
-	date = DateTimeField()
+	# FIXME: Something is causing peewee to store reminder dates in a format
+	# that is not supported for reading dates by default (%z +0000 suffix)
+	date = DateTimeField(formats=('%Y-%m-%d %H:%M:%S.%f', '%Y-%m-%d %H:%M:%S.%f%z'))
 	revision = IntegerField()
-	created_at = DateTimeField()
+	created_at = DateTimeField(formats=('%Y-%m-%d %H:%M:%S.%f', '%Y-%m-%d %H:%M:%S.%f%z'))
 
 	@classmethod
 	def sync(cls):

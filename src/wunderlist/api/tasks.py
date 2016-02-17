@@ -48,7 +48,7 @@ def task_positions(list_id):
 	return positions
 
 def task(id):
-	req = api.get('tasks/' + id)
+	req = api.get('tasks/%d' % int(id))
 	info = req.json()
 
 	return info
@@ -100,13 +100,16 @@ def update_task(id, revision, title=NO_CHANGE, assignee_id=NO_CHANGE, recurrence
 		elif value != NO_CHANGE:
 			params[key] = value
 
+	if due_date:
+		params['due_date'] = due_date.strftime('%Y-%m-%d')
+
 	if remove:
 		params['remove'] = remove
 
 	if params:
 		params['revision'] = revision
 
-		req = api.patch('tasks/%d' % id, params)
+		req = api.patch('tasks/%d' % int(id), params)
 		info = req.json()
 
 		return info
@@ -114,6 +117,6 @@ def update_task(id, revision, title=NO_CHANGE, assignee_id=NO_CHANGE, recurrence
 	return None
 
 def delete_task(id, revision):
-	req = api.delete('tasks/' + id, { 'revision': revision })
+	req = api.delete('tasks/%d' % int(id), { 'revision': revision })
 	
 	return req.status_code == codes.no_content 

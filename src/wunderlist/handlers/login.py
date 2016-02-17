@@ -45,7 +45,7 @@ def filter(args):
 			icon=icons.INFO
 		)
 
-def commit(args):
+def commit(args, modifier=None):
 	command = ' '.join(args).strip()
 	manual_verification_url = re.search(r'localhost\S+', command)
 

@@ -22,7 +22,7 @@ def route(args):
 	elif args:
 		command_string = args[0]
 
-	command = command_string.split(' ')
+	command = re.split(r' +', command_string)
 
 	if command:
 		action = command[0]
@@ -36,6 +36,15 @@ def route(args):
 	elif action == ':list':
 		from wunderlist.handlers import lists
 		handler = lists
+	elif action == ':task':
+		from wunderlist.handlers import task
+		handler = task
+	elif action == ':search':
+		from wunderlist.handlers import search
+		handler = search
+	elif action == ':due':
+		from wunderlist.handlers import due
+		handler = due
 	elif action == ':logout':
 		from wunderlist.handlers import logout
 		handler = logout
@@ -45,15 +54,20 @@ def route(args):
 	# If the command starts with a space (no special keywords), the workflow
 	# creates a new task
 	elif command_string and command_string[0] == ' ':
-		from wunderlist.handlers import tasks
-		handler = tasks
+		from wunderlist.handlers import new_task
+		handler = new_task
 	else:
 		from wunderlist.handlers import welcome
 		handler = welcome
 
 	if handler:
 		if '--commit' in args:
-			handler.commit(command)
+			modifier = re.search(r'--(alt|cmd|ctrl|fn|shift)\b', ' '.join(args))
+
+			if modifier:
+				modifier = modifier.group(1)
+
+			handler.commit(command, modifier)
 		else:
 			handler.filter(command)
 
