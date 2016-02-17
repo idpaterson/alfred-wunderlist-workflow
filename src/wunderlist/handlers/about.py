@@ -5,19 +5,19 @@ def filter(args):
 	workflow().add_item(
 		'New in this version',
 		'Installed: __VERSION__   See the changes from the previous version',
-		arg=':about changelog', valid=True, icon=icons.INFO
+		arg='-about changelog', valid=True, icon=icons.INFO
 	)
 
 	workflow().add_item(
 		'Questions or concerns?',
 		'See outstanding issues and report your own bugs or feedback',
-		arg=':about issues', valid=True, icon=icons.HELP
+		arg='-about issues', valid=True, icon=icons.HELP
 	)
 
 	workflow().add_item(
 		'Update workflow',
 		'Check for updates to the workflow (automatically checked periodically)',
-		arg=':about update', valid=True, icon=icons.DOWNLOAD
+		arg='-about update', valid=True, icon=icons.DOWNLOAD
 	)
 
 	workflow().add_item(

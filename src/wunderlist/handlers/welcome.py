@@ -12,31 +12,31 @@ def filter(args):
 
 	workflow().add_item(
 		'Due today',
-		autocomplete=':due ',
+		autocomplete='-due ',
 		icon=icons.TODAY
 	)
 
 	workflow().add_item(
-		'Update tasks',
-		autocomplete=':search ',
+		'Find and update tasks',
+		autocomplete='-search ',
 		icon=icons.SEARCH
 	)
 
 	workflow().add_item(
 		'New list',
-		autocomplete=':list ',
+		autocomplete='-list ',
 		icon=icons.LIST_NEW
 	)
 
 	workflow().add_item(
 		'Preferences',
-		autocomplete=':pref ',
+		autocomplete='-pref ',
 		icon=icons.PREFERENCES
 	)
 
 	workflow().add_item(
 		'About',
 		'Learn about the workflow and get support',
-		autocomplete=':about ',
+		autocomplete='-about ',
 		icon=icons.INFO
 	)

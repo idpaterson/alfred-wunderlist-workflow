@@ -89,7 +89,7 @@ def filter(args):
 	# hashtag being typed does not exactly match the single matching hashtag
 	if len(matching_hashtags) > 0:
 		for hashtag in matching_hashtags:
-			wf.add_item(hashtag.id[1:], '', autocomplete=u':search %s %s ' % (query[:hashtag_match.start()], hashtag.id), icon=icons.HASHTAG)
+			wf.add_item(hashtag.id[1:], '', autocomplete=u'-search %s %s ' % (query[:hashtag_match.start()], hashtag.id), icon=icons.HASHTAG)
 
 	else:
 		conditions = None
@@ -99,7 +99,7 @@ def filter(args):
 				conditions = conditions | Task.title.contains(arg)
 
 		for t in Task.select().where(Task.completed_at.is_null() & Task.list.is_null(False) & conditions):
-			wf.add_item(u'%s – %s' % (t.list_title, t.title), task_subtitle(t), autocomplete=':task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed_at else icons.TASK)
+			wf.add_item(u'%s – %s' % (t.list_title, t.title), task_subtitle(t), autocomplete='-task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed_at else icons.TASK)
 
 		wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
 

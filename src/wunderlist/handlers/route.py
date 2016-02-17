@@ -8,7 +8,7 @@ def route(args):
 	handler = None
 	command = []
 	command_string = ''
-	action = ''
+	action = 'none'
 
 	# Read the stored query, which will correspond to the user's alfred query
 	# as of the very latest keystroke. This may be different than the query
@@ -20,35 +20,35 @@ def route(args):
 		os.remove(query_file)
 	# Otherwise take the command from the first command line argument
 	elif args:
-		command_string = args[0]
+		command_string = re.sub(r'^[^\w\s]+', '', args[0])
 
 	command = re.split(r' +', command_string)
 
 	if command:
-		action = command[0]
+		action = re.sub(r'^\W+', '', command[0]) or 'none'
 
-	if action == ':about':
+	if 'about'.find(action) == 0:
 		from wunderlist.handlers import about
 		handler = about
 	elif not is_authorized():
 		from wunderlist.handlers import login
 		handler = login
-	elif action == ':list':
+	elif 'list'.find(action) == 0:
 		from wunderlist.handlers import lists
 		handler = lists
-	elif action == ':task':
+	elif 'task'.find(action) == 0:
 		from wunderlist.handlers import task
 		handler = task
-	elif action == ':search':
+	elif 'search'.find(action) == 0:
 		from wunderlist.handlers import search
 		handler = search
-	elif action == ':due':
+	elif 'due'.find(action) == 0:
 		from wunderlist.handlers import due
 		handler = due
-	elif action == ':logout':
+	elif 'logout'.find(action) == 0:
 		from wunderlist.handlers import logout
 		handler = logout
-	elif action == ':pref':
+	elif 'pref'.find(action) == 0:
 		from wunderlist.handlers import preferences
 		handler = preferences
 	# If the command starts with a space (no special keywords), the workflow
@@ -75,7 +75,7 @@ def route(args):
 				update_data = workflow().cached_data('__workflow_update_status', max_age=0)
 
 				if '__VERSION__' != update_data.get('version'):
-					workflow().add_item('An update is available!', 'Update the Wunderlist workflow from version __VERSION__ to %s' % update_data.get('version'), arg=':about update', valid=True, icon=icons.DOWNLOAD)
+					workflow().add_item('An update is available!', 'Update the Wunderlist workflow from version __VERSION__ to %s' % update_data.get('version'), arg='-about update', valid=True, icon=icons.DOWNLOAD)
 
 			workflow().send_feedback()
 
