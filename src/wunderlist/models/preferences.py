@@ -111,7 +111,7 @@ class Preferences(object):
 
 	@property
 	def due_order(self):
-		return self._get(DUE_ORDER_KEY, ['due', 'list', 'times_overdue'])
+		return self._get(DUE_ORDER_KEY, ['order', 'due_date', 'list.order', 'overdue_times'])
 
 	@due_order.setter
 	def due_order(self, due_order):

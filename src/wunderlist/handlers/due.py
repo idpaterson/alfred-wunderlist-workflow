@@ -16,6 +16,24 @@ _reminder = u'⏰'
 
 _hashtag_prompt_pattern = r'#\S*$'
 
+_due_orders = (
+	{
+		'due_order': ['order', 'due_date', 'list.order', 'overdue_times'],
+		'title': 'Tasks by list with recurrence highlighted',
+		'subtitle': 'Shows recurring tasks that are multiple times overdue on top (workflow default)'
+	},
+	{
+		'due_order': ['order', 'due_date', 'list.order'],
+		'title': 'Tasks by list',
+		'subtitle': 'Sort by due date within lists (Wunderlist default)'
+	},
+	{
+		'due_order': ['order', 'due_date'],
+		'title': 'Tasks by due date',
+		'subtitle': 'All tasks sorted by due date'
+	}
+)
+
 def _task(args):
 	return TaskParser(' '.join(args))
 
@@ -74,6 +92,28 @@ def task_subtitle(task):
 def filter(args):
 	wf = workflow()
 	prefs = Preferences.current_prefs()
+	command = args[1] if len(args) > 1 else None
+
+	if command == 'sort':
+		if len(args) > 2:
+			index = int(args[2])
+			order_info = _due_orders[index - 1]
+			prefs.due_order = order_info['due_order']
+
+			from workflow.background import run_in_background
+
+			# Only runs if another sync is not already in progress
+			run_in_background('sync', ['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl:due'])
+
+			args = []
+			command = None
+		else:
+			for i, order_info in enumerate(_due_orders):
+				wf.add_item(order_info['title'], order_info['subtitle'], autocomplete=':due sort %d' % (i + 1), icon=icons.OPTION_SELECTED if order_info['due_order'] == prefs.due_order else icons.OPTION)
+
+			wf.add_item('Back', autocomplete=':due ', icon=icons.BACK)
+
+			return
 
 	conditions = None
 
@@ -92,18 +132,20 @@ def filter(args):
 	)
 
 	for key in prefs.due_order:
-		if key == 'due':
+		if key == 'due_date':
 			tasks = tasks.order_by(Task.due_date.asc())
-		elif key == 'list':
+		elif key == 'list.order':
 			tasks = tasks.join(List).order_by(List.order.asc())
-		elif key == 'task':
+		elif key == 'order':
 			tasks = tasks.order_by(Task.order.asc())
 
-	if 'times_overdue' in prefs.due_order:
+	if 'overdue_times' in prefs.due_order:
 		tasks = sorted(tasks, key=lambda t: -t.overdue_times)
 
 	for t in tasks:
 		wf.add_item(u'%s – %s' % (t.list_title, t.title), task_subtitle(t), autocomplete=':task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed_at else icons.TASK)
+
+	wf.add_item(u'Sort order', 'Change the display order of due tasks', autocomplete=':due sort', icon=icons.SORT)
 
 	wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
 
