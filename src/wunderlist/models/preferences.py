@@ -9,6 +9,7 @@ REMINDER_TODAY_OFFSET_KEY = 'reminder_today_offset'
 LAST_SYNC_KEY = 'last_sync'
 DUE_ORDER_KEY = 'due_order'
 HOIST_SKIPPED_TASKS_KEY = 'hoist_skipped_tasks'
+SHOW_COMPLETED_TASKS_KEY = 'show_completed_tasks'
 
 class Preferences(object):
 
@@ -125,3 +126,11 @@ class Preferences(object):
 	@hoist_skipped_tasks.setter
 	def hoist_skipped_tasks(self, hoist_skipped_tasks):
 		self._set(HOIST_SKIPPED_TASKS_KEY, hoist_skipped_tasks)
+
+	@property
+	def show_completed_tasks(self):
+		return self._get(SHOW_COMPLETED_TASKS_KEY, False)
+
+	@show_completed_tasks.setter
+	def show_completed_tasks(self, show_completed_tasks):
+		self._set(SHOW_COMPLETED_TASKS_KEY, show_completed_tasks)

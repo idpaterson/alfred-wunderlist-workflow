@@ -108,6 +108,12 @@ def filter(args):
 			)
 
 		workflow().add_item(
+			'Show completed tasks',
+			'Includes completed tasks in search results',
+			arg='-pref show_completed_tasks', valid=True, icon=icons.TASK_COMPLETED if prefs.show_completed_tasks else icons.TASK
+		)
+
+		workflow().add_item(
 			'Default reminder time',
 			u'⏰ %s    Reminders without a specific time will be set to this time' % format_time(prefs.reminder_time, 'short'),
 			autocomplete='-pref reminder ', icon=icons.REMINDER
@@ -153,10 +159,23 @@ def filter(args):
 def commit(args, modifier=None):
 	prefs = Preferences.current_prefs()
 	relaunch_alfred = False
+	alfred_command = '-pref'
+
+	if '--alfred' in args:
+		alfred_command = ' '.join(args[args.index('--alfred') + 1:])
 
 	if 'sync' in args:
 		from wunderlist.sync import sync
 		sync()
+	elif 'show_completed_tasks' in args:
+		relaunch_alfred = True
+
+		prefs.show_completed_tasks = not prefs.show_completed_tasks
+
+		if prefs.show_completed_tasks:
+			print 'Completed tasks are now visible in the workflow'
+		else:
+			print 'Completed tasks will not be visible in the workflow'
 	elif 'explicit_keywords' in args:
 		relaunch_alfred = True
 
@@ -201,4 +220,4 @@ def commit(args, modifier=None):
 
 	if relaunch_alfred:
 		import subprocess
-		subprocess.call(['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl-pref'])
+		subprocess.call(['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl%s' % alfred_command])

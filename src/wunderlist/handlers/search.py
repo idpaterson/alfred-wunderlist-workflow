@@ -3,6 +3,8 @@
 from wunderlist import icons
 from wunderlist.util import workflow, format_time
 from wunderlist.models.task import Task
+from wunderlist.models.list import List
+from wunderlist.models.preferences import Preferences
 from datetime import date
 import re
 
@@ -65,6 +67,7 @@ def task_subtitle(task):
 def filter(args):
 	query = ' '.join(args[1:])
 	wf = workflow()
+	prefs = Preferences.current_prefs()
 	matching_hashtags = []
 
 	if not query:
@@ -94,12 +97,26 @@ def filter(args):
 	else:
 		conditions = None
 
-		for arg in args:
+		for arg in args[1:]:
 			if len(arg) > 1:
 				conditions = conditions | Task.title.contains(arg)
 
-		for t in Task.select().where(Task.completed_at.is_null() & Task.list.is_null(False) & conditions):
-			wf.add_item(u'%s – %s' % (t.list_title, t.title), task_subtitle(t), autocomplete='-task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed_at else icons.TASK)
+		if conditions:
+			if not prefs.show_completed_tasks:
+				conditions = Task.completed_at.is_null() & conditions
+
+			tasks = Task.select().where(Task.list.is_null(False) & conditions)
+
+			# Default Wunderlist sort order
+			tasks = tasks.join(List).order_by(Task.order.asc()).order_by(List.order.asc())
+
+			for t in tasks:
+				wf.add_item(u'%s – %s' % (t.list_title, t.title), task_subtitle(t), autocomplete='-task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed_at else icons.TASK)
+
+		if prefs.show_completed_tasks:
+			wf.add_item('Hide completed tasks', arg='-pref show_completed_tasks --alfred %s' % ' '.join(args), valid=True, icon=icons.HIDDEN)
+		else:
+			wf.add_item('Show completed tasks', arg='-pref show_completed_tasks --alfred %s' % ' '.join(args), valid=True, icon=icons.VISIBLE)
 
 		wf.add_item('Let\'s discuss this screen', 'Do you need to search completed tasks, tasks by list, date, etc?', arg=' '.join(args + ['discuss']), valid=True, icon=icons.DISCUSS)
 
