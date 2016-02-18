@@ -155,7 +155,14 @@ def filter(args):
 
 	wf.add_item(u'Sort order', 'Change the display order of due tasks', autocomplete='-due sort', icon=icons.SORT)
 
+	wf.add_item('Let\'s discuss this screen', 'Do you need a different sort order or list-level task controls?', arg=' '.join(args + ['discuss']), valid=True, icon=icons.DISCUSS)
+
 	wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
 
 def commit(args, modifier=None):
-	pass
+	action = args[1] 
+
+	if action == 'discuss':
+		import webbrowser
+
+		webbrowser.open('https://github.com/idpaterson/alfred-wunderlist-workflow/issues/96')
