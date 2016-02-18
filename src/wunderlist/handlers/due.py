@@ -20,7 +20,7 @@ _due_orders = (
 	{
 		'due_order': ['order', 'due_date', 'list.order'],
 		'title': 'Most overdue within each list',
-		'subtitle': 'Sort tasks by increasing due date within lists (default)'
+		'subtitle': 'Sort tasks by increasing due date within lists (Wunderlist default)'
 	},
 	{
 		'due_order': ['order', '-due_date', 'list.order'],
@@ -34,7 +34,7 @@ _due_orders = (
 	},
 	{
 		'due_order': ['order', '-due_date'],
-		'title': 'Recently due at the top',
+		'title': 'Most recently due at the top',
 		'subtitle': 'All tasks sorted by decreasing due date'
 	}
 )
