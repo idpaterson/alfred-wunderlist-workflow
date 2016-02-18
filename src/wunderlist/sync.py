@@ -1,8 +1,10 @@
 from wunderlist.models.preferences import Preferences
 from datetime import datetime
+from wunderlist.util import workflow
 
 def sync():
 	from wunderlist.models import base, root, list, task, user, hashtag, reminder
+	from peewee import OperationalError
 
 	Preferences.current_prefs().last_sync = datetime.now()
 
@@ -15,6 +17,17 @@ def sync():
 		reminder.Reminder
 	], safe=True)
 
+	# Perform a query that requires the latest schema; if it fails due to a
+	# mismatched scheme, delete the old database and re-sync
+	try:
+		task.Task.select().where(task.Task.recurrence_count > 0).count()
+	except OperationalError:
+		base.BaseModel._meta.database.close()
+		workflow().clear_data(lambda f: 'wunderlist.db' in f)
+
+		sync()
+		return
+
 	root.Root.sync()
 
 	# If executed manually, this will pass on to the post notification action
@@ -22,7 +35,6 @@ def sync():
 
 def backgroundSync():
 	from workflow.background import run_in_background
-	from wunderlist.util import workflow
 
 	# Only runs if another sync is not already in progress
 	run_in_background('sync', [
