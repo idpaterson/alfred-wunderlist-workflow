@@ -61,6 +61,7 @@ def filter(args):
 
 def commit(args, modifier=None):
 	from wunderlist.api import tasks
+	from wunderlist.sync import backgroundSync
 	
 	task_id = args[1]
 	action = args[2]
@@ -89,3 +90,5 @@ def commit(args, modifier=None):
 		import webbrowser
 
 		webbrowser.open('https://github.com/idpaterson/alfred-wunderlist-workflow/issues/94')
+
+	backgroundSync()
