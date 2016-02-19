@@ -1,5 +1,6 @@
 *.pyc
 *.pyo
+*.orig
 
 /dist
 
@@ -9,3 +10,6 @@
 .coverage
 
 node_modules
+app/www/bower_components
+
+Wunderlist-*.alfredworkflow
