@@ -227,7 +227,10 @@ class TaskParser(object):
 				# Set due_date if a datetime was found and it is not time only
 				if datetime_info[1].hasDate:
 					self.due_date = datetime_info[0].date()
+				elif datetime_info[1].hasTime:
+					self.due_date = date.today()
 
+				if self.due_date:
 					# Pull in any words between the `due` keyword and the
 					# actual date text
 					date_pattern = re.escape(datetime_info[4])
