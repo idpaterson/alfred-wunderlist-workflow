@@ -2,7 +2,7 @@
 
 from wunderlist.models.user import User
 from wunderlist.models.preferences import Preferences
-from wunderlist.util import workflow, parsedatetime_calendar, parsedatetime_constants, format_time
+from wunderlist.util import workflow, parsedatetime_calendar, parsedatetime_constants, format_time, update_prerelease_channel
 from wunderlist import icons
 
 def _parse_time(phrase):
@@ -132,6 +132,12 @@ def filter(args):
 		)
 
 		workflow().add_item(
+			'Check for experimental updates to this workflow',
+			'The workflow automatically checks for updates; enable this to include pre-releases',
+			arg=':pref prerelease_channel', valid=True, icon=icons.TASK_COMPLETED if prefs.prerelease_channel else icons.TASK
+		)
+
+		workflow().add_item(
 			'Force sync',
 			'The workflow syncs automatically, but feel free to be forcible.',
 			arg=':pref sync', valid=True, icon=icons.SYNC
@@ -198,7 +204,19 @@ def commit(args):
 		prefs.icon_theme = 'light' if icons.icon_theme() == 'dark' else 'dark'
 
 		print 'The workflow is now using the %s icon theme' % (prefs.icon_theme)
+	elif 'prerelease_channel' in args:
+		relaunch_alfred = True
 
+		prefs.prerelease_channel = not prefs.prerelease_channel
+
+		# Update the workflow settings and reverify the update data
+		update_prerelease_channel()
+		workflow().check_update(True)
+
+		if prefs.prerelease_channel:
+			print 'The workflow will prompt you to update to experimental pre-releases'
+		else:
+			print 'The workflow will only prompt you to update to final releases'
 	if relaunch_alfred:
 		import subprocess
 		subprocess.call(['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl:pref'])

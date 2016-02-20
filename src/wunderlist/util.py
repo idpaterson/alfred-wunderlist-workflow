@@ -1,24 +1,42 @@
 from workflow import Workflow
 
 _workflow = None
+_update_settings = None
 
 def workflow():
-	global _workflow
+	global _workflow, _update_settings
 
 	if _workflow is None:
+		version = '__VERSION__'
+		_update_settings = {
+			'github_slug': 'idpaterson/alfred-wunderlist-workflow',
+			'version': version,
+			# Check for updates daily
+			# TODO: check less frequently as the workflow becomes more
+			# stable
+			'frequency': 1,
+			# Download pre-release updates if enabled in preferences or if
+			# a prerelease is currently installed
+			'prerelease': '-' in version
+		}
+
 		_workflow = Workflow(
 			capture_args=False,
-			update_settings={
-				'github_slug': 'idpaterson/alfred-wunderlist-workflow',
-				'version': '__VERSION__',
-				# Check for updates daily
-				# TODO: check less frequently as the workflow becomes more
-				# stable
-				'frequency': 1
-			}
+			update_settings=_update_settings
 		)
 
+		# Check preferences after initializing the workflow since the workflow
+		# is required for checking preferences
+		update_prerelease_channel()
+
 	return _workflow
+
+def update_prerelease_channel():
+	from wunderlist.models.preferences import Preferences
+
+	prefs = Preferences.current_prefs()
+
+	_update_settings['prerelease'] = prefs.prerelease_channel
 
 def parsedatetime_calendar():
 	from parsedatetime import Calendar, Constants

@@ -6,6 +6,7 @@ ICON_THEME_KEY = 'icon_theme'
 EXPLICIT_KEYWORDS_KEY = 'explicit_keywords'
 AUTOMATIC_REMINDERS_KEY = 'automatic_reminders'
 REMINDER_TODAY_OFFSET_KEY = 'reminder_today_offset'
+PRERELEASE_CHANNEL_KEY = 'prerelease_channel'
 
 class Preferences(object):
 
@@ -98,3 +99,12 @@ class Preferences(object):
 	@automatic_reminders.setter
 	def automatic_reminders(self, automatic_reminders):
 		self._set(AUTOMATIC_REMINDERS_KEY, automatic_reminders)
+
+	@property
+	def prerelease_channel(self):
+		return self._get(PRERELEASE_CHANNEL_KEY, False)
+
+	@prerelease_channel.setter
+	def prerelease_channel(self, prerelease_channel):
+		self._set(PRERELEASE_CHANNEL_KEY, prerelease_channel)
+
