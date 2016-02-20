@@ -170,4 +170,4 @@ def commit(args, modifier=None):
 	# Output must be a UTF-8 encoded string
 	print ('The task was added to ' + task.list_title).encode('utf-8')
 
-	backgroundSync()
+	backgroundSync(True)

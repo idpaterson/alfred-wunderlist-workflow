@@ -91,4 +91,4 @@ def commit(args, modifier=None):
 
 		webbrowser.open('https://github.com/idpaterson/alfred-wunderlist-workflow/issues/94')
 
-	backgroundSync()
+	backgroundSync(True)

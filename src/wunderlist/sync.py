@@ -33,11 +33,15 @@ def sync():
 	# If executed manually, this will pass on to the post notification action
 	print 'Sync completed successfully'
 
-def backgroundSync():
+def backgroundSync(force=False):
 	from workflow.background import run_in_background
+	task_id = 'sync'
+
+	if force:
+		task_id = 'forced_sync'
 
 	# Only runs if another sync is not already in progress
-	run_in_background('sync', [
+	run_in_background(task_id, [
 		'/usr/bin/env',
 		'python',
 		workflow().workflowfile('alfred-wunderlist-workflow.py'),
