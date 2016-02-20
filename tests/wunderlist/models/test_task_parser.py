@@ -63,7 +63,7 @@ single_recurrence_types = {
 	'daily': 'day'
 }
 
-@pytest.fixture(autouse=True)
+@pytest.fixture
 def mock_lists(mocker):
 	"""
 	Causes stored_data to return the lists specified for this test suite
@@ -283,6 +283,7 @@ class TestReminderDateCombine():
 # Lists
 #
 
+@pytest.mark.usefixtures("mock_lists")
 class TestLists():
 
 	def test_list_name_exact_match(self):
@@ -541,19 +542,25 @@ class TestDueDate():
 
 		assert_task(task, phrase=phrase, title=title, due_date=due_date)
 
-	def test_due_date_ignores_time_only(self):
-		title = 'a sample task due 4:00'
-		phrase = title
+	def test_time_only_due_today_with_reminder(self):
+		title = 'a sample task'
+		due_phrase = 'due 12:00'
+		due_date = _today
+		reminder_date = datetime.combine(_today, _noon)
+		phrase = '%s %s' % (title, due_phrase)
 		task = TaskParser(phrase)
 
-		assert_task(task, phrase=phrase, title=title)
+		assert_task(task, phrase=phrase, title=title, due_date=due_date, reminder_date=reminder_date)
 
-	def test_due_date_ignores_time_only_no_keyword(self):
-		title = 'a sample task 4:00'
-		phrase = title
+	def test_time_only_due_today_with_reminder_no_keyword(self):
+		title = 'a sample task'
+		due_phrase = 'at noon'
+		due_date = _today
+		reminder_date = datetime.combine(_today, _noon)
+		phrase = '%s %s' % (title, due_phrase)
 		task = TaskParser(phrase)
 
-		assert_task(task, phrase=phrase, title=title)
+		assert_task(task, phrase=phrase, title=title, due_date=due_date, reminder_date=reminder_date)
 
 	def test_due_date_with_time_sets_reminder(self):
 		title = 'a sample task'
@@ -791,8 +798,17 @@ class TestReminders():
 		phrase = '%s %s' % (title, reminder_phrase)
 		task = TaskParser(phrase)
 
-		assert_task(task, phrase=phrase, title=title, reminder_date=reminder_date)
+	def test_reminder_with_time_implicitly_due_today(self):
+		title = 'a sample task'
+		reminder_phrase = 'at noon'
+		reminder_date = datetime.combine(_today, _noon)
+		due_date = _today
+		phrase = '%s %s' % (title, reminder_phrase)
+		task = TaskParser(phrase)
 
+		assert_task(task, phrase=phrase, title=title, due_date=due_date, reminder_date=reminder_date)
+
+	@pytest.mark.usefixtures("mock_lists")
 	def test_reminder_with_list(self):
 		target_list = _single_word_list
 		title = 'a sample task'
@@ -879,7 +895,7 @@ class TestPhrases():
 		assert phrase == new_phrase
 
 	def test_complex_unchanged_phrase(self):
-		phrase = 'fin: Oil change next Tuesday repeat every 3mo *'
+		phrase = 'fin: Oil change next Tuesday at noon repeat every 3mo *'
 		task = TaskParser(phrase)
 		new_phrase = task.phrase_with()
 
@@ -890,8 +906,8 @@ class TestPhrases():
 		This is not necessarily a desired feature compared to returning the
 		same phrase the user entered, but it works for now.
 		"""
-		phrase = 'finances: every 3mo Oil change next Tuesday *'
-		target_phrase = 'finances: Oil change next Tuesday every 3mo *'
+		phrase = 'finances: r noon every 3mo Oil change next Tuesday *'
+		target_phrase = 'finances: Oil change next Tuesday every 3mo r noon *'
 		task = TaskParser(phrase)
 		new_phrase = task.phrase_with()
 
@@ -920,6 +936,18 @@ class TestPhrases():
 		new_phrase = self.task.phrase_with(recurrence=new_recurrence)
 
 		assert new_phrase == '%s %s' % (self.title, new_recurrence)
+
+	def test_change_reminder(self):
+		new_reminder = 'r tomorrow at noon'
+		new_phrase = self.task.phrase_with(reminder_date=new_reminder)
+
+		assert new_phrase == '%s %s' % (self.title, new_reminder)
+
+	def test_add_reminder_prompt(self):
+		new_reminder = 'remind me '
+		new_phrase = self.task.phrase_with(reminder_date=True)
+
+		assert new_phrase == '%s %s' % (self.title, new_reminder)
 
 	def test_change_star(self):
 		new_phrase = self.task.phrase_with(starred=True)
