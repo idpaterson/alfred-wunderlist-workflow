@@ -1,7 +1,10 @@
-from peewee import *
+# encoding: utf-8
+
+from peewee import BooleanField, CharField, DateField, DateTimeField, ForeignKeyField, IntegerField, PrimaryKeyField, TextField
 from wunderlist.models.base import BaseModel
 from wunderlist.models.list import List
 from wunderlist.models.user import User
+from datetime import date
 
 _days_by_recurrence_type = {
 	'day': 1,
@@ -9,6 +12,12 @@ _days_by_recurrence_type = {
 	'month': 30.43,
 	'year': 365
 }
+
+_star = u'★'
+_overdue_1x = u'⚠️'
+_overdue_2x = u'❗️'
+_recurrence = u'↻'
+_reminder = u'⏰'
 
 class Task(BaseModel):
 	id = PrimaryKeyField()
@@ -62,8 +71,6 @@ class Task(BaseModel):
 
 	@classmethod
 	def due_today(cls):
-		from datetime import date
-
 		return (cls
 			.select(cls, List)
 			.join(List)
@@ -74,8 +81,6 @@ class Task(BaseModel):
 
 	@classmethod
 	def search(cls, query):
-		from datetime import date
-
 		return (cls
 			.select(cls, List)
 			.join(List)
@@ -95,8 +100,6 @@ class Task(BaseModel):
 		if self.recurrence_type is None:
 			return 0
 
-		from datetime import date
-
 		recurrence_days = _days_by_recurrence_type[self.recurrence_type]
 		overdue_time = date.today() - self.due_date
 		return int(overdue_time.days / recurrence_days)
@@ -106,6 +109,63 @@ class Task(BaseModel):
 		if self.list:
 			return self.list.title
 		return None
+
+	def subtitle(self):
+		from wunderlist.util import format_time
+
+		# For related property Task.reminders
+		import wunderlist.models.reminder
+
+		subtitle = []
+		today = date.today()
+
+		if self.starred:
+			subtitle.append(_star)
+
+		if self.due_date:
+			if self.due_date == today:
+				date_format = 'Today'
+			elif self.due_date.year == today.year:
+				date_format = '%a, %b %d'
+			else:
+				date_format = '%b %d, %Y'
+
+			subtitle.append('Due %s' % (self.due_date.strftime(date_format)))
+
+		if self.recurrence_type:
+			if self.recurrence_count > 1:
+				subtitle.append('%s Every %d %ss' % (_recurrence, self.recurrence_count, self.recurrence_type))
+			# Cannot simply add -ly suffix
+			elif self.recurrence_type == 'day':
+				subtitle.append('%s Daily' % (_recurrence))
+			else:
+				subtitle.append('%s %sly' % (_recurrence, self.recurrence_type.title()))
+
+		overdue_times = self.overdue_times
+		if overdue_times > 1:
+			subtitle.insert(0, u'%s %dX OVERDUE!' % (_overdue_2x, overdue_times))
+		elif overdue_times == 1:
+			subtitle.insert(0, u'%s OVERDUE!' % (_overdue_1x))
+
+		if self.reminder_date:
+			if self.reminder_date.date() == today:
+				date_format = 'Today'
+			elif self.reminder_date.date() == self.due_date:
+				date_format = 'On due date'
+			elif self.reminder_date.year == today.year:
+				date_format = '%a, %b %d'
+			else:
+				date_format = '%b %d, %Y'
+
+			subtitle.append('%s %s at %s' % (
+				_reminder,
+				self.reminder_date.strftime(date_format),
+				format_time(self.reminder_date.time(), 'short'))
+			)
+
+		subtitle.append(self.title)
+
+		return '   '.join(subtitle)
 
 	class Meta:
 		order_by = ('order', 'id')
