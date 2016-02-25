@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 from peewee import BooleanField, CharField, DateField, DateTimeField, ForeignKeyField, IntegerField, PrimaryKeyField, TextField
+from wunderlist.models import DateTimeUTCField
 from wunderlist.models.base import BaseModel
 from wunderlist.models.list import List
 from wunderlist.models.user import User
@@ -24,7 +25,7 @@ class Task(BaseModel):
 	list = ForeignKeyField(List, null=True, related_name='tasks')
 	task = ForeignKeyField('self', null=True, related_name='subtasks')
 	title = TextField(index=True)
-	completed_at = DateTimeField(null=True)
+	completed_at = DateTimeUTCField(null=True)
 	completed_by = ForeignKeyField(User, related_name='completed_tasks', null=True)
 	starred = BooleanField(index=True, null=True)
 	due_date = DateField(index=True, null=True)
@@ -33,7 +34,7 @@ class Task(BaseModel):
 	assignee = ForeignKeyField(User, related_name='assigned_tasks', null=True)
 	order = IntegerField(index=True, null=True)
 	revision = IntegerField()
-	created_at = DateTimeField()
+	created_at = DateTimeUTCField()
 	created_by = ForeignKeyField(User, related_name='created_tasks', null=True)
 
 	@classmethod
@@ -71,28 +72,31 @@ class Task(BaseModel):
 
 	@classmethod
 	def due_today(cls):
-		return (cls
-			.select(cls, List)
+		return (
+			cls.select(cls, List)
 			.join(List)
-			.where(cls.completed_at == None)
+			.where(cls.completed_at >> None)
 			.where(cls.due_date <= date.today())
 			.order_by(List.order.asc(), cls.due_date.asc())
 		)
 
 	@classmethod
 	def search(cls, query):
-		return (cls
-			.select(cls, List)
+		return (
+			cls.select(cls, List)
 			.join(List)
-			.where(cls.completed_at == None)
+			.where(cls.completed_at >> None)
 			.where(cls.title.contains(query))
 			.order_by(List.order.asc(), cls.due_date.asc())
 		)
 
 	@property
-	def reminder_date(self):
+	def reminder_date_local(self):
+		# For related property Task.reminders
+		import wunderlist.models.reminder
+
 		for reminder in self.reminders:
-			return reminder.date
+			return reminder.date_local
 		return None
 
 	@property
@@ -112,9 +116,6 @@ class Task(BaseModel):
 
 	def subtitle(self):
 		from wunderlist.util import format_time
-
-		# For related property Task.reminders
-		import wunderlist.models.reminder
 
 		subtitle = []
 		today = date.today()
@@ -147,20 +148,21 @@ class Task(BaseModel):
 		elif overdue_times == 1:
 			subtitle.insert(0, u'%s OVERDUE!' % (_overdue_1x))
 
-		if self.reminder_date:
-			if self.reminder_date.date() == today:
+		reminder_date = self.reminder_date_local
+		if reminder_date:
+			if reminder_date.date() == today:
 				date_format = 'Today'
-			elif self.reminder_date.date() == self.due_date:
+			elif reminder_date.date() == self.due_date:
 				date_format = 'On due date'
-			elif self.reminder_date.year == today.year:
+			elif reminder_date.year == today.year:
 				date_format = '%a, %b %d'
 			else:
 				date_format = '%b %d, %Y'
 
 			subtitle.append('%s %s at %s' % (
 				_reminder,
-				self.reminder_date.strftime(date_format),
-				format_time(self.reminder_date.time(), 'short'))
+				reminder_date.strftime(date_format),
+				format_time(reminder_date, 'short'))
 			)
 
 		subtitle.append(self.title)

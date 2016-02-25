@@ -1,4 +1,6 @@
 from workflow import Workflow
+import calendar
+from datetime import datetime
 
 _workflow = None
 _update_settings = None
@@ -73,3 +75,9 @@ def format_time(time, format):
 		.replace('v', '%z'))
 
 	return time.strftime(expr).lstrip('0')
+
+def utc_to_local(utc_dt):
+	# get integer timestamp to avoid precision lost
+	timestamp = calendar.timegm(utc_dt.timetuple())
+	local_dt = datetime.fromtimestamp(timestamp)
+	return local_dt.replace(microsecond=utc_dt.microsecond)

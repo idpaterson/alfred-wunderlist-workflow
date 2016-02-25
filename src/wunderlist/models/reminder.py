@@ -1,5 +1,6 @@
 from peewee import PrimaryKeyField, ForeignKeyField, IntegerField, DateTimeField
 from base import BaseModel
+from wunderlist.models import DateTimeUTCField
 from wunderlist.models.task import Task
 
 class Reminder(BaseModel):
@@ -7,9 +8,9 @@ class Reminder(BaseModel):
 	task = ForeignKeyField(Task, null=True, related_name='reminders')
 	# FIXME: Something is causing peewee to store reminder dates in a format
 	# that is not supported for reading dates by default (%z +0000 suffix)
-	date = DateTimeField(formats=('%Y-%m-%d %H:%M:%S.%f', '%Y-%m-%d %H:%M:%S.%f%z'))
+	date = DateTimeUTCField()
 	revision = IntegerField()
-	created_at = DateTimeField(formats=('%Y-%m-%d %H:%M:%S.%f', '%Y-%m-%d %H:%M:%S.%f%z'))
+	created_at = DateTimeUTCField()
 
 	@classmethod
 	def sync(cls):

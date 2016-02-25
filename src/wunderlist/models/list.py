@@ -1,5 +1,6 @@
 from peewee import PrimaryKeyField, CharField, BooleanField, IntegerField, DateTimeField, TextField
 from base import BaseModel
+from wunderlist.models import DateTimeUTCField
 from wunderlist.util import workflow
 
 class List(BaseModel):
@@ -8,10 +9,10 @@ class List(BaseModel):
 	list_type = CharField()
 	public = BooleanField()
 	completed_count = IntegerField(default=0)
-	uncompleted_count  = IntegerField(default=0)
+	uncompleted_count = IntegerField(default=0)
 	order = IntegerField(index=True)
-	revision  = IntegerField()
-	created_at = DateTimeField()
+	revision = IntegerField()
+	created_at = DateTimeUTCField()
 
 	@classmethod
 	def sync(cls):
@@ -34,7 +35,9 @@ class List(BaseModel):
 
 	@classmethod
 	def _populate_api_extras(cls, info):
-		lists.update_list_with_tasks_count(info)
+		from wunderlist.api.lists import update_list_with_tasks_count
+
+		update_list_with_tasks_count(info)
 
 		return info
 

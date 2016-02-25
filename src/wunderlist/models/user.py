@@ -1,11 +1,12 @@
 from peewee import *
 from base import BaseModel
+from wunderlist.models import DateTimeUTCField
 
 class User(BaseModel):
 	id = PrimaryKeyField()
 	name = TextField()
 	revision = IntegerField()
-	created_at = DateTimeField()
+	created_at = DateTimeUTCField()
 
 	@classmethod
 	def sync(cls):
