@@ -2,7 +2,7 @@
 
 from wunderlist.models.user import User
 from wunderlist.models.preferences import Preferences
-from wunderlist.util import workflow, parsedatetime_calendar, parsedatetime_constants, format_time, update_prerelease_channel
+from wunderlist.util import workflow, parsedatetime_calendar, parsedatetime_constants, format_time
 from wunderlist import icons
 
 def _parse_time(phrase):
@@ -229,7 +229,6 @@ def commit(args, modifier=None):
 		prefs.prerelease_channel = not prefs.prerelease_channel
 
 		# Update the workflow settings and reverify the update data
-		update_prerelease_channel()
 		workflow().check_update(True)
 
 		if prefs.prerelease_channel:
