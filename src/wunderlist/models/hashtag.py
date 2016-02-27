@@ -27,14 +27,5 @@ class Hashtag(BaseModel):
 			cls._perform_updates(instances, hashtag_data)
 
 	@classmethod
-	def sync_hashtags_in_task(cls, task):
-		hashtags = cls.hashtags_in_task(task)
-
-		if len(hashtags) > 0:
-			hashtag_data = [{'id': re.sub(_hashtag_trim_pattern, r'', tag, flags=re.UNICODE)} for tag in hashtags]
-
-			cls.insert_many(hashtag_data).upsert(True).execute()
-
-	@classmethod
 	def hashtags_in_task(cls, task):
 		return set(re.findall(_hashtag_pattern, ' ' + task.title))

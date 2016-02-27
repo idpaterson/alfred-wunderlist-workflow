@@ -64,8 +64,8 @@ class BaseModel(Model):
 					all_instances.append(instance)
 
 					# If the revision is different, sync any children, then update the db
-					if instance.revision != update_item['revision']:
-						executor.submit(instance._sync_children)
+					if 'revision' in update_item and instance.revision != update_item['revision']:
+						instance._sync_children()
 						cls.update(**update_item).where(cls.id == instance.id).execute()
 
 					del update_items[instance.id]

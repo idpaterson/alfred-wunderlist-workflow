@@ -40,7 +40,6 @@ class Task(BaseModel):
 	@classmethod
 	def sync_tasks_in_list(cls, list):
 		from wunderlist.api import tasks
-		from hashtag import Hashtag
 		from concurrent import futures
 		instances = []
 		tasks_data = []
@@ -64,9 +63,7 @@ class Task(BaseModel):
 		except:
 			pass
 
-		all_instances = cls._perform_updates(instances, tasks_data)
-
-		Hashtag.sync_hashtags_in_tasks(all_instances)
+		cls._perform_updates(instances, tasks_data)
 
 		return None
 
