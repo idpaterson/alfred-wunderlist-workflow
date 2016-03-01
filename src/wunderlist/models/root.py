@@ -24,17 +24,17 @@ class Root(BaseModel):
 
 	def _sync_children(self):
 		from concurrent import futures
-		from hashtag import Hashtag
 
 		with futures.ThreadPoolExecutor(max_workers=2) as executor:
-			jobs = (
-				executor.submit(_sync_user),
-				executor.submit(_sync_lists),
-				executor.submit(_sync_preferences),
-				executor.submit(_sync_reminders)
-			)
+			executor.submit(_sync_user),
+			executor.submit(_sync_lists),
+			executor.submit(_sync_preferences)
 
-		Hashtag.sync()
+		# Wait until all tasks are synced before syncing reminders and
+		# hashtags since these are dependent on tasks.
+		with futures.ThreadPoolExecutor(max_workers=2) as executor:
+			executor.submit(_sync_reminders),
+			executor.submit(_sync_hashtags)
 
 def _sync_user():
 	User.sync()
@@ -53,3 +53,8 @@ def _sync_reminders():
 	from reminder import Reminder
 
 	Reminder.sync()
+
+def _sync_hashtags():
+	from hashtag import Hashtag
+
+	Hashtag.sync()
