@@ -64,6 +64,14 @@ module.exports = {
 					'requests/**/*.{py,pem}'
 				]
 			},
+			{
+				expand: true,
+				cwd: '<%= paths.lib %>/six',
+				dest: '<%= paths.dist_lib %>',
+				src: [
+					'six.py'
+				]
+			},
 			// TODO: remove bundled HTML files once ghpages documentation and
 			// landing page are available
 			{
