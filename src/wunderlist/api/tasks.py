@@ -23,7 +23,7 @@ def tasks(list_id, order='display', completed=False, subtasks=False, positions=N
 		tasks.sort(key=position)
 
 	for (index, task) in enumerate(tasks):
-		task['order'] = index
+		task[u'order'] = index
 
 	return tasks
 

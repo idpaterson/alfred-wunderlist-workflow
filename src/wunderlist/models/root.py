@@ -1,6 +1,7 @@
 from peewee import *
 from base import BaseModel
 from user import User
+from list import List
 
 class Root(BaseModel):
 	id = PrimaryKeyField()
@@ -30,6 +31,8 @@ class Root(BaseModel):
 			executor.submit(_sync_lists),
 			executor.submit(_sync_preferences)
 
+		List.cache_synced_lists()
+
 		# Wait until all tasks are synced before syncing reminders and
 		# hashtags since these are dependent on tasks.
 		with futures.ThreadPoolExecutor(max_workers=2) as executor:
@@ -40,8 +43,6 @@ def _sync_user():
 	User.sync()
 
 def _sync_lists():
-	from list import List
-
 	List.sync()
 
 def _sync_preferences():

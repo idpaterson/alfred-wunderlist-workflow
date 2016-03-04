@@ -29,8 +29,8 @@ def lists(order='display', task_counts=False):
 	for (index, list) in enumerate(lists):
 		if list['list_type'] in SMART_LISTS:
 			# List is not capitalized
-			list['title'] = list['title'].title()
-		list['order'] = index
+			list[u'title'] = list['title'].title()
+		list[u'order'] = index
 
 	return lists
 
