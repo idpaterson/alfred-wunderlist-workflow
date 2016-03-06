@@ -41,6 +41,14 @@ class Preferences(object):
 	def __init__(self, data):
 		self._data = data or {}
 
+		# Clean up old prerelease preference
+		if 'prerelease_channel' in self._data:
+			# Migrate to the alfred-workflow preference
+			self.prerelease_channel = self._data['prerelease_channel']
+			del self._data['prerelease_channel']
+
+			workflow().store_data('prefs', self._data)
+
 	def _set(self, key, value):
 		self._data[key] = value
 
