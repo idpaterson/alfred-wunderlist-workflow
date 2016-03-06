@@ -6,7 +6,7 @@ ICON_THEME_KEY = 'icon_theme'
 EXPLICIT_KEYWORDS_KEY = 'explicit_keywords'
 AUTOMATIC_REMINDERS_KEY = 'automatic_reminders'
 REMINDER_TODAY_OFFSET_KEY = 'reminder_today_offset'
-PRERELEASE_CHANNEL_KEY = 'prerelease_channel'
+PRERELEASES_KEY = '__workflow_prereleases'
 
 class Preferences(object):
 
@@ -40,6 +40,14 @@ class Preferences(object):
 
 	def __init__(self, data):
 		self._data = data or {}
+
+		# Clean up old prerelease preference
+		if 'prerelease_channel' in self._data:
+			# Migrate to the alfred-workflow preference
+			self.prerelease_channel = self._data['prerelease_channel']
+			del self._data['prerelease_channel']
+
+			workflow().store_data('prefs', self._data)
 
 	def _set(self, key, value):
 		self._data[key] = value
@@ -102,9 +110,9 @@ class Preferences(object):
 
 	@property
 	def prerelease_channel(self):
-		return self._get(PRERELEASE_CHANNEL_KEY, False)
+		return workflow().settings.get(PRERELEASES_KEY, False)
 
 	@prerelease_channel.setter
 	def prerelease_channel(self, prerelease_channel):
-		self._set(PRERELEASE_CHANNEL_KEY, prerelease_channel)
+		workflow().settings[PRERELEASES_KEY] = prerelease_channel
 
