@@ -1,5 +1,6 @@
 import re
-from peewee import *
+
+from peewee import CharField
 from wunderlist.models.base import BaseModel
 
 _hashtag_pattern = r'(?<=\s)#\S+'
@@ -12,7 +13,7 @@ class Hashtag(BaseModel):
 
     @classmethod
     def sync(cls):
-        from task import Task
+        from wunderlist.models.task import Task
 
         tasks_with_hashtags = Task.select().where(Task.title.contains('#'))
         hashtags = set()

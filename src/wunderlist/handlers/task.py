@@ -1,14 +1,11 @@
 # encoding: utf-8
 
-from wunderlist import icons
-from wunderlist.util import workflow, format_time
-from wunderlist.models.task_parser import TaskParser
-from wunderlist.models.preferences import Preferences
-from wunderlist.models.task import Task
-from wunderlist.models.reminder import Reminder
-from workflow.background import is_running
 from datetime import date
-from random import random
+
+from wunderlist import icons
+from wunderlist.models.task import Task
+from wunderlist.models.task_parser import TaskParser
+from wunderlist.util import workflow
 
 _star = u'★'
 _recurrence = u'↻'

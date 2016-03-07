@@ -1,6 +1,7 @@
-from peewee import DateTimeField
 from datetime import datetime
+
 from dateutil.tz import tzutc
+from peewee import DateTimeField
 from wunderlist.util import utc_to_local
 
 class DateTimeUTCField(DateTimeField):

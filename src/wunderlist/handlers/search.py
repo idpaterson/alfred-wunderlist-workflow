@@ -1,11 +1,12 @@
 # encoding: utf-8
 
+import re
+
 from wunderlist import icons
-from wunderlist.util import workflow
-from wunderlist.models.task import Task
 from wunderlist.models.list import List
 from wunderlist.models.preferences import Preferences
-import re
+from wunderlist.models.task import Task
+from wunderlist.util import workflow
 
 _hashtag_prompt_pattern = r'#\S*$'
 

@@ -1,6 +1,6 @@
 from peewee import PrimaryKeyField, ForeignKeyField, IntegerField
-from base import BaseModel
 from wunderlist.models import DateTimeUTCField
+from wunderlist.models.base import BaseModel
 from wunderlist.models.task import Task
 
 class Reminder(BaseModel):

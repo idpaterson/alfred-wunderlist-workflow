@@ -1,7 +1,8 @@
 import json
-import requests
-from wunderlist.auth import oauth_token
+
 from wunderlist import config
+from wunderlist.auth import oauth_token
+import requests
 
 _oauth_token = None
 

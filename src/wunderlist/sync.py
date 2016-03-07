@@ -1,5 +1,6 @@
-from wunderlist.models.preferences import Preferences
 from datetime import datetime
+
+from wunderlist.models.preferences import Preferences
 from wunderlist.util import workflow
 
 def sync():

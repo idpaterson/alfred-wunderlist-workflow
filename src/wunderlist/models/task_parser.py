@@ -1,9 +1,9 @@
+from datetime import date, datetime, timedelta
 import re
+
 from workflow import MATCH_ALL, MATCH_ALLCHARS
-from wunderlist.util import workflow, parsedatetime_calendar
 from wunderlist.models.preferences import Preferences
-from datetime import date, datetime, time, timedelta
-import locale
+from wunderlist.util import workflow, parsedatetime_calendar
 
 # Up to 8 words (sheesh!) followed by a colon
 _list_title_pattern = r'^((?:[^\s:]+ *){0,8}):'

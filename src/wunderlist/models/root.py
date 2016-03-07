@@ -1,7 +1,7 @@
-from peewee import *
-from base import BaseModel
-from user import User
-from list import List
+from peewee import ForeignKeyField, IntegerField, PrimaryKeyField
+from wunderlist.models.base import BaseModel
+from wunderlist.models.list import List
+from wunderlist.models.user import User
 
 class Root(BaseModel):
     id = PrimaryKeyField()
@@ -46,16 +46,16 @@ def _sync_lists():
     List.sync()
 
 def _sync_preferences():
-    from preferences import Preferences
+    from wunderlist.models.preferences import Preferences
 
     Preferences.sync()
 
 def _sync_reminders():
-    from reminder import Reminder
+    from wunderlist.models.reminder import Reminder
 
     Reminder.sync()
 
 def _sync_hashtags():
-    from hashtag import Hashtag
+    from wunderlist.models.hashtag import Hashtag
 
     Hashtag.sync()

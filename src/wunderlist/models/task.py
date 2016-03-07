@@ -1,11 +1,12 @@
 # encoding: utf-8
 
-from peewee import BooleanField, CharField, DateField, DateTimeField, ForeignKeyField, IntegerField, PrimaryKeyField, TextField
+from datetime import date
+
+from peewee import BooleanField, CharField, DateField, ForeignKeyField, IntegerField, PrimaryKeyField, TextField
 from wunderlist.models import DateTimeUTCField
 from wunderlist.models.base import BaseModel
 from wunderlist.models.list import List
 from wunderlist.models.user import User
-from datetime import date
 
 _days_by_recurrence_type = {
     'day': 1,

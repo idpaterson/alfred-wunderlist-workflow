@@ -1,6 +1,6 @@
 from peewee import PrimaryKeyField, CharField, BooleanField, IntegerField, TextField
-from base import BaseModel
 from wunderlist.models import DateTimeUTCField
+from wunderlist.models.base import BaseModel
 from wunderlist.util import workflow
 
 _lists_sync_data = None
@@ -51,7 +51,7 @@ class List(BaseModel):
         return info
 
     def _sync_children(self):
-        from task import Task
+        from wunderlist.models.task import Task
 
         Task.sync_tasks_in_list(self)
 

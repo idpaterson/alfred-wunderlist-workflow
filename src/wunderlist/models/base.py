@@ -1,7 +1,8 @@
+from copy import copy
+
+from dateutil import parser
 from peewee import Model, SqliteDatabase, ForeignKeyField, DateField, DateTimeField, TimeField
 from wunderlist.util import workflow
-from copy import copy
-from dateutil import parser
 
 db = SqliteDatabase(workflow().datadir + '/wunderlist.db', threadlocals=True)
 

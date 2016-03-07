@@ -1,8 +1,9 @@
+import os
+import re
+
+from wunderlist import icons, sync
 from wunderlist.auth import is_authorized
 from wunderlist.util import workflow
-from wunderlist import icons, sync
-import re
-import os
 
 def route(args):
     handler = None

@@ -1,6 +1,5 @@
 from wunderlist import icons
 from wunderlist.util import workflow
-from wunderlist.sync import backgroundSync
 
 def filter(args):
     workflow().add_item(

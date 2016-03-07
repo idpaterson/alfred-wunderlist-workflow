@@ -1,6 +1,6 @@
-from peewee import *
-from base import BaseModel
+from peewee import IntegerField, PrimaryKeyField, TextField
 from wunderlist.models import DateTimeUTCField
+from wunderlist.models.base import BaseModel
 
 class User(BaseModel):
     id = PrimaryKeyField()

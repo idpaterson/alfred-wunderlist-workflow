@@ -1,5 +1,5 @@
-from wunderlist.util import workflow
 from wunderlist.models.preferences import Preferences
+from wunderlist.util import workflow
 
 _icon_theme = None
 

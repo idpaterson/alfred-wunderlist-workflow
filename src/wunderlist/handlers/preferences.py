@@ -1,9 +1,9 @@
 # encoding: utf-8
 
-from wunderlist.models.user import User
-from wunderlist.models.preferences import Preferences
-from wunderlist.util import workflow, parsedatetime_calendar, parsedatetime_constants, format_time
 from wunderlist import icons
+from wunderlist.models.preferences import Preferences
+from wunderlist.models.user import User
+from wunderlist.util import workflow, parsedatetime_calendar, format_time
 
 def _parse_time(phrase):
     from datetime import date, time

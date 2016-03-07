@@ -1,8 +1,9 @@
 # encoding: utf-8
 
+import re
+
 from wunderlist import auth, icons
 from wunderlist.util import workflow
-import re
 
 def filter(args):
     getting_help = ':help' in args

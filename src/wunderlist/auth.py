@@ -1,5 +1,5 @@
-from wunderlist.util import workflow
 from wunderlist import config
+from wunderlist.util import workflow
 
 def authorize():
     from multiprocessing import Process
