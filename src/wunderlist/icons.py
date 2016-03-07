@@ -4,24 +4,24 @@ from wunderlist.models.preferences import Preferences
 _icon_theme = None
 
 def alfred_is_dark():
-	# Formatted rgba(255,255,255,0.90)
-	background_rgba = workflow().alfred_env['theme_background']
-	if background_rgba:
-		rgb = [int(x) for x in background_rgba[5:-6].split(',')]
-		return (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255 < 0.5
-	return False
+    # Formatted rgba(255,255,255,0.90)
+    background_rgba = workflow().alfred_env['theme_background']
+    if background_rgba:
+        rgb = [int(x) for x in background_rgba[5:-6].split(',')]
+        return (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255 < 0.5
+    return False
 
 def icon_theme():
-	global _icon_theme
-	if not _icon_theme:
-		prefs = Preferences.current_prefs()
+    global _icon_theme
+    if not _icon_theme:
+        prefs = Preferences.current_prefs()
 
-		if prefs.icon_theme:
-			_icon_theme = prefs.icon_theme
-		else:
-			_icon_theme = 'light' if alfred_is_dark() else 'dark'
+        if prefs.icon_theme:
+            _icon_theme = prefs.icon_theme
+        else:
+            _icon_theme = 'light' if alfred_is_dark() else 'dark'
 
-	return _icon_theme
+    return _icon_theme
 
 _icon_path = 'icons/%s/' % icon_theme()
 

@@ -2,130 +2,130 @@ from wunderlist.util import workflow
 from wunderlist import config
 
 def authorize():
-	from multiprocessing import Process
-	import urllib
-	import webbrowser
+    from multiprocessing import Process
+    import urllib
+    import webbrowser
 
-	workflow().store_data('auth', 'started')
+    workflow().store_data('auth', 'started')
 
-	state = new_oauth_state()
-	data = urllib.urlencode({
-		'client_id': config.WL_CLIENT_ID,
-		'redirect_uri': 'http://localhost:6200',
-		'state': state
-	})
-	url = '%s/%s?%s' % (config.WL_OAUTH_URL, 'authorize', data)
+    state = new_oauth_state()
+    data = urllib.urlencode({
+        'client_id': config.WL_CLIENT_ID,
+        'redirect_uri': 'http://localhost:6200',
+        'state': state
+    })
+    url = '%s/%s?%s' % (config.WL_OAUTH_URL, 'authorize', data)
 
-	# Start a server to await the redirect URL request after authorizing
-	p = Process(target=await_token)
-	p.start()
+    # Start a server to await the redirect URL request after authorizing
+    p = Process(target=await_token)
+    p.start()
 
-	# Open the authorization prompt in the default web browser
-	webbrowser.open(url)
+    # Open the authorization prompt in the default web browser
+    webbrowser.open(url)
 
 def deauthorize():
-	try:
-		workflow().delete_password(config.KC_OAUTH_TOKEN)
-	except:
-		pass
+    try:
+        workflow().delete_password(config.KC_OAUTH_TOKEN)
+    except:
+        pass
 
 def is_authorized():
-	return oauth_token() is not None
+    return oauth_token() is not None
 
 def handle_authorization_url(url):
-	import urlparse
+    import urlparse
 
-	# Parse query data & params to find out what was passed
-	parsed_url = urlparse.urlparse(url)
-	params = urlparse.parse_qs(parsed_url.query)
+    # Parse query data & params to find out what was passed
+    parsed_url = urlparse.urlparse(url)
+    params = urlparse.parse_qs(parsed_url.query)
 
-	# request is either for a file to be served up or our test
-	if 'code' in params and validate_oauth_state(params['state'][0]):
-		# Request a token based on the code
-		resolve_oauth_token(params['code'][0])
-		workflow().store_data('auth', None)
+    # request is either for a file to be served up or our test
+    if 'code' in params and validate_oauth_state(params['state'][0]):
+        # Request a token based on the code
+        resolve_oauth_token(params['code'][0])
+        workflow().store_data('auth', None)
 
-		print 'You are now logged in'
-		return True
-	elif 'error' in params:
-		workflow().store_data('auth', 'Error: %s' % params['error'])
+        print 'You are now logged in'
+        return True
+    elif 'error' in params:
+        workflow().store_data('auth', 'Error: %s' % params['error'])
 
-		print 'Please try again later'
-		return params['error']
+        print 'Please try again later'
+        return params['error']
 
-	# Not a valid URL
-	return False
+    # Not a valid URL
+    return False
 
 def oauth_token():
-	try:
-		return workflow().get_password(config.KC_OAUTH_TOKEN)
-	except:
-		return None
+    try:
+        return workflow().get_password(config.KC_OAUTH_TOKEN)
+    except:
+        return None
 
 def client_id():
-	return config.WL_CLIENT_ID
+    return config.WL_CLIENT_ID
 
 def oauth_state():
-	try:
-		return workflow().get_password(config.KC_OAUTH_STATE)
-	except:
-		return None
+    try:
+        return workflow().get_password(config.KC_OAUTH_STATE)
+    except:
+        return None
 
 def new_oauth_state():
-	import random
-	import string
+    import random
+    import string
 
-	state_length = 20
-	state = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(state_length))
+    state_length = 20
+    state = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(state_length))
 
-	workflow().save_password(config.KC_OAUTH_STATE, state)
+    workflow().save_password(config.KC_OAUTH_STATE, state)
 
-	return state
+    return state
 
 def validate_oauth_state(state):
-	return state == oauth_state()
+    return state == oauth_state()
 
 def resolve_oauth_token(code):
-	import requests
+    import requests
 
-	url = '%s/%s' % (config.WL_OAUTH_URL, 'access_token')
-	data = {
-		'code': code,
-		'client_id': config.WL_CLIENT_ID,
-		'client_secret': config.WL_CLIENT_SECRET
-	}
+    url = '%s/%s' % (config.WL_OAUTH_URL, 'access_token')
+    data = {
+        'code': code,
+        'client_id': config.WL_CLIENT_ID,
+        'client_secret': config.WL_CLIENT_SECRET
+    }
 
-	res = requests.post(url=url, data=data)
-	token_info = res.json()
+    res = requests.post(url=url, data=data)
+    token_info = res.json()
 
-	workflow().save_password(config.KC_OAUTH_TOKEN, token_info['access_token'])
-	workflow().delete_password(config.KC_OAUTH_STATE)
+    workflow().save_password(config.KC_OAUTH_TOKEN, token_info['access_token'])
+    workflow().delete_password(config.KC_OAUTH_STATE)
 
 def await_token():
-	global server
+    global server
 
-	import SimpleHTTPServer
-	import SocketServer
+    import SimpleHTTPServer
+    import SocketServer
 
-	class OAuthTokenResponseHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+    class OAuthTokenResponseHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
-		def do_GET(self):
-			auth_status = handle_authorization_url(self.path)
+        def do_GET(self):
+            auth_status = handle_authorization_url(self.path)
 
-			if not auth_status:
-				self.path = 'www/' + self.path
-			elif auth_status is True:
-				self.path = 'www/authorize.html'
-			else:
-				self.path = 'www/decline.html'
+            if not auth_status:
+                self.path = 'www/' + self.path
+            elif auth_status is True:
+                self.path = 'www/authorize.html'
+            else:
+                self.path = 'www/decline.html'
 
-			SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
+            SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
-			# Reopen the workflow
-			import subprocess
-			subprocess.call(['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl'])
+            # Reopen the workflow
+            import subprocess
+            subprocess.call(['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl'])
 
-	server = SocketServer.TCPServer(("", config.OAUTH_PORT), OAuthTokenResponseHandler)
+    server = SocketServer.TCPServer(("", config.OAUTH_PORT), OAuthTokenResponseHandler)
 
-	server.timeout = config.OAUTH_TIMEOUT
-	server.handle_request()
+    server.timeout = config.OAUTH_TIMEOUT
+    server.handle_request()

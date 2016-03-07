@@ -15,80 +15,80 @@ _recurrence = u'↻'
 _reminder = u'⏰'
 
 def _task(args):
-	return TaskParser(' '.join(args))
+    return TaskParser(' '.join(args))
 
 def _modifier_subtitles(alt=None, cmd=None, ctrl=None, fn=None, shift=None):
-	subtitles = {}
+    subtitles = {}
 
-	if alt is not None:
-		subtitles['alt'] = alt
-	if cmd is not None:
-		subtitles['cmd'] = cmd
-	if ctrl is not None:
-		subtitles['ctrl'] = ctrl
-	if fn is not None:
-		subtitles['fn'] = fn
-	if shift is not None:
-		subtitles['shift'] = shift
+    if alt is not None:
+        subtitles['alt'] = alt
+    if cmd is not None:
+        subtitles['cmd'] = cmd
+    if ctrl is not None:
+        subtitles['ctrl'] = ctrl
+    if fn is not None:
+        subtitles['fn'] = fn
+    if shift is not None:
+        subtitles['shift'] = shift
 
-	return subtitles
+    return subtitles
 
 def filter(args):
-	task_id = args[1]
-	task = Task.get(Task.id == task_id)
-	wf = workflow()
-	matching_hashtags = []
+    task_id = args[1]
+    task = Task.get(Task.id == task_id)
+    wf = workflow()
+    matching_hashtags = []
 
-	if not task:
-		wf.add_item('Unknown task', 'The ID does not match a task', icon=icons.BACK)
-	else:
-		if task.completed_at:
-			wf.add_item(task.title, 'Mark task not completed', modifier_subtitles={
-			}, arg=' '.join(args + ['toggle-completion']), valid=True, icon=icons.TASK_COMPLETED)
-		else:
-			wf.add_item(task.title, 'Complete this task', modifier_subtitles=_modifier_subtitles(
-				alt='Complete this task and set due today'
-			), arg=' '.join(args + ['toggle-completion']), valid=True, icon=icons.TASK)
+    if not task:
+        wf.add_item('Unknown task', 'The ID does not match a task', icon=icons.BACK)
+    else:
+        if task.completed_at:
+            wf.add_item(task.title, 'Mark task not completed', modifier_subtitles={
+            }, arg=' '.join(args + ['toggle-completion']), valid=True, icon=icons.TASK_COMPLETED)
+        else:
+            wf.add_item(task.title, 'Complete this task', modifier_subtitles=_modifier_subtitles(
+                alt='Complete this task and set due today'
+            ), arg=' '.join(args + ['toggle-completion']), valid=True, icon=icons.TASK)
 
-		if task.recurrence_type and not task.completed_at:
-			wf.add_item('Delete', 'Delete this task and cancel recurrence', arg=' '.join(args + ['delete']), valid=True, icon=icons.TRASH)
-		else:
-			wf.add_item('Delete', 'Delete this task', arg=' '.join(args + ['delete']), valid=True, icon=icons.TRASH)
+        if task.recurrence_type and not task.completed_at:
+            wf.add_item('Delete', 'Delete this task and cancel recurrence', arg=' '.join(args + ['delete']), valid=True, icon=icons.TRASH)
+        else:
+            wf.add_item('Delete', 'Delete this task', arg=' '.join(args + ['delete']), valid=True, icon=icons.TRASH)
 
-		wf.add_item('Let\'s discuss this screen', 'What task-level features do you need here?', arg=' '.join(args + ['discuss']), valid=True, icon=icons.DISCUSS)
+        wf.add_item('Let\'s discuss this screen', 'What task-level features do you need here?', arg=' '.join(args + ['discuss']), valid=True, icon=icons.DISCUSS)
 
-		wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
+        wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
 
 def commit(args, modifier=None):
-	from wunderlist.api import tasks
-	from wunderlist.sync import backgroundSync
-	
-	task_id = args[1]
-	action = args[2]
-	task = Task.get(Task.id == task_id)
+    from wunderlist.api import tasks
+    from wunderlist.sync import backgroundSync
 
-	if action == 'toggle-completion':
-		due_date = task.due_date
+    task_id = args[1]
+    action = args[2]
+    task = Task.get(Task.id == task_id)
 
-		if modifier == 'alt':
-			due_date = date.today()
+    if action == 'toggle-completion':
+        due_date = task.due_date
 
-		if task.completed_at:
-			tasks.update_task(task.id, task.revision, completed=False, due_date=due_date)
-			print 'The task was marked incomplete'
-		else:
-			tasks.update_task(task.id, task.revision, completed=True, due_date=due_date)
-			print 'The task was marked complete'
+        if modifier == 'alt':
+            due_date = date.today()
 
-	elif action == 'delete':
-		if tasks.delete_task(task.id, task.revision):
-			print 'The task was deleted'
-		else:
-			print 'Please try again'
+        if task.completed_at:
+            tasks.update_task(task.id, task.revision, completed=False, due_date=due_date)
+            print 'The task was marked incomplete'
+        else:
+            tasks.update_task(task.id, task.revision, completed=True, due_date=due_date)
+            print 'The task was marked complete'
 
-	elif action == 'discuss':
-		import webbrowser
+    elif action == 'delete':
+        if tasks.delete_task(task.id, task.revision):
+            print 'The task was deleted'
+        else:
+            print 'Please try again'
 
-		webbrowser.open('https://github.com/idpaterson/alfred-wunderlist-workflow/issues/94')
+    elif action == 'discuss':
+        import webbrowser
 
-	backgroundSync(True)
+        webbrowser.open('https://github.com/idpaterson/alfred-wunderlist-workflow/issues/94')
+
+    backgroundSync(True)
