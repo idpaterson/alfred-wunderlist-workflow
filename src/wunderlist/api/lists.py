@@ -46,7 +46,7 @@ def list(id, task_counts=False):
 
     # TODO: run this request in parallel
     if task_counts:
-        _update_list_with_tasks_count(info)
+        update_list_with_tasks_count(info)
 
     return info
 

@@ -46,7 +46,7 @@ def update_reminder(id, revision, date=NO_CHANGE):
             date = date.replace(tzinfo=tzlocal())
             params['date'] = date.isoformat()
         else:
-            params['date'] = null
+            params['date'] = None
 
     req = api.patch('reminders/' + id, params)
     info = req.json()

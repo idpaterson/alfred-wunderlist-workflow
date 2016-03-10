@@ -102,8 +102,6 @@ def resolve_oauth_token(code):
     workflow().delete_password(config.KC_OAUTH_STATE)
 
 def await_token():
-    global server
-
     import SimpleHTTPServer
     import SocketServer
 
