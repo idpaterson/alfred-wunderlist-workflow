@@ -1,7 +1,9 @@
 from copy import copy
 
 from dateutil import parser
-from peewee import Model, SqliteDatabase, ForeignKeyField, DateField, DateTimeField, TimeField
+from peewee import (DateField, DateTimeField, ForeignKeyField, Model,
+                    SqliteDatabase, TimeField)
+
 from wunderlist.util import workflow
 
 db = SqliteDatabase(workflow().datadir + '/wunderlist.db', threadlocals=True)
@@ -82,7 +84,7 @@ class BaseModel(Model):
 
                 cls.insert_many(inserted_chunk).execute()
 
-                inserted_ids = map(lambda i: i['id'], inserted_chunk)
+                inserted_ids = [i['id'] for i in inserted_chunk]
                 inserted_instances = cls.select().where(cls.id.in_(inserted_ids))
 
                 for instance in inserted_instances:

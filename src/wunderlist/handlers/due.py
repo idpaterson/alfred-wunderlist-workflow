@@ -68,7 +68,9 @@ def filter(args):
                     # due tasks are not searched by the sort command
                     args = []
                     command = None
-                except:
+                except IndexError:
+                    pass
+                except ValueError:
                     pass
         # Show sort options
         else:

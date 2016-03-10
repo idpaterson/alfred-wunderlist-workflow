@@ -1,6 +1,7 @@
 import re
 
 from peewee import CharField
+
 from wunderlist.models.base import BaseModel
 
 _hashtag_pattern = r'(?<=\s)#\S+'

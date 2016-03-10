@@ -6,6 +6,7 @@ from workflow import Workflow
 _workflow = None
 _update_settings = None
 
+
 def workflow():
     global _workflow, _update_settings
 
@@ -29,10 +30,12 @@ def workflow():
 
     return _workflow
 
+
 def parsedatetime_calendar():
     from parsedatetime import Calendar, Constants
 
     return Calendar(parsedatetime_constants())
+
 
 def parsedatetime_constants():
     import locale
@@ -45,10 +48,11 @@ def parsedatetime_constants():
         # an exception that may be thrown
         try:
             loc = locale.getdefaultlocale()[0]
-        except:
+        except IndexError:
             loc = 'en_US'
 
     return Constants(loc)
+
 
 def format_time(time, format):
     c = parsedatetime_constants()
@@ -64,6 +68,7 @@ def format_time(time, format):
             .replace('v', '%z'))
 
     return time.strftime(expr).lstrip('0')
+
 
 def utc_to_local(utc_dt):
     # get integer timestamp to avoid precision lost

@@ -1,6 +1,8 @@
-from peewee import IntegerField, PrimaryKeyField, TextField
+from peewee import IntegerField, PeeweeException, PrimaryKeyField, TextField
+
 from wunderlist.models import DateTimeUTCField
 from wunderlist.models.base import BaseModel
+
 
 class User(BaseModel):
     id = PrimaryKeyField()
@@ -16,7 +18,7 @@ class User(BaseModel):
 
         try:
             instance = cls.get()
-        except:
+        except PeeweeException:
             pass
 
         cls._perform_updates([instance], [user.user()])

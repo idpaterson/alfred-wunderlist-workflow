@@ -6,6 +6,7 @@ import sys
 from wunderlist.handlers.route import route
 from wunderlist.util import workflow
 
+
 def main(wf):
     route(wf.args)
 

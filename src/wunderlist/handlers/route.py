@@ -5,6 +5,7 @@ from wunderlist import icons, sync
 from wunderlist.auth import is_authorized
 from wunderlist.util import workflow
 
+
 def route(args):
     handler = None
     command = []
@@ -75,9 +76,9 @@ def route(args):
             if workflow().update_available:
                 update_data = workflow().cached_data('__workflow_update_status', max_age=0)
 
-                if '__VERSION__' != update_data.get('version'):
+                if update_data.get('version') != '__VERSION__':
                     workflow().add_item('An update is available!', 'Update the Wunderlist workflow from version __VERSION__ to %s' % update_data.get('version'), arg='-about update', valid=True, icon=icons.DOWNLOAD)
 
             workflow().send_feedback()
 
-    sync.backgroundSyncIfNecessary()
+    sync.background_sync_if_necessary()

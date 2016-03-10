@@ -1,6 +1,7 @@
 from wunderlist import icons
 from wunderlist.util import workflow
 
+
 def filter(args):
     workflow().add_item(
         'New task...',

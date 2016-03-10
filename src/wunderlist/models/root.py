@@ -1,7 +1,10 @@
-from peewee import ForeignKeyField, IntegerField, PrimaryKeyField
+from peewee import (ForeignKeyField, IntegerField, PeeweeException,
+                    PrimaryKeyField)
+
 from wunderlist.models.base import BaseModel
 from wunderlist.models.list import List
 from wunderlist.models.user import User
+
 
 class Root(BaseModel):
     id = PrimaryKeyField()
@@ -16,7 +19,7 @@ class Root(BaseModel):
 
         try:
             instance = cls.get()
-        except:
+        except PeeweeException:
             pass
 
         cls._perform_updates([instance], [root.root()])

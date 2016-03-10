@@ -1,7 +1,10 @@
-from peewee import PrimaryKeyField, ForeignKeyField, IntegerField
+from peewee import (ForeignKeyField, IntegerField, PeeweeException,
+                    PrimaryKeyField)
+
 from wunderlist.models import DateTimeUTCField
 from wunderlist.models.base import BaseModel
 from wunderlist.models.task import Task
+
 
 class Reminder(BaseModel):
     id = PrimaryKeyField()
@@ -20,7 +23,7 @@ class Reminder(BaseModel):
 
         try:
             instances = cls.select()
-        except:
+        except PeeweeException:
             pass
 
         reminders_data = reminders.reminders()

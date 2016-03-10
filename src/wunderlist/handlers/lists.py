@@ -1,4 +1,5 @@
-from wunderlist import util, icons
+from wunderlist import icons, util
+
 
 def _list_name(args):
     return ' '.join(args[1:]).strip()
@@ -16,7 +17,7 @@ def filter(args):
 
 def commit(args, modifier=None):
     from wunderlist.api import lists
-    from wunderlist.sync import backgroundSync
+    from wunderlist.sync import background_sync
 
     list_name = _list_name(args)
 
@@ -24,4 +25,4 @@ def commit(args, modifier=None):
 
     print 'The new list was created'
 
-    backgroundSync(True)
+    background_sync(True)

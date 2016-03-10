@@ -1,5 +1,8 @@
+from workflow import PasswordNotFound
+
 from wunderlist import config
 from wunderlist.util import workflow
+
 
 def authorize():
     from multiprocessing import Process
@@ -17,20 +20,23 @@ def authorize():
     url = '%s/%s?%s' % (config.WL_OAUTH_URL, 'authorize', data)
 
     # Start a server to await the redirect URL request after authorizing
-    p = Process(target=await_token)
-    p.start()
+    server = Process(target=await_token)
+    server.start()
 
     # Open the authorization prompt in the default web browser
     webbrowser.open(url)
 
+
 def deauthorize():
     try:
         workflow().delete_password(config.KC_OAUTH_TOKEN)
-    except:
+    except PasswordNotFound:
         pass
+
 
 def is_authorized():
     return oauth_token() is not None
+
 
 def handle_authorization_url(url):
     import urlparse
@@ -56,34 +62,42 @@ def handle_authorization_url(url):
     # Not a valid URL
     return False
 
+
 def oauth_token():
     try:
         return workflow().get_password(config.KC_OAUTH_TOKEN)
-    except:
+    except PasswordNotFound:
         return None
+
 
 def client_id():
     return config.WL_CLIENT_ID
 
+
 def oauth_state():
     try:
         return workflow().get_password(config.KC_OAUTH_STATE)
-    except:
+    except PasswordNotFound:
         return None
+
 
 def new_oauth_state():
     import random
     import string
 
     state_length = 20
-    state = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(state_length))
+    state = ''.join(
+        random.SystemRandom().choice(string.ascii_uppercase + string.digits)
+        for _ in range(state_length))
 
     workflow().save_password(config.KC_OAUTH_STATE, state)
 
     return state
 
+
 def validate_oauth_state(state):
     return state == oauth_state()
+
 
 def resolve_oauth_token(code):
     import requests
@@ -100,6 +114,7 @@ def resolve_oauth_token(code):
 
     workflow().save_password(config.KC_OAUTH_TOKEN, token_info['access_token'])
     workflow().delete_password(config.KC_OAUTH_STATE)
+
 
 def await_token():
     import SimpleHTTPServer
@@ -121,9 +136,11 @@ def await_token():
 
             # Reopen the workflow
             import subprocess
-            subprocess.call(['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl'])
+            subprocess.call(['/usr/bin/env', 'osascript',
+                             'bin/launch_alfred.scpt', 'wl'])
 
-    server = SocketServer.TCPServer(("", config.OAUTH_PORT), OAuthTokenResponseHandler)
+    server = SocketServer.TCPServer(
+        ("", config.OAUTH_PORT), OAuthTokenResponseHandler)
 
     server.timeout = config.OAUTH_TIMEOUT
     server.handle_request()

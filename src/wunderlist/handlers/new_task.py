@@ -4,11 +4,11 @@ from datetime import date
 from random import random
 
 from workflow.background import is_running
+
 from wunderlist import icons
 from wunderlist.models.preferences import Preferences
 from wunderlist.models.task_parser import TaskParser
-from wunderlist.util import workflow, format_time
-
+from wunderlist.util import format_time, workflow
 
 _star = u'★'
 _recurrence = u'↻'
@@ -156,7 +156,7 @@ def filter(args):
 
 def commit(args, modifier=None):
     from wunderlist.api import tasks
-    from wunderlist.sync import backgroundSync
+    from wunderlist.sync import background_sync
 
     task = _task(args)
 
@@ -172,4 +172,4 @@ def commit(args, modifier=None):
     # Output must be a UTF-8 encoded string
     print ('The task was added to ' + task.list_title).encode('utf-8')
 
-    backgroundSync(True)
+    background_sync(True)

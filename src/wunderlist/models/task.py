@@ -2,7 +2,9 @@
 
 from datetime import date
 
-from peewee import BooleanField, CharField, DateField, ForeignKeyField, IntegerField, PrimaryKeyField, TextField
+from peewee import (BooleanField, CharField, DateField, ForeignKeyField,
+                    IntegerField, PeeweeException, PrimaryKeyField, TextField)
+
 from wunderlist.models import DateTimeUTCField
 from wunderlist.models.base import BaseModel
 from wunderlist.models.list import List
@@ -61,7 +63,7 @@ class Task(BaseModel):
             # Include all tasks thought to be in the list, plus any additional
             # tasks referenced in the data (task may have been moved to a different list)
             instances = cls.select().where(cls.task.is_null() & (cls.list == list.id) | (cls.id.in_([task['id'] for task in tasks_data])))
-        except:
+        except PeeweeException:
             pass
 
         cls._perform_updates(instances, tasks_data)

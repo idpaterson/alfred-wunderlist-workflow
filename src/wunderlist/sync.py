@@ -3,6 +3,7 @@ from datetime import datetime
 from wunderlist.models.preferences import Preferences
 from wunderlist.util import workflow
 
+
 def sync():
     from wunderlist.models import base, root, list, task, user, hashtag, reminder
     from peewee import OperationalError
@@ -34,7 +35,8 @@ def sync():
     # If executed manually, this will pass on to the post notification action
     print 'Sync completed successfully'
 
-def backgroundSync(force=False):
+
+def background_sync(force=False):
     from workflow.background import run_in_background
     task_id = 'sync'
 
@@ -50,10 +52,11 @@ def backgroundSync(force=False):
         '--commit'
     ])
 
-def backgroundSyncIfNecessary():
+
+def background_sync_if_necessary():
     last_sync = Preferences.current_prefs().last_sync
 
-    # Avoid syncing on every keystroke, backgroundSync will also prevent
+    # Avoid syncing on every keystroke, background_sync will also prevent
     # multiple concurrent syncs
     if last_sync is None or (datetime.now() - last_sync).total_seconds() > 2:
-        backgroundSync()
+        background_sync()

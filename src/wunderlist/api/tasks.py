@@ -1,4 +1,5 @@
 from requests import codes
+
 import wunderlist.api.base as api
 
 NO_CHANGE = '!nochange!'
@@ -17,7 +18,7 @@ def tasks(list_id, order='display', completed=False, subtasks=False, positions=N
         def position(task):
             try:
                 return positions.index(task['id'])
-            except:
+            except ValueError:
                 return 1e99
 
         tasks.sort(key=position)

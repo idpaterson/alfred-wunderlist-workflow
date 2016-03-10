@@ -1,9 +1,10 @@
-from datetime import date, datetime, timedelta
 import re
+from datetime import date, datetime, timedelta
 
 from workflow import MATCH_ALL, MATCH_ALLCHARS
+
 from wunderlist.models.preferences import Preferences
-from wunderlist.util import workflow, parsedatetime_calendar
+from wunderlist.util import parsedatetime_calendar, workflow
 
 # Up to 8 words (sheesh!) followed by a colon
 _list_title_pattern = r'^((?:[^\s:]+ *){0,8}):'
@@ -454,7 +455,7 @@ class TaskParser(object):
             pass
 
         # Remove any empty string components, often a blank title
-        components = filter(bool, components)
+        components = [component for component in components if component]
 
         phrase = ' '.join(components)
         phrase = re.sub(_whitespace_cleanup_pattern, ' ', phrase)

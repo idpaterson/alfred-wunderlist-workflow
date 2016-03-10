@@ -1,4 +1,6 @@
-from peewee import PrimaryKeyField, CharField, BooleanField, IntegerField, TextField
+from peewee import (BooleanField, CharField, IntegerField, PeeweeException,
+                    PrimaryKeyField, TextField)
+
 from wunderlist.models import DateTimeUTCField
 from wunderlist.models.base import BaseModel
 from wunderlist.util import workflow
@@ -26,7 +28,7 @@ class List(BaseModel):
 
         try:
             instances = cls.select()
-        except:
+        except PeeweeException:
             pass
 
         lists_data = lists.lists()

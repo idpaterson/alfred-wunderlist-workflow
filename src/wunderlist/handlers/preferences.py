@@ -3,7 +3,8 @@
 from wunderlist import icons
 from wunderlist.models.preferences import Preferences
 from wunderlist.models.user import User
-from wunderlist.util import workflow, parsedatetime_calendar, format_time
+from wunderlist.util import format_time, parsedatetime_calendar, workflow
+
 
 def _parse_time(phrase):
     from datetime import date, time

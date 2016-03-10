@@ -1,4 +1,5 @@
 from requests import codes
+
 import wunderlist.api.base as api
 
 SMART_LISTS = [

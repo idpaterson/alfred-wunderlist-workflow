@@ -1,4 +1,5 @@
-from wunderlist import util, auth, icons
+from wunderlist import auth, icons, util
+
 
 def filter(args):
     util.workflow().add_item(
