@@ -7,35 +7,37 @@ from wunderlist.models.preferences import Preferences
 from wunderlist.util import parsedatetime_calendar, workflow
 
 # Up to 8 words (sheesh!) followed by a colon
-_list_title_pattern = r'^((?:[^\s:]+ *){0,8}):'
+LIST_TITLE_PATTERN = r'^((?:[^\s:]+ *){0,8}):'
 
 # The word "in" followed optionally by "list"
-_infix_list_keyword_pattern = r'\bin\s+(list\s+)?'
+INFIX_LIST_KEYWORD_PATTERN = r'\bin\s+(list\s+)?'
 
 # `every N units` optionally preceded by `repeat`
-_recurrence_pattern = r'(?:\brepeat(?:ing|s)?:? )?(?:\bevery *(\d*) *((?:day|week|month|year|d|w|m|y|da|wk|mo|yr)s?\b)?|(daily|weekly|monthly|yearly|annually))'
-_recurrence_by_date_pattern = r'(?:\brepeat:? )?\bevery *((?:\S+ *){0,2})'
+RECURRENCE_PATTERN = (r'(?:\brepeat(?:ing|s)?:? )?(?:\bevery *(\d*) ' +
+                      r'*((?:day|week|month|year|d|w|m|y|da|wk|mo|yr)s?\b)?' +
+                      r'|(daily|weekly|monthly|yearly|annually))')
+RECURRENCE_BY_DATE_PATTERN = r'(?:\brepeat:? )?\bevery *((?:\S+ *){0,2})'
 
-_reminder_pattern = r'(\b(?:remind me|reminder|remind|r|alarm)\b:? *)(.*)'
+REMINDER_PATTERN = r'(\b(?:remind me|reminder|remind|r|alarm)\b:? *)(.*)'
 
 # Anything following the `due` keyword
-_due_pattern = r'(\bdue:?\b\s*)(.*)'
+DUE_PATTERN = r'(\bdue:?\b\s*)(.*)'
 
-_not_due_pattern = r'not? due( date)?'
+NOT_DUE_PATTERN = r'not? due( date)?'
 
-_hashtag_prompt_pattern = r'(?:^|\s)(#\S*)$'
+HASHTAG_PROMPT_PATTERN = r'(?:^|\s)(#\S*)$'
 
 # An asterisk at the end of the phrase
-_star_pattern = r'\*$'
+STAR_PATTERN = r'\*$'
 
 # Tabs or multiple consecutive spaces
-_whitespace_cleanup_pattern = r'\t|\s{2,}'
+WHITESPACE_CLEANUP_PATTERN = r'\t|\s{2,}'
 
 # Split words ignoring leading and trailing punctuation
-_word_separator_pattern = r'\W*\s+\W*'
+WORD_SEPARATOR_PATTERN = r'\W*\s+\W*'
 
 # Maps first letter to the API recurrence type
-_recurrence_types = {
+RECURRENCE_TYPES = {
     'd': 'day',
     'w': 'week',
     'm': 'month',
@@ -43,6 +45,7 @@ _recurrence_types = {
     # for "annually"
     'a': 'year'
 }
+
 
 class TaskParser(object):
     phrase = None
@@ -83,23 +86,23 @@ class TaskParser(object):
         prefs = Preferences.current_prefs()
         ignore_due_date = False
 
-        match = re.search(_hashtag_prompt_pattern, phrase)
+        match = re.search(HASHTAG_PROMPT_PATTERN, phrase)
         if match:
             self.hashtag_prompt = match.group(1)
             self.has_hashtag_prompt = True
 
-        match = re.search(_star_pattern, phrase)
+        match = re.search(STAR_PATTERN, phrase)
         if match:
             self.starred = True
             self._starred_phrase = match.group()
             phrase = phrase[:match.start()] + phrase[match.end():]
 
-        match = re.search(_not_due_pattern, phrase)
+        match = re.search(NOT_DUE_PATTERN, phrase)
         if match:
             ignore_due_date = True
             phrase = phrase[:match.start()] + phrase[match.end():]
 
-        match = re.search(_list_title_pattern, phrase, re.IGNORECASE)
+        match = re.search(LIST_TITLE_PATTERN, phrase, re.IGNORECASE)
         if lists and match:
             if match.group(1):
                 matching_lists = wf.filter(
@@ -124,16 +127,16 @@ class TaskParser(object):
 
         # Parse and remove the recurrence phrase first so that any dates do
         # not interfere with the due date
-        match = re.search(_recurrence_pattern, phrase, re.IGNORECASE)
+        match = re.search(RECURRENCE_PATTERN, phrase, re.IGNORECASE)
         if match:
             type_phrase = match.group(2) if match.group(2) else match.group(3)
             if type_phrase:
                 # Look up the recurrence type based on the first letter of the
                 # work or abbreviation used in the phrase
-                self.recurrence_type = _recurrence_types[type_phrase[0].lower()]
+                self.recurrence_type = RECURRENCE_TYPES[type_phrase[0].lower()]
                 self.recurrence_count = int(match.group(1) or 1)
             else:
-                match = re.search(_recurrence_by_date_pattern, phrase, re.IGNORECASE)
+                match = re.search(RECURRENCE_BY_DATE_PATTERN, phrase, re.IGNORECASE)
                 if match:
                     recurrence_phrase = match.group()
                     dates = cal.nlp(match.group(1), version=2)
@@ -180,7 +183,7 @@ class TaskParser(object):
 
 
         reminder_info = None
-        match = re.search(_reminder_pattern, phrase, re.IGNORECASE)
+        match = re.search(REMINDER_PATTERN, phrase, re.IGNORECASE)
         if match:
             datetimes = cal.nlp(match.group(2), version=2)
 
@@ -208,7 +211,7 @@ class TaskParser(object):
         due_keyword = None
         potential_date_phrase = None
         if not ignore_due_date:
-            match = re.search(_due_pattern, phrase, re.IGNORECASE)
+            match = re.search(DUE_PATTERN, phrase, re.IGNORECASE)
             # Search for the due date only following the `due` keyword
             if match:
                 due_keyword = match.group(1)
@@ -291,7 +294,7 @@ class TaskParser(object):
         # Look for a list title at the end of the remaining phrase, like
         # "in list Office"
         if not self.list_title:
-            matches = re.finditer(_infix_list_keyword_pattern, phrase, re.IGNORECASE)
+            matches = re.finditer(INFIX_LIST_KEYWORD_PATTERN, phrase, re.IGNORECASE)
             for match in matches:
                 subphrase = phrase[match.end():]
 
@@ -316,13 +319,19 @@ class TaskParser(object):
 
         # No list parsed, assign to inbox
         if not self.list_title:
-            if lists:
-                inbox = lists[0]
-                self.list_id = inbox['id']
-                self.list_title = inbox['title']
-            else:
-                self.list_id = 0
-                self.list_title = 'Inbox'
+            if prefs.default_list_id:
+                self.list_id = prefs.default_list_id
+                default_list = next((l for l in lists if l['id'] == self.list_id), None)
+                self.list_title = default_list['title']
+
+            if not self.list_title:
+                if lists:
+                    inbox = lists[0]
+                    self.list_id = inbox['id']
+                    self.list_title = inbox['title']
+                else:
+                    self.list_id = 0
+                    self.list_title = 'Inbox'
 
         # Set an automatic reminder when there is a due date without a
         # specified reminder
@@ -330,7 +339,7 @@ class TaskParser(object):
             self.reminder_date = cls.reminder_date_combine(self.due_date)
 
         # Condense extra whitespace remaining in the task title after parsing
-        self.title = re.sub(_whitespace_cleanup_pattern, ' ', phrase).strip()
+        self.title = re.sub(WHITESPACE_CLEANUP_PATTERN, ' ', phrase).strip()
 
     @classmethod
     def reminder_date_combine(cls, date_component, time_component=None):
@@ -458,6 +467,6 @@ class TaskParser(object):
         components = [component for component in components if component]
 
         phrase = ' '.join(components)
-        phrase = re.sub(_whitespace_cleanup_pattern, ' ', phrase)
+        phrase = re.sub(WHITESPACE_CLEANUP_PATTERN, ' ', phrase)
 
         return phrase

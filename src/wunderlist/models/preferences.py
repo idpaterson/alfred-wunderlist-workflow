@@ -2,15 +2,16 @@ from datetime import time, timedelta
 
 from wunderlist.util import workflow
 
-REMINDER_TIME_KEY = 'reminder_time'
-ICON_THEME_KEY = 'icon_theme'
-EXPLICIT_KEYWORDS_KEY = 'explicit_keywords'
 AUTOMATIC_REMINDERS_KEY = 'automatic_reminders'
-REMINDER_TODAY_OFFSET_KEY = 'reminder_today_offset'
-PRERELEASES_KEY = '__workflow_prereleases'
-LAST_SYNC_KEY = 'last_sync'
+DEFAULT_LIST_ID = 'default_list_id'
 DUE_ORDER_KEY = 'due_order'
+EXPLICIT_KEYWORDS_KEY = 'explicit_keywords'
 HOIST_SKIPPED_TASKS_KEY = 'hoist_skipped_tasks'
+ICON_THEME_KEY = 'icon_theme'
+LAST_SYNC_KEY = 'last_sync'
+PRERELEASES_KEY = '__workflow_prereleases'
+REMINDER_TIME_KEY = 'reminder_time'
+REMINDER_TODAY_OFFSET_KEY = 'reminder_today_offset'
 SHOW_COMPLETED_TASKS_KEY = 'show_completed_tasks'
 
 class Preferences(object):
@@ -152,3 +153,11 @@ class Preferences(object):
     @show_completed_tasks.setter
     def show_completed_tasks(self, show_completed_tasks):
         self._set(SHOW_COMPLETED_TASKS_KEY, show_completed_tasks)
+
+    @property
+    def default_list_id(self):
+        return self._get(DEFAULT_LIST_ID, None)
+
+    @default_list_id.setter
+    def default_list_id(self, default_list_id):
+        self._set(DEFAULT_LIST_ID, default_list_id)

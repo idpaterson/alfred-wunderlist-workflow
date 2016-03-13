@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+from workflow import MATCH_ALL, MATCH_ALLCHARS
+
 from wunderlist import icons
 from wunderlist.models.preferences import Preferences
 from wunderlist.models.user import User
@@ -98,8 +100,37 @@ def filter(args):
             'Cancel',
             autocomplete='-pref', icon=icons.BACK
         )
+    elif 'default_list' in args:
+        lists = workflow().stored_data('lists')
+        matching_lists = lists
+
+        if len(args) > 2:
+            list_query = ' '.join(args[2:])
+            if list_query:
+                matching_lists = workflow().filter(
+                    list_query,
+                    lists,
+                    lambda l: l['title'],
+                    # Ignore MATCH_ALLCHARS which is expensive and inaccurate
+                    match_on=MATCH_ALL ^ MATCH_ALLCHARS
+                )
+
+        for l in matching_lists:
+            workflow().add_item(
+                l['title'],
+                arg='-pref default_list %s' % l['id'],
+                valid=True, icon=icons.LIST
+            )
+
+        workflow().add_item(
+            'Cancel',
+            autocomplete='-pref', icon=icons.BACK
+        )
     else:
         current_user = User.get()
+        lists = workflow().stored_data('lists')
+        default_list_id = prefs.default_list_id
+        default_list_name = next((l['title'] for l in lists if l['id'] == default_list_id), 'Inbox')
 
         if current_user and current_user.name:
             workflow().add_item(
@@ -124,6 +155,12 @@ def filter(args):
             'Default reminder when due today',
             u'⏰ %s    Default reminder time for tasks due today is %s' % (_format_time_offset(prefs.reminder_today_offset), 'relative to the current time' if prefs.reminder_today_offset else 'always %s' % format_time(prefs.reminder_time, 'short')),
             autocomplete='-pref reminder_today ', icon=icons.REMINDER
+        )
+
+        workflow().add_item(
+            'Default list',
+            u'%s    Change the default list when creating new tasks' % default_list_name,
+            autocomplete='-pref default_list ', icon=icons.LIST
         )
 
         workflow().add_item(
@@ -183,6 +220,21 @@ def commit(args, modifier=None):
             print 'Completed tasks are now visible in the workflow'
         else:
             print 'Completed tasks will not be visible in the workflow'
+    elif 'default_list' in args:
+        relaunch_alfred = True
+        default_list_id = None
+        lists = workflow().stored_data('lists')
+
+        if len(args) > 2:
+            default_list_id = int(args[2])
+
+        prefs.default_list_id = default_list_id
+
+        if default_list_id:
+            default_list_name = next((l['title'] for l in lists if l['id'] == default_list_id), 'Inbox')
+            print 'Tasks will be added to your %s list by default' % default_list_name
+        else:
+            print 'Tasks will be added to the Inbox by default'
     elif 'explicit_keywords' in args:
         relaunch_alfred = True
 
