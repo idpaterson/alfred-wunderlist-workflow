@@ -288,7 +288,7 @@ class TestReminderDateCombine():
 		assert reminder_date.microsecond == 0
 		assert reminder_date.second == 0
 		assert reminder_date.minute % 5 == 0
-		assert reminder_date.hour == (now + timedelta(hours=1)).hour
+		assert reminder_date.hour == (now + timedelta(hours=1, minutes=(5 - now.minute % 5) % 5)).hour
 
 		# Rounded up to the nearest 5 minute mark
 		assert reminder_date.minute == (now + timedelta(minutes=(5 - now.minute % 5) % 5)).minute
@@ -303,7 +303,7 @@ class TestReminderDateCombine():
 		assert reminder_date.microsecond == 0
 		assert reminder_date.second == 0
 		assert reminder_date.minute % 5 == 0
-		assert reminder_date.hour == (now + timedelta(hours=2)).hour
+		assert reminder_date.hour == (now + timedelta(hours=2, minutes=(5 - now.minute % 5) % 5)).hour
 
 		# Rounded up to the nearest 5 minute mark
 		assert reminder_date.minute == (now + timedelta(minutes=(5 - now.minute % 5) % 5)).minute
