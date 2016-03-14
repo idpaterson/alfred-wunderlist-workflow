@@ -319,10 +319,11 @@ class TaskParser(object):
 
         # No list parsed, assign to inbox
         if not self.list_title:
-            if prefs.default_list_id:
+            if prefs.default_list_id and lists:
                 self.list_id = prefs.default_list_id
                 default_list = next((l for l in lists if l['id'] == self.list_id), None)
-                self.list_title = default_list['title']
+                if default_list:
+                    self.list_title = default_list['title']
 
             if not self.list_title:
                 if lists:

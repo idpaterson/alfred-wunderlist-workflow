@@ -137,6 +137,27 @@ def mock_enabled_automatic_reminders(mocker):
 	mocker.patch('wunderlist.models.preferences.Preferences.automatic_reminders', new=True)
 
 @pytest.fixture(autouse=True)
+def mock_default_list_inbox(mocker):
+	"""
+	Returns None for default_list_id rather than the user's preference
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.default_list_id', new=None)
+
+@pytest.fixture()
+def mock_default_list_single_word_list(mocker):
+	"""
+	Returns 1 for default_list_id rather than the user's preference
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.default_list_id', new=1)
+
+@pytest.fixture()
+def mock_default_list_invalid_list(mocker):
+	"""
+	Returns 8 for default_list_id rather than the user's preference
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.default_list_id', new=8)
+
+@pytest.fixture(autouse=True)
 def set_locale():
 	"""
 	Ensures an en-US locale
@@ -198,6 +219,24 @@ class TestBasics():
 		assert_task(task, phrase=phrase, title=title)
 
 	def test_inbox_is_default(self):
+		target_list = _inbox
+		title = 'a sample task'
+		phrase = title
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
+
+	@pytest.mark.usefixtures("mock_default_list_single_word_list", "mock_lists")
+	def test_default_list_preference_is_default(self):
+		target_list = _single_word_list
+		title = 'a sample task'
+		phrase = title
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
+
+	@pytest.mark.usefixtures("mock_default_list_invalid_list", "mock_lists")
+	def test_inbox_is_default_for_invalid_list_preference(self):
 		target_list = _inbox
 		title = 'a sample task'
 		phrase = title
