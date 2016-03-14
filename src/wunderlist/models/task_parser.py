@@ -448,6 +448,8 @@ class TaskParser(object):
 
         # Add the hashtag
         if hashtag:
+            if '#' not in hashtag:
+                hashtag = '#' + hashtag
             components.append(hashtag)
         # Removes the star
         else:

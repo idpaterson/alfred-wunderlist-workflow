@@ -170,7 +170,7 @@ def initials(phrase):
 	"""
 	return re.sub(r'(?:^| +)(\S)\S*', r'\1', phrase)
 
-def assert_task(task, phrase=None, title=None, list_id=None, list_title=None, due_date=None, recurrence_type=None, recurrence_count=None, reminder_date=None, assignee_id=None, starred=False, completed=False, has_list_prompt=False, has_due_date_prompt=False, has_recurrence_prompt=False, has_reminder_prompt=False):
+def assert_task(task, phrase=None, title=None, list_id=None, list_title=None, due_date=None, recurrence_type=None, recurrence_count=None, reminder_date=None, assignee_id=None, starred=False, completed=False, has_list_prompt=False, has_due_date_prompt=False, has_recurrence_prompt=False, has_reminder_prompt=False, has_hashtag_prompt=False):
 	assert task.phrase == phrase
 	assert task.title == title
 
@@ -191,6 +191,7 @@ def assert_task(task, phrase=None, title=None, list_id=None, list_title=None, du
 	assert task.has_due_date_prompt == has_due_date_prompt
 	assert task.has_recurrence_prompt == has_recurrence_prompt
 	assert task.has_reminder_prompt == has_reminder_prompt
+	assert task.has_hashtag_prompt == has_hashtag_prompt
 
 #
 # Basics
@@ -450,6 +451,19 @@ class TestLists():
 		task = TaskParser(phrase)
 
 		assert_task(task, phrase=title, title=title, has_list_prompt=False)
+
+#
+# Hashtags
+# 
+
+class TestHashtags():
+
+	def test_hashtag_prompt(self):
+		title = 'a sample task #'
+		phrase = title
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, has_hashtag_prompt=True)
 	
 #
 # Due date
@@ -1007,4 +1021,31 @@ class TestPhrases():
 		new_phrase = self.task.phrase_with(recurrence=True)
 
 		assert new_phrase == '%s every ' % (self.title)
+
+	def test_add_hashtags(self):
+		hashtag = 'Example'
+		phrase = self.title
+		task = TaskParser(phrase)
+
+		new_phrase = self.task.phrase_with(hashtag=hashtag)
+
+		assert new_phrase == '%s #%s' % (self.title, hashtag)
+
+	def test_change_hashtags(self):
+		hashtag = 'Example'
+		phrase = '%s #' % self.title
+		task = TaskParser(phrase)
+
+		new_phrase = self.task.phrase_with(hashtag=hashtag)
+
+		assert new_phrase == '%s #%s' % (self.title, hashtag)
+
+	def test_remove_hashtag_prompt(self):
+		hashtag = 'Example'
+		phrase = '%s #%s' % (self.title, hashtag)
+		task = TaskParser(phrase)
+
+		new_phrase = self.task.phrase_with(hashtag=None)
+
+		assert new_phrase == '%s' % (self.title)
 
