@@ -42,7 +42,8 @@ class List(BaseModel):
     @classmethod
     def cache_synced_lists(cls):
         global _lists_sync_data
-        workflow().store_data('lists', _lists_sync_data)
+        if _lists_sync_data:
+            workflow().store_data('lists', _lists_sync_data)
 
     @classmethod
     def _populate_api_extras(cls, info):
