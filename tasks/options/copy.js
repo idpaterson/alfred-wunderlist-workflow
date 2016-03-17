@@ -43,7 +43,7 @@ module.exports = {
 				cwd: '<%= paths.lib %>/alfred-workflow/',
 				dest: '<%= paths.dist_lib %>',
 				src: [
-					'workflow/**/*.py',
+					'workflow/**/*.{py,tgz}',
 					'workflow/version'
 				]
 			},
