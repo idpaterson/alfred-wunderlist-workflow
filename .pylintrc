@@ -1,0 +1,17 @@
+[MASTER]
+init-hook='import sys; sys.path.insert(1, "dist/workflow")'
+
+[MESSAGES CONTROL]
+# Disable the following PyLint messages:
+# C0111 - Missing docstring
+disable-msg=C0111
+
+[FORMAT]
+
+# Maximum number of characters on a single line.
+max-line-length=100
+
+[REPORTS]
+
+# Include message IDs in output
+include-ids=yes
