@@ -3,7 +3,7 @@ from datetime import date, datetime, timedelta
 
 from workflow import MATCH_ALL, MATCH_ALLCHARS
 
-from wunderlist.models.preferences import Preferences
+from wunderlist.models.preferences import Preferences, DEFAULT_LIST_MOST_RECENT
 from wunderlist.util import parsedatetime_calendar, workflow
 
 # Up to 8 words (sheesh!) followed by a colon
@@ -320,7 +320,10 @@ class TaskParser(object):
         # No list parsed, assign to inbox
         if not self.list_title:
             if prefs.default_list_id and lists:
-                self.list_id = prefs.default_list_id
+                if prefs.default_list_id == DEFAULT_LIST_MOST_RECENT:
+                    self.list_id = prefs.last_list_id
+                else:
+                    self.list_id = prefs.default_list_id
                 default_list = next((l for l in lists if l['id'] == self.list_id), None)
                 if default_list:
                     self.list_title = default_list['title']

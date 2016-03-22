@@ -3,7 +3,7 @@
 from workflow import MATCH_ALL, MATCH_ALLCHARS
 
 from wunderlist import icons
-from wunderlist.models.preferences import Preferences
+from wunderlist.models.preferences import Preferences, DEFAULT_LIST_MOST_RECENT
 from wunderlist.models.user import User
 from wunderlist.util import format_time, parsedatetime_calendar, workflow
 
@@ -115,11 +115,19 @@ def filter(args):
                     match_on=MATCH_ALL ^ MATCH_ALLCHARS
                 )
 
-        for l in matching_lists:
+        for i, l in enumerate(matching_lists):
+            if i == 1:
+                workflow().add_item(
+                    'Most recently used list',
+                    'Default to the last list to which a task was added',
+                    arg='-pref default_list %d' % DEFAULT_LIST_MOST_RECENT,
+                    valid=True, icon=icons.RECURRENCE
+                )
+            icon = icons.INBOX if l['list_type'] == 'inbox' else icons.LIST
             workflow().add_item(
                 l['title'],
                 arg='-pref default_list %s' % l['id'],
-                valid=True, icon=icons.LIST
+                valid=True, icon=icon
             )
 
         workflow().add_item(
@@ -129,8 +137,13 @@ def filter(args):
     else:
         current_user = User.get()
         lists = workflow().stored_data('lists')
-        default_list_id = prefs.default_list_id
-        default_list_name = next((l['title'] for l in lists if l['id'] == default_list_id), 'Inbox')
+        default_list_name = 'Inbox'
+
+        if prefs.default_list_id == DEFAULT_LIST_MOST_RECENT:
+            default_list_name = 'Most recent list'
+        else:
+            default_list_id = prefs.default_list_id
+            default_list_name = next((l['title'] for l in lists if l['id'] == default_list_id), 'Inbox')
 
         if current_user and current_user.name:
             workflow().add_item(

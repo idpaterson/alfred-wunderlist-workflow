@@ -66,7 +66,8 @@ def filter(args):
 
         if len(matching_lists) > 1:
             for l in matching_lists:
-                wf.add_item(l['title'], autocomplete='-search %s: ' % l['title'], icon=icons.LIST)
+                icon = icons.INBOX if l['list_type'] == 'inbox' else icons.LIST
+                wf.add_item(l['title'], autocomplete='-search %s: ' % l['title'], icon=icon)
         elif matching_lists:
             conditions = conditions & (Task.list == matching_lists[0]['id'])
 

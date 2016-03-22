@@ -2,12 +2,15 @@ from datetime import time, timedelta
 
 from wunderlist.util import workflow
 
+DEFAULT_LIST_MOST_RECENT = -1
+
 AUTOMATIC_REMINDERS_KEY = 'automatic_reminders'
 DEFAULT_LIST_ID = 'default_list_id'
 DUE_ORDER_KEY = 'due_order'
 EXPLICIT_KEYWORDS_KEY = 'explicit_keywords'
 HOIST_SKIPPED_TASKS_KEY = 'hoist_skipped_tasks'
 ICON_THEME_KEY = 'icon_theme'
+LAST_LIST_ID_KEY = 'last_list_id'
 LAST_SYNC_KEY = 'last_sync'
 PRERELEASES_KEY = '__workflow_prereleases'
 REMINDER_TIME_KEY = 'reminder_time'
@@ -56,9 +59,10 @@ class Preferences(object):
             workflow().store_data('prefs', self._data)
 
     def _set(self, key, value):
-        self._data[key] = value
+        if self._data.get('key') != value:
+            self._data[key] = value
 
-        workflow().store_data('prefs', self._data)
+            workflow().store_data('prefs', self._data)
 
     def _get(self, key, default=None, type=str):
         value = self._data.get(key)
@@ -121,6 +125,14 @@ class Preferences(object):
     @prerelease_channel.setter
     def prerelease_channel(self, prerelease_channel):
         workflow().settings[PRERELEASES_KEY] = prerelease_channel
+
+    @property
+    def last_list_id(self):
+        return self._get(LAST_LIST_ID_KEY, None)
+
+    @last_list_id.setter
+    def last_list_id(self, last_list_id):
+        self._set(LAST_LIST_ID_KEY, last_list_id)
 
     @property
     def last_sync(self):

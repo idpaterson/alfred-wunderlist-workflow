@@ -159,6 +159,9 @@ def commit(args, modifier=None):
     from wunderlist.sync import background_sync
 
     task = _task(args)
+    prefs = Preferences.current_prefs()
+
+    prefs.last_list_id = task.list_id
 
     tasks.create_task(task.list_id, task.title,
                       assignee_id=task.assignee_id,
