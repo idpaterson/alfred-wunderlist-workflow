@@ -6,6 +6,36 @@
 	<string>com.ipaterson.alfred.wunderlist</string>
 	<key>connections</key>
 	<dict>
+		<key>06482847-7F21-4C57-88BB-B642E0182781</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>0BD5A678-C27A-4DEC-8170-B71A675AF94E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>0F5DDFFB-8D34-43DE-8652-8FC47EEDEBFD</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>0BD5A678-C27A-4DEC-8170-B71A675AF94E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>942CDC8D-C24D-4DB7-B085-A1F18CF934F7</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>0F2D229C-18BA-4E40-A81D-D796A6E159BC</key>
 		<array>
 			<dict>
@@ -54,6 +84,25 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>A28E28AD-30A4-4578-87C2-E258E3948B63</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>40D1F3AB-A7A4-487C-A0DD-EEB4DCB4A527</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>E05D8886-A5A2-4CD7-9C9D-6D8F3CDDEE3F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>0BD5A678-C27A-4DEC-8170-B71A675AF94E</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -169,6 +218,26 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>export LC_CTYPE="$(defaults read -g AppleLocale).UTF-8"
+/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>E0AE4F8B-253B-4EFD-B568-E9A2A46AA0C7</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>action</key>
 				<integer>0</integer>
 				<key>argument</key>
@@ -264,26 +333,6 @@ echo "{query}" &gt; .query
 				<integer>102</integer>
 				<key>script</key>
 				<string>export LC_CTYPE="$(defaults read -g AppleLocale).UTF-8"
-/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>E0AE4F8B-253B-4EFD-B568-E9A2A46AA0C7</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
-				<string>export LC_CTYPE="$(defaults read -g AppleLocale).UTF-8"
 /usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --cmd</string>
 				<key>type</key>
 				<integer>0</integer>
@@ -315,20 +364,165 @@ echo "{query}" &gt; .query
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>cd "~/Library/Application Support/Alfred 2/Workflow Data/com.ipaterson.alfred.wunderlist/" &amp;&amp; rm lists.* .lists.* *.lock wunderlist.*
+rm -rf "~/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data/com.ipaterson.alfred.wunderlist/"</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>E05D8886-A5A2-4CD7-9C9D-6D8F3CDDEE3F</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>_wl-reset</string>
+				<key>subtext</key>
+				<string>Clears stored data and caches while maintaining your preferences</string>
+				<key>text</key>
+				<string>Partial Reset of Alfred Wunderlist Workflow</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>40D1F3AB-A7A4-487C-A0DD-EEB4DCB4A527</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>plusspaces</key>
+				<false/>
+				<key>url</key>
+				<string>https://github.com/idpaterson/alfred-wunderlist-workflow/issues</string>
+				<key>utf8</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>0BD5A678-C27A-4DEC-8170-B71A675AF94E</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>output</key>
+				<integer>0</integer>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>Please post a support request on GitHub for any recurring problems.</string>
+				<key>title</key>
+				<string>Workflow has been reset</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>942CDC8D-C24D-4DB7-B085-A1F18CF934F7</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>rm -rf "~/Library/Application Support/Alfred 2/Workflow Data/com.ipaterson.alfred.wunderlist/"
+rm -rf "~/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data/com.ipaterson.alfred.wunderlist/"
+security delete-generic-password -s com.ipaterson.alfred.wunderlist -a oauth_token</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>0F5DDFFB-8D34-43DE-8652-8FC47EEDEBFD</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>_wl-full-reset</string>
+				<key>subtext</key>
+				<string>Clears all stored data, preferences, and authentication token</string>
+				<key>text</key>
+				<string>Full Reset of Alfred Wunderlist Workflow</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>06482847-7F21-4C57-88BB-B642E0182781</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Readme</string>
 	<key>uidata</key>
 	<dict>
+		<key>06482847-7F21-4C57-88BB-B642E0182781</key>
+		<dict>
+			<key>ypos</key>
+			<real>710</real>
+		</dict>
+		<key>0BD5A678-C27A-4DEC-8170-B71A675AF94E</key>
+		<dict>
+			<key>ypos</key>
+			<real>610</real>
+		</dict>
 		<key>0F2D229C-18BA-4E40-A81D-D796A6E159BC</key>
 		<dict>
 			<key>ypos</key>
 			<real>210</real>
 		</dict>
+		<key>0F5DDFFB-8D34-43DE-8652-8FC47EEDEBFD</key>
+		<dict>
+			<key>ypos</key>
+			<real>710</real>
+		</dict>
 		<key>39540B6D-5AA4-4427-BA63-42256009EE5F</key>
 		<dict>
 			<key>ypos</key>
 			<real>110</real>
+		</dict>
+		<key>40D1F3AB-A7A4-487C-A0DD-EEB4DCB4A527</key>
+		<dict>
+			<key>ypos</key>
+			<real>510</real>
 		</dict>
 		<key>55076087-BED3-4ED8-A573-23050597BC2B</key>
 		<dict>
@@ -339,6 +533,11 @@ echo "{query}" &gt; .query
 		<dict>
 			<key>ypos</key>
 			<real>410</real>
+		</dict>
+		<key>942CDC8D-C24D-4DB7-B085-A1F18CF934F7</key>
+		<dict>
+			<key>ypos</key>
+			<real>610</real>
 		</dict>
 		<key>A28E28AD-30A4-4578-87C2-E258E3948B63</key>
 		<dict>
@@ -354,6 +553,11 @@ echo "{query}" &gt; .query
 		<dict>
 			<key>ypos</key>
 			<real>210</real>
+		</dict>
+		<key>E05D8886-A5A2-4CD7-9C9D-6D8F3CDDEE3F</key>
+		<dict>
+			<key>ypos</key>
+			<real>510</real>
 		</dict>
 		<key>E0AE4F8B-253B-4EFD-B568-E9A2A46AA0C7</key>
 		<dict>
