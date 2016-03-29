@@ -2,6 +2,8 @@
 
 import re
 
+from workflow import MATCH_ALL, MATCH_ALLCHARS
+
 from wunderlist import icons
 from wunderlist.models.list import List
 from wunderlist.models.preferences import Preferences
@@ -41,31 +43,63 @@ def filter(args):
             wf.add_item(hashtag.id[1:], '', autocomplete=u'-search %s %s ' % (query[:hashtag_match.start()], hashtag.id), icon=icons.HASHTAG)
 
     else:
-        conditions = None
+        conditions = True
+        lists = workflow().stored_data('lists')
+        matching_lists = lists
+        query = ' '.join(args[1:])
 
-        for arg in args[1:]:
-            if len(arg) > 1:
-                conditions = conditions | Task.title.contains(arg)
+        if len(args) > 1:
+            components = re.split(r':\s*', query, 1)
+            list_query = components[0]
+            if list_query:
+                matching_lists = workflow().filter(
+                    list_query,
+                    lists,
+                    lambda l: l['title'],
+                    # Ignore MATCH_ALLCHARS which is expensive and inaccurate
+                    match_on=MATCH_ALL ^ MATCH_ALLCHARS
+                )
 
-        if conditions:
-            if not prefs.show_completed_tasks:
-                conditions = Task.completed_at.is_null() & conditions
+                # If no matching list search against all tasks
+                if matching_lists:
+                    query = components[1] if len(components) > 1 else ''
 
-            tasks = Task.select().where(Task.list.is_null(False) & conditions)
+        if len(matching_lists) > 1:
+            for l in matching_lists:
+                icon = icons.INBOX if l['list_type'] == 'inbox' else icons.LIST
+                wf.add_item(l['title'], autocomplete='-search %s: ' % l['title'], icon=icon)
+        elif matching_lists:
+            conditions = conditions & (Task.list == matching_lists[0]['id'])
 
-            # Default Wunderlist sort order
-            tasks = tasks.join(List).order_by(Task.order.asc()).order_by(List.order.asc())
+        if len(matching_lists) <= 1:
+            for arg in query.split(' '):
+                if len(arg) > 1:
+                    conditions = conditions & Task.title.contains(arg)
 
-            for t in tasks:
-                wf.add_item(u'%s – %s' % (t.list_title, t.title), t.subtitle(), autocomplete='-task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed_at else icons.TASK)
+            if conditions:
+                if not prefs.show_completed_tasks:
+                    conditions = Task.completed_at.is_null() & conditions
 
-        if prefs.show_completed_tasks:
-            wf.add_item('Hide completed tasks', arg='-pref show_completed_tasks --alfred %s' % ' '.join(args), valid=True, icon=icons.HIDDEN)
-        else:
-            wf.add_item('Show completed tasks', arg='-pref show_completed_tasks --alfred %s' % ' '.join(args), valid=True, icon=icons.VISIBLE)
+                tasks = Task.select().where(Task.list.is_null(False) & conditions)
+
+                # Default Wunderlist sort order
+                tasks = tasks.join(List).order_by(Task.order.asc()).order_by(List.order.asc())
+
+                # Avoid excessive results
+                tasks = tasks.limit(50)
+
+                for t in tasks:
+                    wf.add_item(u'%s – %s' % (t.list_title, t.title), t.subtitle(), autocomplete='-task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed_at else icons.TASK)
+
+
+            if prefs.show_completed_tasks:
+                wf.add_item('Hide completed tasks', arg='-pref show_completed_tasks --alfred %s' % ' '.join(args), valid=True, icon=icons.HIDDEN)
+            else:
+                wf.add_item('Show completed tasks', arg='-pref show_completed_tasks --alfred %s' % ' '.join(args), valid=True, icon=icons.VISIBLE)
 
         wf.add_item('Let\'s discuss this screen', 'Do you need to search completed tasks, tasks by list, date, etc?', arg=' '.join(args + ['discuss']), valid=True, icon=icons.DISCUSS)
 
+        wf.add_item('New search', autocomplete='-search ', icon=icons.CANCEL)
         wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
 
 def commit(args, modifier=None):

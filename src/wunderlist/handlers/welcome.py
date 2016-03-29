@@ -18,6 +18,7 @@ def filter(args):
 
     workflow().add_item(
         'Find and update tasks',
+        'Search or browse by list',
         autocomplete='-search ',
         icon=icons.SEARCH
     )
