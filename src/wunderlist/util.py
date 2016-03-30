@@ -1,5 +1,5 @@
 import calendar
-from datetime import datetime
+from datetime import date, datetime, timedelta
 
 from workflow import Workflow
 
@@ -68,6 +68,25 @@ def format_time(time, format):
             .replace('v', '%z'))
 
     return time.strftime(expr).lstrip('0')
+
+
+def short_relative_formatted_date(dt):
+    d = dt.date() if isinstance(dt, datetime) else dt
+    today = date.today()
+    # Mar 3, 2016
+    date_format = '%b %d, %Y'
+
+    if d == today:
+        return 'today'
+    if d == today + timedelta(days=1):
+        return 'tomorrow'
+    elif d == today - timedelta(days=1):
+        return 'yesterday'
+    elif d.year == today.year:
+        # Wed, Mar 3
+        date_format = '%a, %b %d'
+
+    return dt.strftime(date_format)
 
 
 def utc_to_local(utc_dt):

@@ -39,7 +39,7 @@ def filter(args):
     if not task:
         wf.add_item('Unknown task', 'The ID does not match a task', icon=icons.BACK)
     else:
-        if task.completed_at:
+        if task.completed:
             wf.add_item(task.title, 'Mark task not completed', modifier_subtitles={
             }, arg=' '.join(args + ['toggle-completion']), valid=True, icon=icons.TASK_COMPLETED)
         else:
@@ -47,7 +47,7 @@ def filter(args):
                 alt='Complete this task and set due today'
             ), arg=' '.join(args + ['toggle-completion']), valid=True, icon=icons.TASK)
 
-        if task.recurrence_type and not task.completed_at:
+        if task.recurrence_type and not task.completed:
             wf.add_item('Delete', 'Delete this task and cancel recurrence', arg=' '.join(args + ['delete']), valid=True, icon=icons.TRASH)
         else:
             wf.add_item('Delete', 'Delete this task', arg=' '.join(args + ['delete']), valid=True, icon=icons.TRASH)
@@ -70,7 +70,7 @@ def commit(args, modifier=None):
         if modifier == 'alt':
             due_date = date.today()
 
-        if task.completed_at:
+        if task.completed:
             tasks.update_task(task.id, task.revision, completed=False, due_date=due_date)
             print 'The task was marked incomplete'
         else:

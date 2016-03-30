@@ -9,6 +9,7 @@ from wunderlist.models import DateTimeUTCField
 from wunderlist.models.base import BaseModel
 from wunderlist.models.list import List
 from wunderlist.models.user import User
+from wunderlist.util import short_relative_formatted_date
 
 _days_by_recurrence_type = {
     'day': 1,
@@ -22,6 +23,7 @@ _overdue_1x = u'⚠️'
 _overdue_2x = u'❗️'
 _recurrence = u'↻'
 _reminder = u'⏰'
+_completed = u'✔'
 
 class Task(BaseModel):
     id = PrimaryKeyField()
@@ -100,8 +102,12 @@ class Task(BaseModel):
         return None
 
     @property
+    def completed(self):
+        return bool(self.completed_at)
+
+    @property
     def overdue_times(self):
-        if self.recurrence_type is None or self.completed_at is not None:
+        if self.recurrence_type is None or self.completed is not None:
             return 0
 
         recurrence_days = _days_by_recurrence_type[self.recurrence_type]
@@ -123,15 +129,12 @@ class Task(BaseModel):
         if self.starred:
             subtitle.append(_star)
 
-        if self.due_date:
-            if self.due_date == today:
-                date_format = 'Today'
-            elif self.due_date.year == today.year:
-                date_format = '%a, %b %d'
-            else:
-                date_format = '%b %d, %Y'
-
-            subtitle.append('Due %s' % (self.due_date.strftime(date_format)))
+        # Task is completed
+        if self.completed:
+            subtitle.append(u'%s %s' % (_completed, short_relative_formatted_date(self.completed_at)))
+        # Task is not yet completed
+        elif self.due_date:
+            subtitle.append('Due %s' % short_relative_formatted_date(self.due_date))
 
         if self.recurrence_type:
             if self.recurrence_count > 1:
@@ -142,27 +145,26 @@ class Task(BaseModel):
             else:
                 subtitle.append('%s %sly' % (_recurrence, self.recurrence_type.title()))
 
-        overdue_times = self.overdue_times
-        if overdue_times > 1:
-            subtitle.insert(0, u'%s %dX OVERDUE!' % (_overdue_2x, overdue_times))
-        elif overdue_times == 1:
-            subtitle.insert(0, u'%s OVERDUE!' % (_overdue_1x))
+        if not self.completed:
+            overdue_times = self.overdue_times
+            if overdue_times > 1:
+                subtitle.insert(0, u'%s %dX OVERDUE!' % (_overdue_2x, overdue_times))
+            elif overdue_times == 1:
+                subtitle.insert(0, u'%s OVERDUE!' % (_overdue_1x))
 
-        reminder_date = self.reminder_date_local
-        if reminder_date:
-            if reminder_date.date() == today:
-                date_format = 'Today'
-            elif reminder_date.date() == self.due_date:
-                date_format = 'On due date'
-            elif reminder_date.year == today.year:
-                date_format = '%a, %b %d'
-            else:
-                date_format = '%b %d, %Y'
+            reminder_date = self.reminder_date_local
+            if reminder_date:
+                reminder_date_phrase = None
 
-            subtitle.append('%s %s at %s' % (
-                _reminder,
-                reminder_date.strftime(date_format),
-                format_time(reminder_date, 'short')))
+                if reminder_date.date() == self.due_date:
+                    reminder_date_phrase = 'On due date'
+                else:
+                    reminder_date_phrase = short_relative_formatted_date(self.due_date)
+
+                subtitle.append('%s %s at %s' % (
+                    _reminder,
+                    reminder_date_phrase,
+                    format_time(reminder_date, 'short')))
 
         subtitle.append(self.title)
 

@@ -8,7 +8,7 @@ from workflow.background import is_running
 from wunderlist import icons
 from wunderlist.models.preferences import Preferences
 from wunderlist.models.task_parser import TaskParser
-from wunderlist.util import format_time, workflow
+from wunderlist.util import format_time, short_relative_formatted_date, workflow
 
 _star = u'★'
 _recurrence = u'↻'
@@ -24,15 +24,7 @@ def task_subtitle(task):
         subtitle.append(_star)
 
     if task.due_date:
-        today = date.today()
-        if task.due_date == today:
-            date_format = 'Today'
-        elif task.due_date.year == today.year:
-            date_format = '%a, %b %d'
-        else:
-            date_format = '%b %d, %Y'
-
-        subtitle.append('Due %s' % (task.due_date.strftime(date_format)))
+        subtitle.append('Due %s' % short_relative_formatted_date(task.due_date))
 
     if task.recurrence_type:
         if task.recurrence_count > 1:
@@ -44,15 +36,11 @@ def task_subtitle(task):
             subtitle.append('%s %sly' % (_recurrence, task.recurrence_type.title()))
 
     if task.reminder_date:
-        today = date.today()
-        if task.reminder_date.date() == today:
-            date_format = 'Today'
-        elif task.reminder_date.date() == task.due_date:
-            date_format = 'On due date'
-        elif task.reminder_date.year == today.year:
-            date_format = '%a, %b %d'
+        reminder_date_phrase = None
+        if task.reminder_date.date() == task.due_date:
+            reminder_date_phrase = 'On due date'
         else:
-            date_format = '%b %d, %Y'
+            reminder_date_phrase = short_relative_formatted_date(task.due_date)
 
         subtitle.append('%s %s at %s' % (
             _reminder,

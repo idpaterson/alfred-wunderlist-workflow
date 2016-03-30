@@ -89,7 +89,7 @@ def filter(args):
                 tasks = tasks.limit(50)
 
                 for t in tasks:
-                    wf.add_item(u'%s – %s' % (t.list_title, t.title), t.subtitle(), autocomplete='-task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed_at else icons.TASK)
+                    wf.add_item(u'%s – %s' % (t.list_title, t.title), t.subtitle(), autocomplete='-task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed else icons.TASK)
 
 
             if prefs.show_completed_tasks:
