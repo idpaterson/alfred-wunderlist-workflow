@@ -19,7 +19,7 @@ class Root(BaseModel):
 
         try:
             instance = cls.get()
-        except PeeweeException:
+        except Root.DoesNotExist:
             pass
 
         cls._perform_updates([instance], [root.root()])

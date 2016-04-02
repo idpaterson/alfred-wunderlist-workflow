@@ -18,7 +18,7 @@ class User(BaseModel):
 
         try:
             instance = cls.get()
-        except PeeweeException:
+        except User.DoesNotExist:
             pass
 
         cls._perform_updates([instance], [user.user()])
