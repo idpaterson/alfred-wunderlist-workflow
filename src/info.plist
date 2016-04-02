@@ -372,8 +372,8 @@ echo "{query}" &gt; .query
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>cd "~/Library/Application Support/Alfred 2/Workflow Data/com.ipaterson.alfred.wunderlist/" &amp;&amp; rm lists.* .lists.* *.lock wunderlist.*
-rm -rf "~/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data/com.ipaterson.alfred.wunderlist/"</string>
+				<string>cd ~/Library/Application\ Support/Alfred\ 2/Workflow\ Data/com.ipaterson.alfred.wunderlist/ &amp;&amp; rm lists.* .lists.* *.lock wunderlist.*
+rm -rf ~/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow\ Data/com.ipaterson.alfred.wunderlist/</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -455,8 +455,8 @@ rm -rf "~/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data/com.ipate
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>rm -rf "~/Library/Application Support/Alfred 2/Workflow Data/com.ipaterson.alfred.wunderlist/"
-rm -rf "~/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data/com.ipaterson.alfred.wunderlist/"
+				<string>rm -rf ~/Library/Application\ Support/Alfred\ 2/Workflow\ Data/com.ipaterson.alfred.wunderlist/
+rm -rf ~/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow\ Data/com.ipaterson.alfred.wunderlist/
 security delete-generic-password -s com.ipaterson.alfred.wunderlist -a oauth_token</string>
 				<key>type</key>
 				<integer>0</integer>
