@@ -22,19 +22,19 @@ class Root(BaseModel):
         except Root.DoesNotExist:
             pass
 
-        cls._perform_updates([instance], [root.root()])
+        cls._perform_updates([instance], [root.root()], threading=False)
 
         return None
 
     def _sync_children(self):
         from concurrent import futures
 
+        lists_data = List.prepare_sync_data()
+
         with futures.ThreadPoolExecutor(max_workers=2) as executor:
             executor.submit(_sync_user),
-            executor.submit(_sync_lists),
+            executor.submit(_sync_lists, lists_data),
             executor.submit(_sync_preferences)
-
-        List.cache_synced_lists()
 
         # Wait until all tasks are synced before syncing reminders and
         # hashtags since these are dependent on tasks.
@@ -45,8 +45,8 @@ class Root(BaseModel):
 def _sync_user():
     User.sync()
 
-def _sync_lists():
-    List.sync()
+def _sync_lists(lists_data):
+    List.sync(lists_data)
 
 def _sync_preferences():
     from wunderlist.models.preferences import Preferences

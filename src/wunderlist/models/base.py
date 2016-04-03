@@ -51,7 +51,7 @@ class BaseModel(Model):
         pass
 
     @classmethod
-    def _perform_updates(cls, model_instances, update_items):
+    def _perform_updates(cls, model_instances, update_items, threading=True):
         from concurrent import futures
 
         # Map of id to the normalized item
@@ -68,8 +68,14 @@ class BaseModel(Model):
 
                     # If the revision is different, sync any children, then update the db
                     if 'revision' in update_item and instance.revision != update_item['revision']:
-                        instance._sync_children()
-                        cls.update(**update_item).where(cls.id == instance.id).execute()
+                        def sync_instance_children():
+                            instance._sync_children()
+                            cls.update(**update_item).where(cls.id == instance.id).execute()
+
+                        if threading:
+                            executor.submit(sync_instance_children)
+                        else:
+                            sync_instance_children()
 
                     del update_items[instance.id]
                 # The model does not exist anymore
@@ -87,8 +93,12 @@ class BaseModel(Model):
                 inserted_ids = [i['id'] for i in inserted_chunk]
                 inserted_instances = cls.select().where(cls.id.in_(inserted_ids))
 
-                for instance in inserted_instances:
-                    executor.submit(instance._sync_children)
+                if threading:
+                    for instance in inserted_instances:
+                        executor.submit(instance._sync_children)
+                else:
+                    for instance in inserted_instances:
+                        instance._sync_children()
 
                 all_instances += inserted_instances
 
