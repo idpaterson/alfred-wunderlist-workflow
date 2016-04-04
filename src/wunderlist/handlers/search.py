@@ -83,7 +83,7 @@ def filter(args):
                 tasks = Task.select().where(Task.list.is_null(False) & conditions)
 
                 # Default Wunderlist sort order
-                tasks = tasks.join(List).order_by(Task.order.asc()).order_by(List.order.asc())
+                tasks = tasks.join(List).order_by(Task.order.asc(), List.order.asc())
 
                 # Avoid excessive results
                 tasks = tasks.limit(50)
