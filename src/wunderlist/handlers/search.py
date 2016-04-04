@@ -2,6 +2,7 @@
 
 import re
 
+from peewee import OperationalError
 from workflow import MATCH_ALL, MATCH_ALLCHARS
 
 from wunderlist import icons
@@ -54,7 +55,7 @@ def filter(args):
             if list_query:
                 matching_lists = workflow().filter(
                     list_query,
-                    lists,
+                    lists if lists else [],
                     lambda l: l['title'],
                     # Ignore MATCH_ALLCHARS which is expensive and inaccurate
                     match_on=MATCH_ALL ^ MATCH_ALLCHARS
@@ -64,14 +65,15 @@ def filter(args):
                 if matching_lists:
                     query = components[1] if len(components) > 1 else ''
 
-        if len(matching_lists) > 1:
-            for l in matching_lists:
-                icon = icons.INBOX if l['list_type'] == 'inbox' else icons.LIST
-                wf.add_item(l['title'], autocomplete='-search %s: ' % l['title'], icon=icon)
-        elif matching_lists:
-            conditions = conditions & (Task.list == matching_lists[0]['id'])
+        if matching_lists:
+            if len(matching_lists) > 1:
+                for l in matching_lists:
+                    icon = icons.INBOX if l['list_type'] == 'inbox' else icons.LIST
+                    wf.add_item(l['title'], autocomplete='-search %s: ' % l['title'], icon=icon)
+            else:
+                conditions = conditions & (Task.list == matching_lists[0]['id'])
 
-        if len(matching_lists) <= 1:
+        if not matching_lists or len(matching_lists) <= 1:
             for arg in query.split(' '):
                 if len(arg) > 1:
                     conditions = conditions & Task.title.contains(arg)
@@ -88,8 +90,12 @@ def filter(args):
                 # Avoid excessive results
                 tasks = tasks.limit(50)
 
-                for t in tasks:
-                    wf.add_item(u'%s – %s' % (t.list_title, t.title), t.subtitle(), autocomplete='-task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed else icons.TASK)
+                try:
+                    for t in tasks:
+                        wf.add_item(u'%s – %s' % (t.list_title, t.title), t.subtitle(), autocomplete='-task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed else icons.TASK)
+                except OperationalError:
+                    from wunderlist.sync import background_sync
+                    background_sync()
 
 
             if prefs.show_completed_tasks:

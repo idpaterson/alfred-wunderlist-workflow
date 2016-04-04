@@ -2,6 +2,8 @@
 
 from datetime import date, timedelta
 
+from peewee import OperationalError
+
 from wunderlist import icons
 from wunderlist.models.list import List
 from wunderlist.models.preferences import Preferences
@@ -122,11 +124,15 @@ def filter(args):
             else:
                 tasks = tasks.order_by(field.desc())
 
-    if prefs.hoist_skipped_tasks:
-        tasks = sorted(tasks, key=lambda t: -t.overdue_times)
+    try:
+        if prefs.hoist_skipped_tasks:
+            tasks = sorted(tasks, key=lambda t: -t.overdue_times)
 
-    for t in tasks:
-        wf.add_item(u'%s – %s' % (t.list_title, t.title), t.subtitle(), autocomplete='-task %s ' % t.id, icon=icons.TASK_COMPLETED if t.completed else icons.TASK)
+        for t in tasks:
+            wf.add_item(u'%s – %s' % (t.list_title, t.title), t.subtitle(), autocomplete='-task %s ' % t.id, icon=icons.TASK_COMPLETED if t.completed else icons.TASK)
+    except OperationalError:
+        from wunderlist.sync import background_sync
+        background_sync()
 
     wf.add_item(u'Sort order', 'Change the display order of due tasks', autocomplete='-due sort', icon=icons.SORT)
 
