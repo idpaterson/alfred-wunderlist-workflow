@@ -2,6 +2,8 @@
 
 from workflow import MATCH_ALL, MATCH_ALLCHARS
 
+from peewee import OperationalError
+
 from wunderlist import icons
 from wunderlist.models.preferences import Preferences, DEFAULT_LIST_MOST_RECENT
 from wunderlist.models.user import User
@@ -135,9 +137,17 @@ def filter(args):
             autocomplete='-pref', icon=icons.BACK
         )
     else:
-        current_user = User.get()
+        current_user = None
         lists = workflow().stored_data('lists')
         default_list_name = 'Inbox'
+
+        try:
+            current_user = User.get()
+        except User.DoesNotExist:
+            pass
+        except OperationalError:
+            from wunderlist.sync import background_sync
+            background_sync()
 
         if prefs.default_list_id == DEFAULT_LIST_MOST_RECENT:
             default_list_name = 'Most recent list'
