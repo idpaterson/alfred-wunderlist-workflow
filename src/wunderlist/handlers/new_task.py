@@ -44,7 +44,7 @@ def task_subtitle(task):
 
         subtitle.append('%s %s at %s' % (
             _reminder,
-            task.reminder_date.strftime(date_format),
+            reminder_date_phrase,
             format_time(task.reminder_date.time(), 'short')))
 
     subtitle.append(task.title)
