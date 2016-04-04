@@ -32,12 +32,17 @@ def _modifier_subtitles(alt=None, cmd=None, ctrl=None, fn=None, shift=None):
 
 def filter(args):
     task_id = args[1]
-    task = Task.get(Task.id == task_id)
     wf = workflow()
     matching_hashtags = []
+    task = None
+
+    try:
+        Task.get(Task.id == task_id)
+    except Task.DoesNotExist:
+        pass
 
     if not task:
-        wf.add_item('Unknown task', 'The ID does not match a task', icon=icons.BACK)
+        wf.add_item('Unknown task', 'The ID does not match a task', autocomplete='', icon=icons.BACK)
     else:
         if task.completed:
             wf.add_item(task.title, 'Mark task not completed', modifier_subtitles={
