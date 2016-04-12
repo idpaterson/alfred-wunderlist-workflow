@@ -23,7 +23,6 @@ _overdue_1x = u'⚠️'
 _overdue_2x = u'❗️'
 _recurrence = u'↻'
 _reminder = u'⏰'
-_completed = u'✔'
 
 class Task(BaseModel):
     id = PrimaryKeyField()
@@ -131,7 +130,7 @@ class Task(BaseModel):
 
         # Task is completed
         if self.completed:
-            subtitle.append(u'%s %s' % (_completed, short_relative_formatted_date(self.completed_at)))
+            subtitle.append('Completed %s' % short_relative_formatted_date(self.completed_at))
         # Task is not yet completed
         elif self.due_date:
             subtitle.append('Due %s' % short_relative_formatted_date(self.due_date))
