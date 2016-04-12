@@ -37,7 +37,7 @@ def filter(args):
     task = None
 
     try:
-        Task.get(Task.id == task_id)
+        task = Task.get(Task.id == task_id)
     except Task.DoesNotExist:
         pass
 
