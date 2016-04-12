@@ -94,3 +94,20 @@ def utc_to_local(utc_dt):
     timestamp = calendar.timegm(utc_dt.timetuple())
     local_dt = datetime.fromtimestamp(timestamp)
     return local_dt.replace(microsecond=utc_dt.microsecond)
+
+
+def modifier_subtitles(alt=None, cmd=None, ctrl=None, fn=None, shift=None):
+    subtitles = {}
+
+    if alt is not None:
+        subtitles['alt'] = alt
+    if cmd is not None:
+        subtitles['cmd'] = cmd
+    if ctrl is not None:
+        subtitles['ctrl'] = ctrl
+    if fn is not None:
+        subtitles['fn'] = fn
+    if shift is not None:
+        subtitles['shift'] = shift
+
+    return subtitles

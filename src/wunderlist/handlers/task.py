@@ -5,7 +5,7 @@ from datetime import date
 from wunderlist import icons
 from wunderlist.models.task import Task
 from wunderlist.models.task_parser import TaskParser
-from wunderlist.util import workflow
+from wunderlist.util import modifier_subtitles, workflow
 
 _star = u'★'
 _recurrence = u'↻'
@@ -13,22 +13,6 @@ _reminder = u'⏰'
 
 def _task(args):
     return TaskParser(' '.join(args))
-
-def _modifier_subtitles(alt=None, cmd=None, ctrl=None, fn=None, shift=None):
-    subtitles = {}
-
-    if alt is not None:
-        subtitles['alt'] = alt
-    if cmd is not None:
-        subtitles['cmd'] = cmd
-    if ctrl is not None:
-        subtitles['ctrl'] = ctrl
-    if fn is not None:
-        subtitles['fn'] = fn
-    if shift is not None:
-        subtitles['shift'] = shift
-
-    return subtitles
 
 def filter(args):
     task_id = args[1]
@@ -44,12 +28,14 @@ def filter(args):
     if not task:
         wf.add_item('Unknown task', 'The ID does not match a task', autocomplete='', icon=icons.BACK)
     else:
+        subtitle = task.subtitle()
+
         if task.completed:
-            wf.add_item(task.title, 'Mark task not completed', modifier_subtitles={
+            wf.add_item('Mark task not completed', subtitle, modifier_subtitles={
             }, arg=' '.join(args + ['toggle-completion']), valid=True, icon=icons.TASK_COMPLETED)
         else:
-            wf.add_item(task.title, 'Complete this task', modifier_subtitles=_modifier_subtitles(
-                alt='Complete this task and set due today'
+            wf.add_item('Complete this task', subtitle, modifier_subtitles=modifier_subtitles(
+                alt=u'…and set due today    %s' % subtitle
             ), arg=' '.join(args + ['toggle-completion']), valid=True, icon=icons.TASK)
 
         if task.recurrence_type and not task.completed:
