@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from workflow.notify import notify
+
 from wunderlist.models.preferences import Preferences
 from wunderlist.util import workflow
 
@@ -30,7 +32,17 @@ def sync():
         sync()
         return
 
+    first_sync = False
+
+    try:
+        root.Root.get()
+    except root.Root.DoesNotExist:
+        first_sync = True
+
     root.Root.sync()
+
+    if first_sync:
+        notify('Initial sync has completed', 'All of your tasks are now available for browsing')
 
     # If executed manually, this will pass on to the post notification action
     print 'Sync completed successfully'
