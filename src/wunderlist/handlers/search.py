@@ -41,13 +41,14 @@ def filter(args):
     # hashtag being typed does not exactly match the single matching hashtag
     if len(matching_hashtags) > 0:
         for hashtag in matching_hashtags:
-            wf.add_item(hashtag.id[1:], '', autocomplete=u'-search %s %s ' % (query[:hashtag_match.start()], hashtag.id), icon=icons.HASHTAG)
+            wf.add_item(hashtag.id[1:], '', autocomplete=u'-search %s%s ' % (query[:hashtag_match.start()], hashtag.id), icon=icons.HASHTAG)
 
     else:
         conditions = True
         lists = workflow().stored_data('lists')
         matching_lists = lists
         query = ' '.join(args[1:])
+        list_query = None
 
         if len(args) > 1:
             components = re.split(r':\s*', query, 1)
@@ -66,6 +67,9 @@ def filter(args):
                     query = components[1] if len(components) > 1 else ''
 
         if matching_lists:
+            if not list_query:
+                wf.add_item('Browse by hashtag', autocomplete='-search #', icon=icons.HASHTAG)
+
             if len(matching_lists) > 1:
                 for l in matching_lists:
                     icon = icons.INBOX if l['list_type'] == 'inbox' else icons.LIST
