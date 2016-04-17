@@ -231,7 +231,7 @@ class TaskParser(object):
                 # Set due_date if a datetime was found and it is not time only
                 if datetime_info[1].hasDate:
                     self.due_date = datetime_info[0].date()
-                elif datetime_info[1].hasTime:
+                elif datetime_info[1].hasTime and not self.due_date:
                     self.due_date = date.today()
 
                 if self.due_date:
@@ -250,7 +250,10 @@ class TaskParser(object):
 
                     # If the due date specifies a time, set it as the reminder
                     if datetime_info[1].hasTime:
-                        self.reminder_date = datetime_info[0]
+                        if datetime_info[1].hasDate:
+                            self.reminder_date = datetime_info[0]
+                        elif self.due_date:
+                            self.reminder_date = datetime.combine(self.due_date, datetime_info[0].time())
                 # Just a time component
                 else:
                     due_keyword = None

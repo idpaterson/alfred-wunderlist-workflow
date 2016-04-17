@@ -24,8 +24,9 @@ _default_reminder_today_offset = time(1, 0, 0)
 _noon = time(12, 0, 0)
 _12_13_14 = date(2014, 12, 13)
 _today = date.today()
-_tomorrow = date.today() + timedelta(days=1)
-_next_week = date.today() + timedelta(days=7)
+_tomorrow = _today + timedelta(days=1)
+_next_week = _today + timedelta(days=7)
+_monday = _today + timedelta(days=7 - _today.weekday())
 due_date_formats = {
 	'12/13/14': _12_13_14,
 	'12/13/2014': _12_13_14,
@@ -35,6 +36,7 @@ due_date_formats = {
 	'tomorrow': _tomorrow,
 	'1d': _tomorrow,
 	'next week': _next_week,
+	'Monday': _monday,
 	'1w': _next_week,
 	'in 1 week': _next_week,
 	'in 7d': _next_week
@@ -761,13 +763,25 @@ class TestRecurrence():
 	def test_recurrence_with_explicit_weekday(self):
 		title = 'a sample task'
 		recurrence_count = 1
-		due_date = _today + timedelta(days=7 - _today.weekday())
+		due_date = _monday
 		recurrence_type = 'week'
 		recurrence_phrase = 'every Monday'
 		phrase = '%s %s' % (title, recurrence_phrase)
 		task = TaskParser(phrase)
 
 		assert_task(task, phrase=phrase, title=title, recurrence_type=recurrence_type, recurrence_count=recurrence_count, due_date=due_date)
+
+	def test_recurrence_with_explicit_weekday_and_reminder(self):
+		title = 'a sample task'
+		recurrence_count = 1
+		due_date = _monday
+		reminder_date = datetime.combine(_monday, _noon)
+		recurrence_type = 'week'
+		recurrence_phrase = 'every Monday at noon'
+		phrase = '%s %s' % (title, recurrence_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, recurrence_type=recurrence_type, recurrence_count=recurrence_count, due_date=due_date, reminder_date=reminder_date)
 
 	def test_recurrence_prompt(self):
 		title = 'a sample task'
