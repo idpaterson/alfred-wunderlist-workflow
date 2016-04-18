@@ -40,7 +40,7 @@ def task_subtitle(task):
         if task.reminder_date.date() == task.due_date:
             reminder_date_phrase = 'On due date'
         else:
-            reminder_date_phrase = short_relative_formatted_date(task.due_date)
+            reminder_date_phrase = short_relative_formatted_date(task.reminder_date)
 
         subtitle.append('%s %s at %s' % (
             _reminder,
