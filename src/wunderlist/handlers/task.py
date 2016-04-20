@@ -5,7 +5,7 @@ from datetime import date
 from wunderlist import icons
 from wunderlist.models.task import Task
 from wunderlist.models.task_parser import TaskParser
-from wunderlist.util import modifier_subtitles, workflow
+from wunderlist.util import workflow
 
 _star = u'★'
 _recurrence = u'↻'
@@ -34,9 +34,9 @@ def filter(args):
             wf.add_item('Mark task not completed', subtitle, modifier_subtitles={
             }, arg=' '.join(args + ['toggle-completion']), valid=True, icon=icons.TASK_COMPLETED)
         else:
-            wf.add_item('Complete this task', subtitle, modifier_subtitles=modifier_subtitles(
-                alt=u'…and set due today    %s' % subtitle
-            ), arg=' '.join(args + ['toggle-completion']), valid=True, icon=icons.TASK)
+            wf.add_item('Complete this task', subtitle, modifier_subtitles={
+                'alt': u'…and set due today    %s' % subtitle
+            }, arg=' '.join(args + ['toggle-completion']), valid=True, icon=icons.TASK)
 
         if task.recurrence_type and not task.completed:
             wf.add_item('Delete', 'Delete this task and cancel recurrence', arg=' '.join(args + ['delete']), valid=True, icon=icons.TRASH)
