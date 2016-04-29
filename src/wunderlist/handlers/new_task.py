@@ -3,6 +3,7 @@
 from datetime import date
 from random import random
 
+from peewee import fn
 from workflow.background import is_running
 
 from wunderlist import icons
@@ -64,7 +65,7 @@ def filter(args):
     if task.has_hashtag_prompt:
         from wunderlist.models.hashtag import Hashtag
 
-        hashtags = Hashtag.select().where(Hashtag.id.contains(task.hashtag_prompt))
+        hashtags = Hashtag.select().where(Hashtag.id.contains(task.hashtag_prompt)).order_by(fn.Lower(Hashtag.id).asc())
 
         for hashtag in hashtags:
             matching_hashtags.append(hashtag)

@@ -2,7 +2,7 @@
 
 import re
 
-from peewee import OperationalError
+from peewee import fn, OperationalError
 from workflow import MATCH_ALL, MATCH_ALLCHARS
 
 from wunderlist import icons
@@ -27,7 +27,7 @@ def filter(args):
         from wunderlist.models.hashtag import Hashtag
 
         hashtag_prompt = hashtag_match.group()
-        hashtags = Hashtag.select().where(Hashtag.id.contains(hashtag_prompt))
+        hashtags = Hashtag.select().where(Hashtag.id.contains(hashtag_prompt)).order_by(fn.Lower(Hashtag.id).asc())
 
         for hashtag in hashtags:
             # If there is an exact match, do not show hashtags
