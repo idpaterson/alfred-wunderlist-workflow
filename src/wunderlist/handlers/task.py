@@ -38,6 +38,8 @@ def filter(args):
                 'alt': u'…and set due today    %s' % subtitle
             }, arg=' '.join(args + ['toggle-completion']), valid=True, icon=icons.TASK)
 
+        wf.add_item('View in Wunderlist', 'View and edit this task in the Wunderlist app', arg=' '.join(args + ['view']), valid=True, icon=icons.OPEN)
+
         if task.recurrence_type and not task.completed:
             wf.add_item('Delete', 'Delete this task and cancel recurrence', arg=' '.join(args + ['delete']), valid=True, icon=icons.TRASH)
         else:
@@ -78,5 +80,10 @@ def commit(args, modifier=None):
         import webbrowser
 
         webbrowser.open('https://github.com/idpaterson/alfred-wunderlist-workflow/issues/94')
+
+    elif action == 'view':
+        import webbrowser
+
+        webbrowser.open('wunderlist://tasks/%d' % task.id)
 
     background_sync(True)
