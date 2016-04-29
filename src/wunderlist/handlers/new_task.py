@@ -121,7 +121,9 @@ def filter(args):
 
     # Main menu for tasks
     else:
-        wf.add_item(task.list_title + u' – create a new task...', subtitle, arg='--stored-query', valid=task.title != '', icon=icons.TASK)
+        wf.add_item(task.list_title + u' – create a new task...', subtitle, modifier_subtitles={
+            'alt': u'…then edit it in the Wunderlist app    %s' % subtitle
+        }, arg='--stored-query', valid=task.title != '', icon=icons.TASK)
 
         title = 'Change list' if task.list_title else 'Select a list'
         wf.add_item(title, 'Prefix the task, e.g. Automotive: ' + task.title, autocomplete=' ' + task.phrase_with(list_title=True), icon=icons.LIST)
@@ -151,7 +153,7 @@ def commit(args, modifier=None):
 
     prefs.last_list_id = task.list_id
 
-    tasks.create_task(task.list_id, task.title,
+    task_info = tasks.create_task(task.list_id, task.title,
                       assignee_id=task.assignee_id,
                       recurrence_type=task.recurrence_type,
                       recurrence_count=task.recurrence_count,
@@ -162,5 +164,10 @@ def commit(args, modifier=None):
 
     # Output must be a UTF-8 encoded string
     print ('The task was added to ' + task.list_title).encode('utf-8')
+
+    if modifier == 'alt':
+        import webbrowser
+
+        webbrowser.open('wunderlist://tasks/%d' % task_info['id'])
 
     background_sync(True)
