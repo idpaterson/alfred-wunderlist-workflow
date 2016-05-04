@@ -22,8 +22,9 @@ def route(args):
         os.remove(query_file)
     # Otherwise take the command from the first command line argument
     elif args:
-        command_string = re.sub(r'^[^\w\s]+', '', args[0])
+        command_string = args[0]
 
+    command_string = re.sub(r'^[^\w\s]+', '', command_string)
     command = re.split(r' +', command_string)
 
     if command:
