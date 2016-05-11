@@ -25,7 +25,7 @@ DUE_PATTERN = r'(\bdue:?\b\s*)(.*)'
 
 NOT_DUE_PATTERN = r'not? due( date)?'
 
-HASHTAG_PROMPT_PATTERN = r'(?:^|\s)(#\S*)$'
+HASHTAG_PROMPT_PATTERN = r'(?:^|[\s:])(#\S*)$'
 
 # An asterisk at the end of the phrase
 STAR_PATTERN = r'\*$'

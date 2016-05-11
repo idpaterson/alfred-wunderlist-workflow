@@ -466,6 +466,15 @@ class TestHashtags():
 		task = TaskParser(phrase)
 
 		assert_task(task, phrase=phrase, title=title, has_hashtag_prompt=True)
+
+	@pytest.mark.usefixtures("mock_lists")
+	def test_hashtag_prompt_following_list(self):
+		target_list = _single_word_list
+		title = '#'
+		phrase = '%s:%s' % (target_list, title)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list), has_hashtag_prompt=True)
 	
 #
 # Due date
