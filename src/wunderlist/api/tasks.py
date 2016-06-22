@@ -9,12 +9,23 @@ def tasks(list_id, order='display', completed=False, subtasks=False, positions=N
         'list_id': int(list_id),
         'completed': completed
     })
-    tasks = req.json()
+    tasks = []
+    positions = []
+
+    if order == 'display' and positions is None:
+        with futures.ThreadPoolExecutor(max_workers=2) as executor:
+            def get_tasks():
+                tasks.extend(req.json())
+
+            def get_positions():
+                positions.extend(task_positions(list_id))
+
+            executor.submit(get_tasks)
+            executor.submit(get_positions)
+    else:
+        tasks = req.json()
 
     if order == 'display':
-        if positions is None:
-            positions = task_positions(list_id)
-
         def position(task):
             try:
                 return positions.index(task['id'])

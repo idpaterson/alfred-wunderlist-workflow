@@ -1,3 +1,4 @@
+from concurrent import futures
 from requests import codes
 
 import wunderlist.api.base as api
@@ -8,10 +9,19 @@ SMART_LISTS = [
 
 def lists(order='display', task_counts=False):
     req = api.get('lists')
-    lists = req.json()
+    lists = []
+    positions = []
 
     if order == 'display':
-        positions = list_positions()
+        with futures.ThreadPoolExecutor(max_workers=2) as executor:
+            def get_tasks():
+                lists.extend(req.json())
+
+            def get_positions():
+                positions.extend(task_positions(list_id))
+
+            executor.submit(get_tasks)
+            executor.submit(get_positions)
 
         def position(list):
             if list['list_type'] in SMART_LISTS:
@@ -22,6 +32,8 @@ def lists(order='display', task_counts=False):
                 return list['id']
 
         lists.sort(key=position)
+    else:
+        lists = req.json()
 
     if task_counts:
         for list in lists:

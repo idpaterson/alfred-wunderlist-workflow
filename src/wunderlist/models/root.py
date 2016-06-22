@@ -21,43 +21,24 @@ class Root(BaseModel):
         except Root.DoesNotExist:
             pass
 
-        cls._perform_updates([instance], [root.root()], threading=False)
+        cls._perform_updates([instance], [root.root()])
 
         return None
 
     def _sync_children(self):
-        from concurrent import futures
+        from wunderlist.models.hashtag import Hashtag
+        from wunderlist.models.preferences import Preferences
+        from wunderlist.models.reminder import Reminder
 
-        lists_data = List.prepare_sync_data()
+        User.sync()
+        List.sync()
+        Preferences.sync()
+        Reminder.sync()
+        Hashtag.sync()
 
-        with futures.ThreadPoolExecutor(max_workers=2) as executor:
-            executor.submit(_sync_user),
-            executor.submit(_sync_lists, lists_data),
-            executor.submit(_sync_preferences)
+    def __str__(self):
+        return '<%s>' % (type(self).__name__)
 
-        # Wait until all tasks are synced before syncing reminders and
-        # hashtags since these are dependent on tasks.
-        with futures.ThreadPoolExecutor(max_workers=2) as executor:
-            executor.submit(_sync_reminders),
-            executor.submit(_sync_hashtags)
-
-def _sync_user():
-    User.sync()
-
-def _sync_lists(lists_data):
-    List.sync(lists_data)
-
-def _sync_preferences():
-    from wunderlist.models.preferences import Preferences
-
-    Preferences.sync()
-
-def _sync_reminders():
-    from wunderlist.models.reminder import Reminder
-
-    Reminder.sync()
-
-def _sync_hashtags():
-    from wunderlist.models.hashtag import Hashtag
-
-    Hashtag.sync()
+    class Meta:
+        expect_revisions = True
+        has_children = True

@@ -55,54 +55,58 @@ class BaseModel(Model):
         pass
 
     @classmethod
-    def _perform_updates(cls, model_instances, update_items, threading=True):
+    def _perform_updates(cls, model_instances, update_items):
         from concurrent import futures
 
         # Map of id to the normalized item
         update_items = {item['id']: cls._api2model(item) for item in update_items}
         all_instances = []
 
-        with futures.ThreadPoolExecutor(max_workers=4) as executor:
-            for instance in model_instances:
-                if not instance:
-                    continue
-                if instance.id in update_items:
-                    update_item = update_items[instance.id]
-                    all_instances.append(instance)
+        for instance in model_instances:
+            if not instance:
+                continue
+            if instance.id in update_items:
+                update_item = update_items[instance.id]
+                all_instances.append(instance)
 
-                    # If the revision is different, sync any children, then update the db
-                    if 'revision' in update_item and instance.revision != update_item['revision']:
-                        def sync_instance_children():
+                # If the revision is different, sync any children, then update the db
+                if 'revision' in update_item:
+                    if instance.revision != update_item['revision']:
+                        if cls._meta.has_children:
+                            log.info('Syncing children of %s' % (instance))
                             instance._sync_children()
                             cls.update(**update_item).where(cls.id == instance.id).execute()
+                        log.info('Updated %s to revision %d' % (instance, update_item['revision']))
+                    else:
+                        logger = log.debug
 
-                        if threading:
-                            executor.submit(sync_instance_children)
-                        else:
-                            sync_instance_children()
+                        if type(instance)._meta.expect_revisions:
+                            logger = log.info
 
-                    del update_items[instance.id]
-                # The model does not exist anymore
-                else:
-                    instance.delete_instance()
+                        logger('Revision %d of %s is still the latest' % (update_item['revision'], instance))
 
-            # Bulk insert and retrieve
-            new_values = update_items.values()
-            # Insert in batches
-            for i in xrange(0, len(new_values), 500):
-                inserted_chunk = _balance_keys_for_insert(new_values[i:i + 500])
+                del update_items[instance.id]
+            # The model does not exist anymore
+            else:
+                instance.delete_instance()
+                log.info('Deleted %s' % instance)
 
+        # Bulk insert and retrieve
+        new_values = update_items.values()
+        # Insert in batches
+        for i in xrange(0, len(new_values), 500):
+            inserted_chunk = _balance_keys_for_insert(new_values[i:i + 500])
+
+            with db.atomic():
                 cls.insert_many(inserted_chunk).execute()
+
+                log.info('Created %d of model %s' % (len(inserted_chunk), cls.__name__))
 
                 inserted_ids = [i['id'] for i in inserted_chunk]
                 inserted_instances = cls.select().where(cls.id.in_(inserted_ids))
 
-                if threading:
-                    for instance in inserted_instances:
-                        executor.submit(instance._sync_children)
-                else:
-                    for instance in inserted_instances:
-                        instance._sync_children()
+                for instance in inserted_instances:
+                    instance._sync_children()
 
                 all_instances += inserted_instances
 
@@ -120,3 +124,5 @@ class BaseModel(Model):
 
     class Meta:
         database = db
+        expect_revisions = False
+        has_children = False

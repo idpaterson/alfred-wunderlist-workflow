@@ -17,7 +17,10 @@ class List(BaseModel):
     created_at = DateTimeUTCField()
 
     @classmethod
-    def sync(cls, lists_data=None):
+    def sync(cls):
+        from wunderlist.api import lists
+
+        lists_data = lists.lists()
         instances = []
 
         try:
@@ -25,22 +28,9 @@ class List(BaseModel):
         except PeeweeException:
             pass
 
-        if not lists_data:
-            from wunderlist.api import lists
-            lists_data = lists.lists()
-
         cls._perform_updates(instances, lists_data)
 
         return None
-
-    @classmethod
-    def prepare_sync_data(cls):
-        from wunderlist.api import lists
-
-        lists_data = lists.lists()
-        workflow().store_data('lists', lists_data)
-
-        return lists_data
 
     @classmethod
     def _populate_api_extras(cls, info):
@@ -60,3 +50,4 @@ class List(BaseModel):
 
     class Meta:
         order_by = ('order', 'id')
+        has_children = True
