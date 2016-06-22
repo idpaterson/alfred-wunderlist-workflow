@@ -10,7 +10,7 @@ module.exports = {
 				cwd: '<%= paths.app %>',
 				dest: '<%= paths.dist_app %>',
 				src: [
-					'**/*.{py,scpt,plist}'
+					'**/*.{py,scpt,plist,ini}'
 				]
 			},
 			{

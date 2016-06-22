@@ -1,7 +1,15 @@
 import calendar
 from datetime import date, datetime, timedelta
+import logging
 
 from workflow import Workflow
+
+try:  # Python 2.7+
+    from logging import NullHandler
+except ImportError:
+    class NullHandler(logging.Handler):
+        def emit(self, record):
+            pass
 
 _workflow = None
 _update_settings = None
@@ -27,6 +35,9 @@ def workflow():
                 'prerelease': '-' in version
             }
         )
+
+        # Avoid default logger output configuration
+        _workflow.logger = logging.getLogger('workflow')
 
     return _workflow
 

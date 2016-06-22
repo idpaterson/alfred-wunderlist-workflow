@@ -1,5 +1,4 @@
-from peewee import (ForeignKeyField, IntegerField, PeeweeException,
-                    PrimaryKeyField)
+from peewee import ForeignKeyField, IntegerField, PrimaryKeyField
 
 from wunderlist.models.base import BaseModel
 from wunderlist.models.list import List

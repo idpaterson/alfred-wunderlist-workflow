@@ -1,4 +1,4 @@
-from peewee import IntegerField, PeeweeException, PrimaryKeyField, TextField
+from peewee import IntegerField, PrimaryKeyField, TextField
 
 from wunderlist.models import DateTimeUTCField
 from wunderlist.models.base import BaseModel

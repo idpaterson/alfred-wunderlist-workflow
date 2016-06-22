@@ -50,6 +50,9 @@ class List(BaseModel):
 
         return info
 
+    def __str__(self):
+        return u'<%s %d %s>' % (type(self).__name__, self.id, self.title)
+
     def _sync_children(self):
         from wunderlist.models.task import Task
 

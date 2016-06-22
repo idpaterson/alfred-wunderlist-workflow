@@ -169,5 +169,9 @@ class Task(BaseModel):
 
         return '   '.join(subtitle)
 
+    def __str__(self):
+        title = self.title if len(self.title) <= 20 else self.title[:20].rstrip() + u'…'
+        return u'<%s %d %s>' % (type(self).__name__, self.id, title)
+
     class Meta:
         order_by = ('order', 'id')

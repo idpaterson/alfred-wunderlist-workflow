@@ -1,10 +1,14 @@
 from copy import copy
+import logging
 
 from dateutil import parser
 from peewee import (DateField, DateTimeField, ForeignKeyField, Model,
                     SqliteDatabase, TimeField)
 
-from wunderlist.util import workflow
+from wunderlist.util import workflow, NullHandler
+
+log = logging.getLogger(__name__)
+log.addHandler(NullHandler())
 
 db = SqliteDatabase(workflow().datadir + '/wunderlist.db', threadlocals=True)
 
@@ -107,6 +111,9 @@ class BaseModel(Model):
     @classmethod
     def _populate_api_extras(cls, info):
         return info
+
+    def __str__(self):
+        return '<%s %d>' % (type(self).__name__, self.id)
 
     def _sync_children(self):
         pass
