@@ -23,14 +23,14 @@ class List(BaseModel):
         lists_data = lists.lists()
         instances = []
 
+        workflow().store_data('lists', lists_data)
+
         try:
             instances = cls.select()
         except PeeweeException:
             pass
 
         cls._perform_updates(instances, lists_data)
-
-        return None
 
     @classmethod
     def _populate_api_extras(cls, info):
