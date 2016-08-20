@@ -40,14 +40,6 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>55076087-BED3-4ED8-A573-23050597BC2B</string>
-				<key>modifiers</key>
-				<integer>131072</integer>
-				<key>modifiersubtext</key>
-				<string>No special behavior for the Shift key</string>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
 				<string>39540B6D-5AA4-4427-BA63-42256009EE5F</string>
 				<key>modifiers</key>
 				<integer>524288</integer>
@@ -109,17 +101,6 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>55076087-BED3-4ED8-A573-23050597BC2B</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>A28E28AD-30A4-4578-87C2-E258E3948B63</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
 		<key>6B21F0AC-FBEB-4269-A007-F3FB0A8D11DE</key>
 		<array>
 			<dict>
@@ -175,26 +156,6 @@
 	<string>Wunderlist</string>
 	<key>objects</key>
 	<array>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
-				<string>export LC_CTYPE="$(defaults read -g AppleLocale).UTF-8"
-/usr/bin/env python -O alfred-wunderlist-workflow.py "{query}" --commit --shift</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>55076087-BED3-4ED8-A573-23050597BC2B</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -525,11 +486,6 @@ security delete-generic-password -s com.ipaterson.alfred.wunderlist -a oauth_tok
 		<dict>
 			<key>ypos</key>
 			<real>560</real>
-		</dict>
-		<key>55076087-BED3-4ED8-A573-23050597BC2B</key>
-		<dict>
-			<key>ypos</key>
-			<real>10</real>
 		</dict>
 		<key>6B21F0AC-FBEB-4269-A007-F3FB0A8D11DE</key>
 		<dict>
