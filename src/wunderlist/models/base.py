@@ -56,10 +56,8 @@ class BaseModel(Model):
 
     @classmethod
     def _perform_updates(cls, model_instances, update_items):
-        from concurrent import futures
-
         # Map of id to the normalized item
-        update_items = {item['id']: cls._api2model(item) for item in update_items}
+        update_items = dict((item['id'], cls._api2model(item)) for item in update_items)
         all_instances = []
 
         for instance in model_instances:
@@ -75,7 +73,7 @@ class BaseModel(Model):
                         if cls._meta.has_children:
                             log.info('Syncing children of %s' % (instance))
                             instance._sync_children()
-                            cls.update(**update_item).where(cls.id == instance.id).execute()
+                        cls.update(**update_item).where(cls.id == instance.id).execute()
                         log.info('Updated %s to revision %d' % (instance, update_item['revision']))
                     else:
                         logger = log.debug
