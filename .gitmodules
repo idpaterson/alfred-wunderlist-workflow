@@ -18,4 +18,4 @@
 	url = https://github.com/agronholm/pythonfutures.git
 [submodule "lib/six"]
 	path = lib/six
-	url = https://github.com/kelp404/six.git
+	url=https://github.com/Khan/six.git
