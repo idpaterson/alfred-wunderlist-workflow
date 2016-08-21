@@ -12,8 +12,16 @@ def filter(args):
 
     workflow().add_item(
         'Due today',
+        'Due and overdue tasks',
         autocomplete='-due ',
         icon=icons.TODAY
+    )
+
+    workflow().add_item(
+        'Upcoming',
+        'Tasks due soon',
+        autocomplete='-upcoming ',
+        icon=icons.UPCOMING
     )
 
     workflow().add_item(

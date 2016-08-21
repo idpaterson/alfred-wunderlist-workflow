@@ -16,6 +16,7 @@ PRERELEASES_KEY = '__workflow_prereleases'
 REMINDER_TIME_KEY = 'reminder_time'
 REMINDER_TODAY_OFFSET_KEY = 'reminder_today_offset'
 SHOW_COMPLETED_TASKS_KEY = 'show_completed_tasks'
+UPCOMING_DURATION_KEY = 'upcoming_duration'
 
 class Preferences(object):
 
@@ -165,6 +166,14 @@ class Preferences(object):
     @show_completed_tasks.setter
     def show_completed_tasks(self, show_completed_tasks):
         self._set(SHOW_COMPLETED_TASKS_KEY, show_completed_tasks)
+
+    @property
+    def upcoming_duration(self):
+        return self._get(UPCOMING_DURATION_KEY, 7)
+
+    @upcoming_duration.setter
+    def upcoming_duration(self, upcoming_duration):
+        self._set(UPCOMING_DURATION_KEY, upcoming_duration)
 
     @property
     def default_list_id(self):
