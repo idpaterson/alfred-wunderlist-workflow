@@ -1,5 +1,6 @@
 from copy import copy
 import logging
+import time
 
 from dateutil import parser
 from peewee import (DateField, DateTimeField, ForeignKeyField, Model,
@@ -65,42 +66,60 @@ class BaseModel(Model):
 
     @classmethod
     def _perform_updates(cls, model_instances, update_items):
+        start = time.time()
+        instances_by_id = dict((instance.id, instance) for instance in model_instances if instance)
+
+        # Remove all update metadata and instances that have the same revision
+        # before any additional processing on the metadata
+        def revised_only(item):
+            id = item['id']
+            if id in instances_by_id and instances_by_id[id].revision == item['revision']:
+                instance = instances_by_id[id]
+                del instances_by_id[id]
+
+                logger = log.debug
+
+                if type(instance)._meta.expect_revisions:
+                    logger = log.info
+
+                logger('Revision %d of %s is still the latest' % (instance.revision, instance))
+
+                return False
+            return True
+
+        changed_items = filter(revised_only, update_items)
+
         # Map of id to the normalized item
-        update_items = dict((item['id'], cls._api2model(item)) for item in update_items)
+        changed_items = dict((item['id'], cls._api2model(item)) for item in changed_items)
         all_instances = []
+        log.info('Prepared %d of %d updated items in %s' % (len(changed_items), len(update_items), time.time() - start))
 
-        for instance in model_instances:
-            if not instance:
-                continue
-            if instance.id in update_items:
-                update_item = update_items[instance.id]
-                all_instances.append(instance)
+        # Update all the changed metadata and remove instances that no longer
+        # exist
+        with db.atomic():
+            for id, instance in instances_by_id.iteritems():
+                if not instance:
+                    continue
+                if id in changed_items:
+                    changed_item = changed_items[id]
+                    all_instances.append(instance)
 
-                # If the revision is different, sync any children, then update the db
-                if 'revision' in update_item:
-                    if instance.revision != update_item['revision']:
-                        if cls._meta.has_children:
-                            log.info('Syncing children of %s' % (instance))
-                            instance._sync_children()
-                        cls.update(**update_item).where(cls.id == instance.id).execute()
-                        log.info('Updated %s to revision %d' % (instance, update_item['revision']))
-                        log.debug('with data %s' % update_item)
-                    else:
-                        logger = log.debug
+                    if cls._meta.has_children:
+                        log.info('Syncing children of %s' % (instance))
+                        instance._sync_children()
+                    cls.update(**changed_item).where(cls.id == id).execute()
+                    log.info('Updated %s to revision %d' % (instance, changed_item['revision']))
+                    log.debug('with data %s' % changed_item)
 
-                        if type(instance)._meta.expect_revisions:
-                            logger = log.info
-
-                        logger('Revision %d of %s is still the latest' % (update_item['revision'], instance))
-
-                del update_items[instance.id]
-            # The model does not exist anymore
-            else:
-                instance.delete_instance()
-                log.info('Deleted %s' % instance)
+                    del changed_items[id]
+                # The model does not exist anymore
+                else:
+                    instance.delete_instance()
+                    log.info('Deleted %s' % instance)
 
         # Bulk insert and retrieve
-        new_values = update_items.values()
+        new_values = changed_items.values()
+
         # Insert in batches
         for i in xrange(0, len(new_values), 500):
             inserted_chunk = _balance_keys_for_insert(new_values[i:i + 500])
@@ -114,7 +133,9 @@ class BaseModel(Model):
                 inserted_instances = cls.select().where(cls.id.in_(inserted_ids))
 
                 for instance in inserted_instances:
-                    instance._sync_children()
+                    if type(instance)._meta.has_children:
+                        log.info('Syncing children of %s' % (instance))
+                        instance._sync_children()
 
                 all_instances += inserted_instances
 
