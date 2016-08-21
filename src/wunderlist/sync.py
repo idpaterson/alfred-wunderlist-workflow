@@ -48,12 +48,9 @@ def sync():
     print 'Sync completed successfully'
 
 
-def background_sync(force=False):
+def background_sync():
     from workflow.background import run_in_background
     task_id = 'sync'
-
-    if force:
-        task_id = 'forced_sync'
 
     # Only runs if another sync is not already in progress
     run_in_background(task_id, [

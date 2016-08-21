@@ -25,4 +25,4 @@ def commit(args, modifier=None):
 
     print 'The new list was created'
 
-    background_sync(True)
+    background_sync()

@@ -86,4 +86,4 @@ def commit(args, modifier=None):
 
         webbrowser.open('wunderlist://tasks/%d' % task.id)
 
-    background_sync(True)
+    background_sync()
