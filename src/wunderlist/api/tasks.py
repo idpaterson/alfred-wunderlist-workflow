@@ -1,16 +1,29 @@
 from requests import codes
+import logging
+import time
 
 import wunderlist.api.base as api
+from wunderlist.util import NullHandler
+
+log = logging.getLogger(__name__)
+log.addHandler(NullHandler())
 
 NO_CHANGE = '!nochange!'
 
 def tasks(list_id, order='display', completed=False, subtasks=False, positions=None):
+    start = time.time()
     req = api.get(('subtasks' if subtasks else 'tasks'), {
         'list_id': int(list_id),
         'completed': completed
     })
     tasks = []
     positions = []
+    task_type = ''
+
+    if completed:
+        task_type += 'completed '
+    if subtasks:
+        task_type += 'sub'
 
     if order == 'display' and positions is None:
         with futures.ThreadPoolExecutor(max_workers=2) as executor:
@@ -22,8 +35,10 @@ def tasks(list_id, order='display', completed=False, subtasks=False, positions=N
 
             executor.submit(get_tasks)
             executor.submit(get_positions)
+        log.info('Retrieved %stasks and positions for list %d in %s' % (task_type, list_id, time.time() - start))
     else:
         tasks = req.json()
+        log.info('Retrieved %stasks for list %d in %s' % (task_type, list_id, time.time() - start))
 
     if order == 'display':
         def position(task):
@@ -40,6 +55,7 @@ def tasks(list_id, order='display', completed=False, subtasks=False, positions=N
     return tasks
 
 def task_positions(list_id):
+    start = time.time()
     positions = []
 
     from concurrent import futures
@@ -56,6 +72,8 @@ def task_positions(list_id):
 
             if len(data) > 0:
                 positions += data[0]['values']
+
+    log.info('Retrieved task positions for list %d in %s' % (list_id, time.time() - start))
 
     return positions
 

@@ -1,6 +1,8 @@
 # encoding: utf-8
 
 from datetime import date
+import logging
+import time
 
 from peewee import (BooleanField, CharField, DateField, ForeignKeyField,
                     IntegerField, PeeweeException, PrimaryKeyField, TextField)
@@ -9,7 +11,10 @@ from wunderlist.models import DateTimeUTCField
 from wunderlist.models.base import BaseModel
 from wunderlist.models.list import List
 from wunderlist.models.user import User
-from wunderlist.util import short_relative_formatted_date
+from wunderlist.util import short_relative_formatted_date, NullHandler
+
+log = logging.getLogger(__name__)
+log.addHandler(NullHandler())
 
 _days_by_recurrence_type = {
     'day': 1,
@@ -45,6 +50,7 @@ class Task(BaseModel):
     def sync_tasks_in_list(cls, list):
         from wunderlist.api import tasks
         from concurrent import futures
+        start = time.time()
         instances = []
         tasks_data = []
         task_positions = tasks.task_positions(list.id)
@@ -60,6 +66,9 @@ class Task(BaseModel):
             for job in futures.as_completed(jobs):
                 tasks_data += job.result()
 
+        log.info('Retrieved all %d tasks for %s in %s' % (len(tasks_data), list, time.time() - start))
+        start = time.time()
+
         try:
             # Include all tasks thought to be in the list, plus any additional
             # tasks referenced in the data (task may have been moved to a different list)
@@ -67,7 +76,12 @@ class Task(BaseModel):
         except PeeweeException:
             pass
 
+        log.info('Loaded all %d tasks for %s from the database in %s' % (len(instances), list, time.time() - start))
+        start = time.time()
+
         cls._perform_updates(instances, tasks_data)
+
+        log.info('Completed updates to tasks in %s in %s' % (list, time.time() - start))
 
         return None
 
