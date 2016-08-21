@@ -5,7 +5,8 @@ import logging
 import time
 
 from peewee import (BooleanField, CharField, DateField, ForeignKeyField,
-                    IntegerField, PeeweeException, PrimaryKeyField, TextField)
+                    IntegerField, PeeweeException, PrimaryKeyField, TextField,
+                    JOIN)
 
 from wunderlist.models import DateTimeUTCField
 from wunderlist.models.base import BaseModel
@@ -72,7 +73,16 @@ class Task(BaseModel):
         try:
             # Include all tasks thought to be in the list, plus any additional
             # tasks referenced in the data (task may have been moved to a different list)
-            instances = cls.select(cls.id, cls.title, cls.revision).where((cls.list == list.id) | (cls.id.in_([task['id'] for task in tasks_data])))
+            ParentTask = cls.alias()
+            task_ids = [task['id'] for task in tasks_data]
+            instances = cls.select(cls.id, cls.title, cls.revision)\
+                .join(ParentTask, JOIN.LEFT_OUTER)\
+                .where(
+                    (ParentTask.list == list.id) |
+                    (cls.list == list.id) |
+                    (cls.id.in_(task_ids)) |
+                    (cls.task.in_(task_ids))
+                )
         except PeeweeException:
             pass
 
