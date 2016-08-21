@@ -72,7 +72,7 @@ class Task(BaseModel):
         try:
             # Include all tasks thought to be in the list, plus any additional
             # tasks referenced in the data (task may have been moved to a different list)
-            instances = cls.select().where((cls.list == list.id) | (cls.id.in_([task['id'] for task in tasks_data])))
+            instances = cls.select(cls.id, cls.title, cls.revision).where((cls.list == list.id) | (cls.id.in_([task['id'] for task in tasks_data])))
         except PeeweeException:
             pass
 

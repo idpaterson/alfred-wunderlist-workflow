@@ -33,7 +33,7 @@ class Reminder(BaseModel):
         start = time.time()
 
         try:
-            instances = cls.select()
+            instances = cls.select(cls.id, cls.revision)
         except PeeweeException:
             pass
 

@@ -36,7 +36,7 @@ class List(BaseModel):
         workflow().store_data('lists', lists_data)
 
         try:
-            instances = cls.select()
+            instances = cls.select(cls.id, cls.revision, cls.title)
         except PeeweeException:
             pass
 
