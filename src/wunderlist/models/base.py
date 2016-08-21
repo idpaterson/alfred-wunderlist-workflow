@@ -31,6 +31,7 @@ class BaseModel(Model):
     @classmethod
     def _api2model(cls, data):
         fields = copy(cls._meta.fields)
+        model_data = {}
 
         # Map relationships, e.g. from user_id to user's
         for (field_name, field) in cls._meta.fields.iteritems():
@@ -39,8 +40,16 @@ class BaseModel(Model):
             elif isinstance(field, ForeignKeyField):
                 fields[field_name + '_id'] = field
 
+            # The Wunderlist API does not include some falsy values. For
+            # example, if a task is completed then marked incomplete the
+            # updated data will not include a completed key, so we have to set
+            # the defaults for everything that is not specified
+            if field.default:
+                model_data[field_name] = field.default
+            elif field.null:
+                model_data[field_name] = None
+
         # Map each data property to the correct field
-        model_data = {}
         for (k, v) in data.iteritems():
             if k in fields:
                 if isinstance(fields[k], (DateTimeField, DateField, TimeField)):
@@ -75,6 +84,7 @@ class BaseModel(Model):
                             instance._sync_children()
                         cls.update(**update_item).where(cls.id == instance.id).execute()
                         log.info('Updated %s to revision %d' % (instance, update_item['revision']))
+                        log.debug('with data %s' % update_item)
                     else:
                         logger = log.debug
 
