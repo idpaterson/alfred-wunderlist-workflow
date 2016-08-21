@@ -2,11 +2,12 @@
 
 from datetime import date, timedelta
 
-from peewee import OperationalError
+from peewee import fn, JOIN, OperationalError
 
 from wunderlist import icons
 from wunderlist.models.list import List
 from wunderlist.models.preferences import Preferences
+from wunderlist.models.reminder import Reminder
 from wunderlist.models.task import Task
 from wunderlist.util import workflow
 
@@ -97,34 +98,11 @@ def filter(args):
         (Task.due_date > date.today() + timedelta(days=1)) &
         Task.list.is_null(False) &
         conditions
-    )
-
-    # Sort the tasks according to user preference
-    for key in prefs.due_order:
-        order = 'asc'
-        field = None
-        if key[0] == '-':
-            order = 'desc'
-            key = key[1:]
-
-        if key == 'due_date':
-            field = Task.due_date
-        elif key == 'list.order':
-            tasks = tasks.join(List)
-            field = List.order
-        elif key == 'order':
-            field = Task.order
-
-        if field:
-            if order == 'asc':
-                tasks = tasks.order_by(field.asc())
-            else:
-                tasks = tasks.order_by(field.desc())
+    )\
+        .join(Reminder, JOIN.LEFT_OUTER)\
+        .order_by(Task.due_date.asc(), Reminder.date.asc(), Task.order.asc())
 
     try:
-        if prefs.hoist_skipped_tasks:
-            tasks = sorted(tasks, key=lambda t: -t.overdue_times)
-
         for t in tasks:
             wf.add_item(u'%s – %s' % (t.list_title, t.title), t.subtitle(), autocomplete='-task %s ' % t.id, icon=icons.TASK_COMPLETED if t.completed else icons.TASK)
     except OperationalError:
