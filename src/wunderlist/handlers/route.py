@@ -48,6 +48,9 @@ def route(args):
     elif 'due'.find(action) == 0:
         from wunderlist.handlers import due
         handler = due
+    elif 'upcoming'.find(action) == 0:
+        from wunderlist.handlers import upcoming
+        handler = upcoming
     elif 'logout'.find(action) == 0:
         from wunderlist.handlers import logout
         handler = logout
