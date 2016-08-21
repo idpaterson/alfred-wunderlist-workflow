@@ -1,6 +1,6 @@
 import re
 
-from peewee import CharField
+from peewee import CharField, IntegerField
 
 from wunderlist.models.base import BaseModel
 
@@ -11,6 +11,7 @@ _hashtag_trim_pattern = r'\W+$'
 
 class Hashtag(BaseModel):
     id = CharField(primary_key=True)
+    revision = IntegerField(default=0)
 
     @classmethod
     def sync(cls):
