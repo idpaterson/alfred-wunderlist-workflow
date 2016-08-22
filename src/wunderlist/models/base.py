@@ -146,7 +146,7 @@ class BaseModel(Model):
         return info
 
     def __str__(self):
-        return '<%s %d>' % (type(self).__name__, self.id)
+        return '<%s %s>' % (type(self).__name__, self.id)
 
     def _sync_children(self):
         pass
