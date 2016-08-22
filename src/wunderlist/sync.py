@@ -25,7 +25,7 @@ def sync():
     # mismatched scheme, delete the old database and re-sync
     try:
         task.Task.select().where(task.Task.recurrence_count > 0).count()
-        hashtag.Hashtag.select().where(hashtag.Hashtag.revision > 0).count()
+        hashtag.Hashtag.select().where(hashtag.Hashtag.tag == '').count()
     except OperationalError:
         base.BaseModel._meta.database.close()
         workflow().clear_data(lambda f: 'wunderlist.db' in f)

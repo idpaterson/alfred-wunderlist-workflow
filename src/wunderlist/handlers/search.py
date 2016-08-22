@@ -26,12 +26,12 @@ def filter(args):
     if hashtag_match:
         from wunderlist.models.hashtag import Hashtag
 
-        hashtag_prompt = hashtag_match.group()
-        hashtags = Hashtag.select().where(Hashtag.id.contains(hashtag_prompt)).order_by(fn.Lower(Hashtag.id).asc())
+        hashtag_prompt = hashtag_match.group().lower()
+        hashtags = Hashtag.select().where(Hashtag.id.contains(hashtag_prompt)).order_by(fn.Lower(Hashtag.tag).asc())
 
         for hashtag in hashtags:
             # If there is an exact match, do not show hashtags
-            if hashtag.id.lower() == hashtag_prompt.lower():
+            if hashtag.id == hashtag_prompt:
                 matching_hashtags = []
                 break
 
@@ -41,7 +41,7 @@ def filter(args):
     # hashtag being typed does not exactly match the single matching hashtag
     if len(matching_hashtags) > 0:
         for hashtag in matching_hashtags:
-            wf.add_item(hashtag.id[1:], '', autocomplete=u'-search %s%s ' % (query[:hashtag_match.start()], hashtag.id), icon=icons.HASHTAG)
+            wf.add_item(hashtag.tag[1:], '', autocomplete=u'-search %s%s ' % (query[:hashtag_match.start()], hashtag.tag), icon=icons.HASHTAG)
 
     else:
         conditions = True
