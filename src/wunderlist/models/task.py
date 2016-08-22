@@ -54,21 +54,29 @@ class Task(BaseModel):
         start = time.time()
         instances = []
         tasks_data = []
-        task_positions = tasks.task_positions(list.id)
+        position_by_task_id = {}
 
         with futures.ThreadPoolExecutor(max_workers=4) as executor:
+            positions_job = executor.submit(tasks.task_positions, list.id)
             jobs = (
-                executor.submit(tasks.tasks, list.id, completed=False, positions=task_positions),
-                executor.submit(tasks.tasks, list.id, completed=True, positions=task_positions),
-                executor.submit(tasks.tasks, list.id, completed=False, subtasks=True, positions=task_positions),
-                executor.submit(tasks.tasks, list.id, completed=True, subtasks=True, positions=task_positions)
+                executor.submit(tasks.tasks, list.id, completed=False),
+                executor.submit(tasks.tasks, list.id, completed=True),
+                executor.submit(tasks.tasks, list.id, subtasks=True)
             )
 
             for job in futures.as_completed(jobs):
                 tasks_data += job.result()
 
+            position_by_task_id = dict((id, index) for (id, index) in enumerate(positions_job.result()))
+
         log.info('Retrieved all %d tasks for %s in %s' % (len(tasks_data), list, time.time() - start))
         start = time.time()
+
+        def task_order(task):
+            task['order'] = position_by_task_id.get(task['id'])
+            return task['order'] or 1e99
+
+        tasks_data.sort(key=task_order)
 
         try:
             # Include all tasks thought to be in the list, plus any additional

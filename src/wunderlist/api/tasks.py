@@ -10,7 +10,7 @@ log.addHandler(NullHandler())
 
 NO_CHANGE = '!nochange!'
 
-def tasks(list_id, order='display', completed=False, subtasks=False, positions=None):
+def tasks(list_id, completed=False, subtasks=False, positions=None):
     start = time.time()
     req = api.get(('subtasks' if subtasks else 'tasks'), {
         'list_id': int(list_id),
@@ -25,32 +25,8 @@ def tasks(list_id, order='display', completed=False, subtasks=False, positions=N
     if subtasks:
         task_type += 'sub'
 
-    if order == 'display' and positions is None:
-        with futures.ThreadPoolExecutor(max_workers=2) as executor:
-            def get_tasks():
-                tasks.extend(req.json())
-
-            def get_positions():
-                positions.extend(task_positions(list_id))
-
-            executor.submit(get_tasks)
-            executor.submit(get_positions)
-        log.info('Retrieved %stasks and positions for list %d in %s' % (task_type, list_id, time.time() - start))
-    else:
-        tasks = req.json()
-        log.info('Retrieved %stasks for list %d in %s' % (task_type, list_id, time.time() - start))
-
-    if order == 'display':
-        def position(task):
-            try:
-                return positions.index(task['id'])
-            except ValueError:
-                return 1e99
-
-        tasks.sort(key=position)
-
-    for (index, task) in enumerate(tasks):
-        task[u'order'] = index
+    tasks = req.json()
+    log.info('Retrieved %stasks for list %d in %s' % (task_type, list_id, time.time() - start))
 
     return tasks
 
