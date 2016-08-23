@@ -9,6 +9,7 @@ from wunderlist import icons
 from wunderlist.models.list import List
 from wunderlist.models.preferences import Preferences
 from wunderlist.models.task import Task
+from wunderlist.sync import background_sync
 from wunderlist.util import workflow
 
 _hashtag_prompt_pattern = r'#\S*$'
@@ -98,7 +99,6 @@ def filter(args):
                     for t in tasks:
                         wf.add_item(u'%s – %s' % (t.list_title, t.title), t.subtitle(), autocomplete='-task %s  ' % t.id, icon=icons.TASK_COMPLETED if t.completed else icons.TASK)
                 except OperationalError:
-                    from wunderlist.sync import background_sync
                     background_sync()
 
 
@@ -111,6 +111,9 @@ def filter(args):
 
         wf.add_item('New search', autocomplete='-search ', icon=icons.CANCEL)
         wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
+
+        # Make sure tasks are up-to-date while searching
+        background_sync()
 
 def commit(args, modifier=None):
     action = args[1]

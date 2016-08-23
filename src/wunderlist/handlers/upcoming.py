@@ -8,7 +8,7 @@ from wunderlist import icons
 from wunderlist.models.preferences import Preferences
 from wunderlist.models.reminder import Reminder
 from wunderlist.models.task import Task
-from wunderlist.sync import sync
+from wunderlist.sync import background_sync, sync
 from wunderlist.util import workflow
 
 _hashtag_prompt_pattern = r'#\S*$'
@@ -110,10 +110,12 @@ def filter(args):
         for t in tasks:
             wf.add_item(u'%s – %s' % (t.list_title, t.title), t.subtitle(), autocomplete='-task %s ' % t.id, icon=icons.TASK_COMPLETED if t.completed else icons.TASK)
     except OperationalError:
-        from wunderlist.sync import background_sync
         background_sync()
 
     wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
+
+    # Make sure tasks stay up-to-date
+    background_sync()
 
 def commit(args, modifier=None):
     relaunch_alfred = False
