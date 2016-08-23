@@ -1,6 +1,9 @@
 from datetime import datetime
+import os
+import time
 
 from workflow.notify import notify
+from workflow.background import is_running
 
 from wunderlist.models.preferences import Preferences
 from wunderlist.util import workflow
@@ -9,6 +12,20 @@ from wunderlist.util import workflow
 def sync(background=False):
     from wunderlist.models import base, root, list, task, user, hashtag, reminder
     from peewee import OperationalError
+
+    # If a sync is already running, wait for it to finish. Otherwise, store
+    # the current pid in alfred-workflow's pid cache file
+    if not background:
+        if is_running('sync'):
+            while is_running('sync'):
+                time.sleep(.25)
+
+            return False
+
+        pidfile = workflow().cachefile('sync.pid')
+
+        with open(pidfile, 'wb') as file_obj:
+            file_obj.write('{0}'.format(os.getpid()))
 
     Preferences.current_prefs().last_sync = datetime.now()
 
@@ -40,7 +57,7 @@ def sync(background=False):
     except root.Root.DoesNotExist:
         first_sync = True
 
-    root.Root.sync()
+    root.Root.sync(background=background)
 
     if background:
         if first_sync:
@@ -71,5 +88,5 @@ def background_sync_if_necessary():
 
     # Avoid syncing on every keystroke, background_sync will also prevent
     # multiple concurrent syncs
-    if last_sync is None or (datetime.now() - last_sync).total_seconds() > 2:
+    if last_sync is None or (datetime.now() - last_sync).total_seconds() > 30:
         background_sync()

@@ -1,6 +1,8 @@
 import logging
-from peewee import ForeignKeyField, IntegerField, PrimaryKeyField
 import time
+
+from peewee import ForeignKeyField, IntegerField, PrimaryKeyField
+from workflow.notify import notify
 
 from wunderlist.models.base import BaseModel
 from wunderlist.models.list import List
@@ -17,7 +19,7 @@ class Root(BaseModel):
     revision = IntegerField()
 
     @classmethod
-    def sync(cls):
+    def sync(cls, background=False):
         from wunderlist.api import root
 
         start = time.time()
@@ -30,6 +32,9 @@ class Root(BaseModel):
             instance = cls.get()
         except Root.DoesNotExist:
             pass
+
+        if not background and instance.revision != root_data['revision']:
+            notify('Please wait...', 'The workflow is making sure your tasks are up-to-date')
 
         return cls._perform_updates([instance], [root_data])
 

@@ -1,14 +1,14 @@
 # encoding: utf-8
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
-from peewee import fn, JOIN, OperationalError
+from peewee import JOIN, OperationalError
 
 from wunderlist import icons
-from wunderlist.models.list import List
 from wunderlist.models.preferences import Preferences
 from wunderlist.models.reminder import Reminder
 from wunderlist.models.task import Task
+from wunderlist.sync import sync
 from wunderlist.util import workflow
 
 _hashtag_prompt_pattern = r'#\S*$'
@@ -79,6 +79,10 @@ def filter(args):
         wf.add_item('Back', autocomplete='-upcoming ', icon=icons.BACK)
 
         return
+
+    # Force a sync if not done recently
+    if datetime.now() - prefs.last_sync > timedelta(seconds=30):
+        sync()
 
     wf.add_item(duration_info['label'], subtitle='Change the duration for upcoming tasks', autocomplete='-upcoming duration ', icon=icons.UPCOMING)
 
