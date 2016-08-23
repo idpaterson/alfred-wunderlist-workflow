@@ -6,7 +6,7 @@ from wunderlist.models.preferences import Preferences
 from wunderlist.util import workflow
 
 
-def sync():
+def sync(background=False):
     from wunderlist.models import base, root, list, task, user, hashtag, reminder
     from peewee import OperationalError
 
@@ -42,11 +42,14 @@ def sync():
 
     root.Root.sync()
 
-    if first_sync:
-        notify('Initial sync has completed', 'All of your tasks are now available for browsing')
+    if background:
+        if first_sync:
+            notify('Initial sync has completed', 'All of your tasks are now available for browsing')
 
-    # If executed manually, this will pass on to the post notification action
-    print 'Sync completed successfully'
+        # If executed manually, this will pass on to the post notification action
+        print 'Sync completed successfully'
+
+    return True
 
 
 def background_sync():
@@ -58,7 +61,7 @@ def background_sync():
         '/usr/bin/env',
         'python',
         workflow().workflowfile('alfred-wunderlist-workflow.py'),
-        'pref sync',
+        'pref sync background',
         '--commit'
     ])
 

@@ -233,7 +233,7 @@ def commit(args, modifier=None):
 
     if 'sync' in args:
         from wunderlist.sync import sync
-        sync()
+        sync('background' in args)
     elif 'show_completed_tasks' in args:
         relaunch_alfred = True
 
