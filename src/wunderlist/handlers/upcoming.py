@@ -37,8 +37,10 @@ _durations = [
     }
 ]
 
+
 def _default_label(days):
     return 'In the next %d day%s' % (days, '' if days == 1 else 's')
+
 
 def _duration_info(days):
     duration_info = [d for d in _durations if d['days'] == days]
@@ -52,6 +54,7 @@ def _duration_info(days):
             'subtitle': 'Your custom duration',
             'custom': True
         }
+
 
 def filter(args):
     wf = workflow()
@@ -74,7 +77,7 @@ def filter(args):
         if 'custom' in duration_info:
             wf.add_item(duration_info['label'], duration_info['subtitle'], arg='-upcoming duration %d' % (duration_info['days']), valid=True, icon=icons.RADIO_SELECTED if duration_info['days'] == selected_duration else icons.RADIO)
 
-        for i, duration_info in enumerate(_durations):
+        for duration_info in _durations:
             wf.add_item(duration_info['label'], duration_info['subtitle'], arg='-upcoming duration %d' % (duration_info['days']), valid=True, icon=icons.RADIO_SELECTED if duration_info['days'] == selected_duration else icons.RADIO)
 
         wf.add_item('Back', autocomplete='-upcoming ', icon=icons.BACK)

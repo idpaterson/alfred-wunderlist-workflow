@@ -1,7 +1,8 @@
-from concurrent import futures
-from requests import codes
 import logging
 import time
+
+from concurrent import futures
+from requests import codes
 
 import wunderlist.api.base as api
 from wunderlist.util import NullHandler
@@ -38,11 +39,11 @@ def lists(order='display', task_counts=False):
             else:
                 return list['id']
 
-        log.info('Retrieved lists and positions in %s' % (time.time() - start))
+        log.info('Retrieved lists and positions in %s', time.time() - start)
         lists.sort(key=position)
     else:
         lists = req.json()
-        log.info('Retrieved lists in %s' % (time.time() - start))
+        log.info('Retrieved lists in %s', time.time() - start)
 
     if task_counts:
         for list in lists:

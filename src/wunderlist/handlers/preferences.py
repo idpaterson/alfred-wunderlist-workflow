@@ -279,7 +279,7 @@ def commit(args, modifier=None):
         relaunch_alfred = True
         reminder_today_offset = None
 
-        if not ('disabled' in args):
+        if not 'disabled' in args:
             reminder_today_offset = _parse_time(' '.join(args))
 
         prefs.reminder_today_offset = reminder_today_offset

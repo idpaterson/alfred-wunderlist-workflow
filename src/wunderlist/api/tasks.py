@@ -1,6 +1,7 @@
-from requests import codes
 import logging
 import time
+
+from requests import codes
 
 import wunderlist.api.base as api
 from wunderlist.util import NullHandler
@@ -26,7 +27,7 @@ def tasks(list_id, completed=False, subtasks=False, positions=None):
         task_type += 'sub'
 
     tasks = req.json()
-    log.info('Retrieved %stasks for list %d in %s' % (task_type, list_id, time.time() - start))
+    log.info('Retrieved %stasks for list %d in %s', task_type, list_id, time.time() - start)
 
     return tasks
 
@@ -49,7 +50,7 @@ def task_positions(list_id):
             if len(data) > 0:
                 positions += data[0]['values']
 
-    log.info('Retrieved task positions for list %d in %s' % (list_id, time.time() - start))
+    log.info('Retrieved task positions for list %d in %s', list_id, time.time() - start)
 
     return positions
 

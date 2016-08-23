@@ -1,7 +1,8 @@
 import logging
+import time
+
 from peewee import (BooleanField, CharField, IntegerField, PeeweeException,
                     PrimaryKeyField, TextField)
-import time
 
 from wunderlist.models import DateTimeUTCField
 from wunderlist.models.base import BaseModel
@@ -30,7 +31,7 @@ class List(BaseModel):
         lists_data = lists.lists()
         instances = []
 
-        log.info('Retrieved all %d lists in %s' % (len(lists_data), time.time() - start))
+        log.info('Retrieved all %d lists in %s', len(lists_data), time.time() - start)
         start = time.time()
 
         workflow().store_data('lists', lists_data)
@@ -40,7 +41,7 @@ class List(BaseModel):
         except PeeweeException:
             pass
 
-        log.info('Loaded all %d lists from the database in %s' % (len(instances), time.time() - start))
+        log.info('Loaded all %d lists from the database in %s', len(instances), time.time() - start)
 
         return cls._perform_updates(instances, lists_data)
 

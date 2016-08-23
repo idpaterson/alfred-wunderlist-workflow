@@ -69,7 +69,7 @@ class Task(BaseModel):
 
             position_by_task_id = dict((id, index) for (id, index) in enumerate(positions_job.result()))
 
-        log.info('Retrieved all %d tasks for %s in %s' % (len(tasks_data), list, time.time() - start))
+        log.info('Retrieved all %d tasks for %s in %s', len(tasks_data), list, time.time() - start)
         start = time.time()
 
         def task_order(task):
@@ -94,12 +94,12 @@ class Task(BaseModel):
         except PeeweeException:
             pass
 
-        log.info('Loaded all %d tasks for %s from the database in %s' % (len(instances), list, time.time() - start))
+        log.info('Loaded all %d tasks for %s from the database in %s', len(instances), list, time.time() - start)
         start = time.time()
 
         cls._perform_updates(instances, tasks_data)
 
-        log.info('Completed updates to tasks in %s in %s' % (list, time.time() - start))
+        log.info('Completed updates to tasks in %s in %s', list, time.time() - start)
 
         return None
 
@@ -155,7 +155,6 @@ class Task(BaseModel):
         from wunderlist.util import format_time
 
         subtitle = []
-        today = date.today()
 
         if self.starred:
             subtitle.append(_star)
@@ -205,5 +204,5 @@ class Task(BaseModel):
         title = self.title if len(self.title) <= 20 else self.title[:20].rstrip() + u'…'
         return u'<%s %d %s>' % (type(self).__name__, self.id, title)
 
-    class Meta:
+    class Meta(object):
         order_by = ('order', 'id')

@@ -26,7 +26,7 @@ class Root(BaseModel):
         instance = None
         root_data = root.root()
 
-        log.info('Retrieved Root revision in %s' % (time.time() - start))
+        log.info('Retrieved Root revision in %s', time.time() - start)
 
         try:
             instance = cls.get()
@@ -45,31 +45,31 @@ class Root(BaseModel):
 
         start = time.time()
         user_revised = User.sync()
-        log.info('Synced user in %s' % (time.time() - start))
+        log.info('Synced user in %s', time.time() - start)
         start = time.time()
 
         lists_revised = List.sync()
-        log.info('Synced lists and tasks in %s' % (time.time() - start))
+        log.info('Synced lists and tasks in %s', time.time() - start)
         start = time.time()
 
         # Changes to reminders or settings increment the User revision
         if user_revised:
             Preferences.sync()
-            log.info('Synced preferences in %s' % (time.time() - start))
+            log.info('Synced preferences in %s', time.time() - start)
             start = time.time()
 
             Reminder.sync()
-            log.info('Synced reminders in %s' % (time.time() - start))
+            log.info('Synced reminders in %s', time.time() - start)
             start = time.time()
 
         # Changes in lists or tasks require hashtags to be updated
         if lists_revised:
             Hashtag.sync()
-            log.info('Synced hashtags in %s' % (time.time() - start))
+            log.info('Synced hashtags in %s', time.time() - start)
 
     def __str__(self):
         return '<%s>' % (type(self).__name__)
 
-    class Meta:
+    class Meta(object):
         expect_revisions = True
         has_children = True
