@@ -83,10 +83,10 @@ def background_sync():
     ])
 
 
-def background_sync_if_necessary():
+def background_sync_if_necessary(seconds=30):
     last_sync = Preferences.current_prefs().last_sync
 
     # Avoid syncing on every keystroke, background_sync will also prevent
     # multiple concurrent syncs
-    if last_sync is None or (datetime.now() - last_sync).total_seconds() > 30:
+    if last_sync is None or (datetime.now() - last_sync).total_seconds() > seconds:
         background_sync()

@@ -3,12 +3,13 @@
 from datetime import date, datetime, timedelta
 
 from peewee import JOIN, OperationalError
+from workflow.background import is_running
 
 from wunderlist import icons
 from wunderlist.models.preferences import Preferences
 from wunderlist.models.reminder import Reminder
 from wunderlist.models.task import Task
-from wunderlist.sync import background_sync, sync
+from wunderlist.sync import background_sync, background_sync_if_necessary, sync
 from wunderlist.util import workflow
 
 _hashtag_prompt_pattern = r'#\S*$'
@@ -80,8 +81,8 @@ def filter(args):
 
         return
 
-    # Force a sync if not done recently
-    if datetime.now() - prefs.last_sync > timedelta(seconds=30):
+    # Force a sync if not done recently or join if already running
+    if datetime.now() - prefs.last_sync > timedelta(seconds=30) or is_running('sync'):
         sync()
 
     wf.add_item(duration_info['label'], subtitle='Change the duration for upcoming tasks', autocomplete='-upcoming duration ', icon=icons.UPCOMING)
@@ -115,7 +116,7 @@ def filter(args):
     wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
 
     # Make sure tasks stay up-to-date
-    background_sync()
+    background_sync_if_necessary(seconds=2)
 
 def commit(args, modifier=None):
     relaunch_alfred = False
