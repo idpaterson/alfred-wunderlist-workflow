@@ -1,15 +1,21 @@
 # encoding: utf-8
 
 from datetime import date
+import logging
+import time
 
 from peewee import (BooleanField, CharField, DateField, ForeignKeyField,
-                    IntegerField, PeeweeException, PrimaryKeyField, TextField)
+                    IntegerField, PeeweeException, PrimaryKeyField, TextField,
+                    JOIN)
 
 from wunderlist.models import DateTimeUTCField
 from wunderlist.models.base import BaseModel
 from wunderlist.models.list import List
 from wunderlist.models.user import User
-from wunderlist.util import short_relative_formatted_date
+from wunderlist.util import short_relative_formatted_date, NullHandler
+
+log = logging.getLogger(__name__)
+log.addHandler(NullHandler())
 
 _days_by_recurrence_type = {
     'day': 1,
@@ -45,29 +51,55 @@ class Task(BaseModel):
     def sync_tasks_in_list(cls, list):
         from wunderlist.api import tasks
         from concurrent import futures
+        start = time.time()
         instances = []
         tasks_data = []
-        task_positions = tasks.task_positions(list.id)
+        position_by_task_id = {}
 
         with futures.ThreadPoolExecutor(max_workers=4) as executor:
+            positions_job = executor.submit(tasks.task_positions, list.id)
             jobs = (
-                executor.submit(tasks.tasks, list.id, completed=False, positions=task_positions),
-                executor.submit(tasks.tasks, list.id, completed=True, positions=task_positions),
-                executor.submit(tasks.tasks, list.id, completed=False, subtasks=True, positions=task_positions),
-                executor.submit(tasks.tasks, list.id, completed=True, subtasks=True, positions=task_positions)
+                executor.submit(tasks.tasks, list.id, completed=False),
+                executor.submit(tasks.tasks, list.id, completed=True),
+                executor.submit(tasks.tasks, list.id, subtasks=True)
             )
 
             for job in futures.as_completed(jobs):
                 tasks_data += job.result()
 
+            position_by_task_id = dict((id, index) for (id, index) in enumerate(positions_job.result()))
+
+        log.info('Retrieved all %d tasks for %s in %s' % (len(tasks_data), list, time.time() - start))
+        start = time.time()
+
+        def task_order(task):
+            task['order'] = position_by_task_id.get(task['id'])
+            return task['order'] or 1e99
+
+        tasks_data.sort(key=task_order)
+
         try:
             # Include all tasks thought to be in the list, plus any additional
             # tasks referenced in the data (task may have been moved to a different list)
-            instances = cls.select().where((cls.list == list.id) | (cls.id.in_([task['id'] for task in tasks_data])))
+            ParentTask = cls.alias()
+            task_ids = [task['id'] for task in tasks_data]
+            instances = cls.select(cls.id, cls.title, cls.revision)\
+                .join(ParentTask, JOIN.LEFT_OUTER)\
+                .where(
+                    (ParentTask.list == list.id) |
+                    (cls.list == list.id) |
+                    (cls.id.in_(task_ids)) |
+                    (cls.task.in_(task_ids))
+                )
         except PeeweeException:
             pass
 
+        log.info('Loaded all %d tasks for %s from the database in %s' % (len(instances), list, time.time() - start))
+        start = time.time()
+
         cls._perform_updates(instances, tasks_data)
+
+        log.info('Completed updates to tasks in %s in %s' % (list, time.time() - start))
 
         return None
 

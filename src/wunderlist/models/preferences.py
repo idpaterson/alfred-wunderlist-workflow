@@ -40,6 +40,8 @@ class Preferences(object):
                     prefs.automatic_reminders = s['value'] and s['value'] != 'off'
                     break
 
+        return False
+
     @classmethod
     def current_prefs(cls):
         if not cls._current_prefs:

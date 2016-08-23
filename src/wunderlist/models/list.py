@@ -1,9 +1,15 @@
+import logging
 from peewee import (BooleanField, CharField, IntegerField, PeeweeException,
                     PrimaryKeyField, TextField)
+import time
 
 from wunderlist.models import DateTimeUTCField
 from wunderlist.models.base import BaseModel
-from wunderlist.util import workflow
+from wunderlist.util import workflow, NullHandler
+
+log = logging.getLogger(__name__)
+log.addHandler(NullHandler())
+
 
 class List(BaseModel):
     id = PrimaryKeyField()
@@ -19,18 +25,24 @@ class List(BaseModel):
     @classmethod
     def sync(cls):
         from wunderlist.api import lists
+        start = time.time()
 
         lists_data = lists.lists()
         instances = []
 
+        log.info('Retrieved all %d lists in %s' % (len(lists_data), time.time() - start))
+        start = time.time()
+
         workflow().store_data('lists', lists_data)
 
         try:
-            instances = cls.select()
+            instances = cls.select(cls.id, cls.revision, cls.title)
         except PeeweeException:
             pass
 
-        cls._perform_updates(instances, lists_data)
+        log.info('Loaded all %d lists from the database in %s' % (len(instances), time.time() - start))
+
+        return cls._perform_updates(instances, lists_data)
 
     @classmethod
     def _populate_api_extras(cls, info):

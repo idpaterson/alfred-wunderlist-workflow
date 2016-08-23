@@ -65,16 +65,16 @@ def filter(args):
     if task.has_hashtag_prompt:
         from wunderlist.models.hashtag import Hashtag
 
-        hashtags = Hashtag.select().where(Hashtag.id.contains(task.hashtag_prompt)).order_by(fn.Lower(Hashtag.id).asc())
+        hashtags = Hashtag.select().where(Hashtag.id.contains(task.hashtag_prompt.lower())).order_by(fn.Lower(Hashtag.tag).asc())
 
         for hashtag in hashtags:
             matching_hashtags.append(hashtag)
 
     # Show hashtag prompt if there is more than one matching hashtag or the
     # hashtag being typed does not exactly match the single matching hashtag
-    if task.has_hashtag_prompt and len(matching_hashtags) > 0 and (len(matching_hashtags) > 1 or task.hashtag_prompt != matching_hashtags[0].id):
+    if task.has_hashtag_prompt and len(matching_hashtags) > 0 and (len(matching_hashtags) > 1 or task.hashtag_prompt != matching_hashtags[0].tag):
         for hashtag in matching_hashtags:
-            wf.add_item(hashtag.id[1:], '', autocomplete=' ' + task.phrase_with(hashtag=hashtag.id) + ' ', icon=icons.HASHTAG)
+            wf.add_item(hashtag.tag[1:], '', autocomplete=' ' + task.phrase_with(hashtag=hashtag.tag) + ' ', icon=icons.HASHTAG)
 
     elif task.has_list_prompt:
         lists = wf.stored_data('lists')
