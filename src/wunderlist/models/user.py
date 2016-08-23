@@ -1,7 +1,13 @@
+import logging
 from peewee import IntegerField, PrimaryKeyField, TextField
+import time
 
 from wunderlist.models import DateTimeUTCField
 from wunderlist.models.base import BaseModel
+from wunderlist.util import NullHandler
+
+log = logging.getLogger(__name__)
+log.addHandler(NullHandler())
 
 
 class User(BaseModel):
@@ -14,13 +20,14 @@ class User(BaseModel):
     def sync(cls):
         from wunderlist.api import user
 
+        start = time.time()
         instance = None
+        user_data = user.user()
+        log.info('Retrieved User in %s' % (time.time() - start))
 
         try:
             instance = cls.get()
         except User.DoesNotExist:
             pass
 
-        cls._perform_updates([instance], [user.user()])
-
-        return None
+        return cls._perform_updates([instance], [user_data])

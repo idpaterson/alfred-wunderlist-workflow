@@ -39,4 +39,4 @@ class Reminder(BaseModel):
 
         log.info('Loaded all %d reminders from the database in %s' % (len(instances), time.time() - start))
 
-        cls._perform_updates(instances, reminders_data)
+        return cls._perform_updates(instances, reminders_data)

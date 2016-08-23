@@ -30,7 +30,9 @@ class Hashtag(BaseModel):
             hashtag_data = [{'id': id, 'tag': tag, 'revision': 0} for (id, tag) in hashtags.iteritems()]
             instances = cls.select()
 
-            cls._perform_updates(instances, hashtag_data)
+            return cls._perform_updates(instances, hashtag_data)
+
+        return False
 
     @classmethod
     def hashtags_in_task(cls, task):

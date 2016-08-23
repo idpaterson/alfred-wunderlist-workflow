@@ -42,7 +42,7 @@ class List(BaseModel):
 
         log.info('Loaded all %d lists from the database in %s' % (len(instances), time.time() - start))
 
-        cls._perform_updates(instances, lists_data)
+        return cls._perform_updates(instances, lists_data)
 
     @classmethod
     def _populate_api_extras(cls, info):
