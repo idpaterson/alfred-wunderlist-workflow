@@ -17,7 +17,6 @@ def _task(args):
 def filter(args):
     task_id = args[1]
     wf = workflow()
-    matching_hashtags = []
     task = None
 
     try:

@@ -1,13 +1,15 @@
 # encoding: utf-8
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 from peewee import OperationalError
+from workflow.background import is_running
 
 from wunderlist import icons
 from wunderlist.models.list import List
 from wunderlist.models.preferences import Preferences
 from wunderlist.models.task import Task
+from wunderlist.sync import background_sync, background_sync_if_necessary, sync
 from wunderlist.util import workflow
 
 _hashtag_prompt_pattern = r'#\S*$'
@@ -85,6 +87,10 @@ def filter(args):
 
             return
 
+    # Force a sync if not done recently or wait on the current sync
+    if datetime.now() - prefs.last_sync > timedelta(seconds=30) or is_running('sync'):
+        sync()
+
     conditions = None
 
     # Build task title query based on the args
@@ -131,7 +137,6 @@ def filter(args):
         for t in tasks:
             wf.add_item(u'%s – %s' % (t.list_title, t.title), t.subtitle(), autocomplete='-task %s ' % t.id, icon=icons.TASK_COMPLETED if t.completed else icons.TASK)
     except OperationalError:
-        from wunderlist.sync import background_sync
         background_sync()
 
     wf.add_item(u'Sort order', 'Change the display order of due tasks', autocomplete='-due sort', icon=icons.SORT)
@@ -139,6 +144,9 @@ def filter(args):
     wf.add_item('Let\'s discuss this screen', 'Do you need a different sort order or list-level task controls?', arg=' '.join(args + ['discuss']), valid=True, icon=icons.DISCUSS)
 
     wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
+
+    # Make sure tasks stay up-to-date
+    background_sync_if_necessary(seconds=2)
 
 def commit(args, modifier=None):
     action = args[1]

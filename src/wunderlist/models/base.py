@@ -71,7 +71,7 @@ class BaseModel(Model):
 
         # Remove all update metadata and instances that have the same revision
         # before any additional processing on the metadata
-        def revised_only(item):
+        def revised(item):
             id = item['id']
             if id in instances_by_id and instances_by_id[id].revision == item['revision']:
                 instance = instances_by_id[id]
@@ -82,17 +82,17 @@ class BaseModel(Model):
                 if type(instance)._meta.expect_revisions:
                     logger = log.info
 
-                logger('Revision %d of %s is still the latest' % (instance.revision, instance))
+                logger('Revision %d of %s is still the latest', instance.revision, instance)
 
                 return False
             return True
 
-        changed_items = filter(revised_only, update_items)
+        changed_items = [item for item in update_items if revised(item)]
 
         # Map of id to the normalized item
         changed_items = dict((item['id'], cls._api2model(item)) for item in changed_items)
         all_instances = []
-        log.info('Prepared %d of %d updated items in %s' % (len(changed_items), len(update_items), time.time() - start))
+        log.info('Prepared %d of %d updated items in %s', len(changed_items), len(update_items), time.time() - start)
 
         # Update all the changed metadata and remove instances that no longer
         # exist
@@ -105,17 +105,17 @@ class BaseModel(Model):
                     all_instances.append(instance)
 
                     if cls._meta.has_children:
-                        log.info('Syncing children of %s' % (instance))
+                        log.info('Syncing children of %s', instance)
                         instance._sync_children()
                     cls.update(**changed_item).where(cls.id == id).execute()
-                    log.info('Updated %s to revision %d' % (instance, changed_item['revision']))
-                    log.debug('with data %s' % changed_item)
+                    log.info('Updated %s to revision %d', instance, changed_item['revision'])
+                    log.debug('with data %s', changed_item)
 
                     del changed_items[id]
                 # The model does not exist anymore
                 else:
                     instance.delete_instance()
-                    log.info('Deleted %s' % instance)
+                    log.info('Deleted %s', instance)
 
         # Bulk insert and retrieve
         new_values = changed_items.values()
@@ -127,14 +127,14 @@ class BaseModel(Model):
             with db.atomic():
                 cls.insert_many(inserted_chunk).execute()
 
-                log.info('Created %d of model %s' % (len(inserted_chunk), cls.__name__))
+                log.info('Created %d of model %s', len(inserted_chunk), cls.__name__)
 
                 inserted_ids = [i['id'] for i in inserted_chunk]
                 inserted_instances = cls.select().where(cls.id.in_(inserted_ids))
 
                 for instance in inserted_instances:
                     if type(instance)._meta.has_children:
-                        log.info('Syncing children of %s' % (instance))
+                        log.info('Syncing children of %s', instance)
                         instance._sync_children()
 
                 all_instances += inserted_instances
@@ -151,7 +151,7 @@ class BaseModel(Model):
     def _sync_children(self):
         pass
 
-    class Meta:
+    class Meta(object):
         database = db
         expect_revisions = False
         has_children = False

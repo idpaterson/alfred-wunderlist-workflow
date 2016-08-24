@@ -1,6 +1,7 @@
 import logging
-from peewee import IntegerField, PrimaryKeyField, TextField
 import time
+
+from peewee import IntegerField, PrimaryKeyField, TextField
 
 from wunderlist.models import DateTimeUTCField
 from wunderlist.models.base import BaseModel
@@ -23,7 +24,7 @@ class User(BaseModel):
         start = time.time()
         instance = None
         user_data = user.user()
-        log.info('Retrieved User in %s' % (time.time() - start))
+        log.info('Retrieved User in %s', time.time() - start)
 
         try:
             instance = cls.get()

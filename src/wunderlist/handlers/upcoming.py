@@ -1,14 +1,15 @@
 # encoding: utf-8
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
-from peewee import fn, JOIN, OperationalError
+from peewee import JOIN, OperationalError
+from workflow.background import is_running
 
 from wunderlist import icons
-from wunderlist.models.list import List
 from wunderlist.models.preferences import Preferences
 from wunderlist.models.reminder import Reminder
 from wunderlist.models.task import Task
+from wunderlist.sync import background_sync, background_sync_if_necessary, sync
 from wunderlist.util import workflow
 
 _hashtag_prompt_pattern = r'#\S*$'
@@ -36,8 +37,10 @@ _durations = [
     }
 ]
 
+
 def _default_label(days):
     return 'In the next %d day%s' % (days, '' if days == 1 else 's')
+
 
 def _duration_info(days):
     duration_info = [d for d in _durations if d['days'] == days]
@@ -51,6 +54,7 @@ def _duration_info(days):
             'subtitle': 'Your custom duration',
             'custom': True
         }
+
 
 def filter(args):
     wf = workflow()
@@ -73,12 +77,16 @@ def filter(args):
         if 'custom' in duration_info:
             wf.add_item(duration_info['label'], duration_info['subtitle'], arg='-upcoming duration %d' % (duration_info['days']), valid=True, icon=icons.RADIO_SELECTED if duration_info['days'] == selected_duration else icons.RADIO)
 
-        for i, duration_info in enumerate(_durations):
+        for duration_info in _durations:
             wf.add_item(duration_info['label'], duration_info['subtitle'], arg='-upcoming duration %d' % (duration_info['days']), valid=True, icon=icons.RADIO_SELECTED if duration_info['days'] == selected_duration else icons.RADIO)
 
         wf.add_item('Back', autocomplete='-upcoming ', icon=icons.BACK)
 
         return
+
+    # Force a sync if not done recently or join if already running
+    if datetime.now() - prefs.last_sync > timedelta(seconds=30) or is_running('sync'):
+        sync()
 
     wf.add_item(duration_info['label'], subtitle='Change the duration for upcoming tasks', autocomplete='-upcoming duration ', icon=icons.UPCOMING)
 
@@ -106,10 +114,12 @@ def filter(args):
         for t in tasks:
             wf.add_item(u'%s – %s' % (t.list_title, t.title), t.subtitle(), autocomplete='-task %s ' % t.id, icon=icons.TASK_COMPLETED if t.completed else icons.TASK)
     except OperationalError:
-        from wunderlist.sync import background_sync
         background_sync()
 
     wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
+
+    # Make sure tasks stay up-to-date
+    background_sync_if_necessary(seconds=2)
 
 def commit(args, modifier=None):
     relaunch_alfred = False
