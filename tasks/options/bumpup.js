@@ -3,6 +3,5 @@
 'use strict';
 
 module.exports = [
-	'package.json',
-	'bower.json'
+	'package.json'
 ];
