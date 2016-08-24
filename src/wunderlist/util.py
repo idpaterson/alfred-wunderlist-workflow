@@ -1,4 +1,3 @@
-import calendar
 from datetime import date, datetime, timedelta
 import logging
 
@@ -101,6 +100,8 @@ def short_relative_formatted_date(dt):
 
 
 def utc_to_local(utc_dt):
+    import calendar
+    
     # get integer timestamp to avoid precision lost
     timestamp = calendar.timegm(utc_dt.timetuple())
     local_dt = datetime.fromtimestamp(timestamp)

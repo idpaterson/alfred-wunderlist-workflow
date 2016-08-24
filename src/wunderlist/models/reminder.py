@@ -4,7 +4,7 @@ import time
 from peewee import (ForeignKeyField, IntegerField, PeeweeException,
                     PrimaryKeyField)
 
-from wunderlist.models import DateTimeUTCField
+from wunderlist.models.fields import DateTimeUTCField
 from wunderlist.models.base import BaseModel
 from wunderlist.models.task import Task
 from wunderlist.util import NullHandler

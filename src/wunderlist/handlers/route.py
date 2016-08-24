@@ -1,8 +1,9 @@
 import os
 import re
 
-from wunderlist import icons, sync
+from wunderlist import icons
 from wunderlist.auth import is_authorized
+from wunderlist.sync import background_sync_if_necessary
 from wunderlist.util import workflow
 
 
@@ -85,4 +86,4 @@ def route(args):
 
             workflow().send_feedback()
 
-    sync.background_sync_if_necessary()
+    background_sync_if_necessary()

@@ -8,7 +8,7 @@ from peewee import (BooleanField, CharField, DateField, ForeignKeyField,
                     IntegerField, PeeweeException, PrimaryKeyField, TextField,
                     JOIN)
 
-from wunderlist.models import DateTimeUTCField
+from wunderlist.models.fields import DateTimeUTCField
 from wunderlist.models.base import BaseModel
 from wunderlist.models.list import List
 from wunderlist.models.user import User

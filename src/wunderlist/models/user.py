@@ -3,7 +3,7 @@ import time
 
 from peewee import IntegerField, PrimaryKeyField, TextField
 
-from wunderlist.models import DateTimeUTCField
+from wunderlist.models.fields import DateTimeUTCField
 from wunderlist.models.base import BaseModel
 from wunderlist.util import NullHandler
 
