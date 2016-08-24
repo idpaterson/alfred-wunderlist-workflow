@@ -47,7 +47,9 @@ def sync(background=False):
         base.BaseModel._meta.database.close()
         workflow().clear_data(lambda f: 'wunderlist.db' in f)
 
-        sync()
+        # Make sure that this sync does not try to wait until its own process
+        # finishes
+        sync(background=True)
         return
 
     first_sync = False
