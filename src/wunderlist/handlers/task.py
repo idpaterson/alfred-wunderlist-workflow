@@ -44,8 +44,6 @@ def filter(args):
         else:
             wf.add_item('Delete', 'Delete this task', arg=' '.join(args + ['delete']), valid=True, icon=icons.TRASH)
 
-        wf.add_item('Let\'s discuss this screen', 'What task-level features do you need here?', arg=' '.join(args + ['discuss']), valid=True, icon=icons.DISCUSS)
-
         wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
 
 def commit(args, modifier=None):
@@ -74,11 +72,6 @@ def commit(args, modifier=None):
             print 'The task was deleted'
         else:
             print 'Please try again'
-
-    elif action == 'discuss':
-        import webbrowser
-
-        webbrowser.open('https://github.com/idpaterson/alfred-wunderlist-workflow/issues/94')
 
     elif action == 'view':
         import webbrowser

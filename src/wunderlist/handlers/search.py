@@ -107,8 +107,6 @@ def filter(args):
             else:
                 wf.add_item('Show completed tasks', arg='-pref show_completed_tasks --alfred %s' % ' '.join(args), valid=True, icon=icons.VISIBLE)
 
-        wf.add_item('Let\'s discuss this screen', 'Do you need to search completed tasks, tasks by list, date, etc?', arg=' '.join(args + ['discuss']), valid=True, icon=icons.DISCUSS)
-
         wf.add_item('New search', autocomplete='-search ', icon=icons.CANCEL)
         wf.add_item('Main menu', autocomplete='', icon=icons.BACK)
 
@@ -117,8 +115,3 @@ def filter(args):
 
 def commit(args, modifier=None):
     action = args[1]
-
-    if action == 'discuss':
-        import webbrowser
-
-        webbrowser.open('https://github.com/idpaterson/alfred-wunderlist-workflow/issues/95')
