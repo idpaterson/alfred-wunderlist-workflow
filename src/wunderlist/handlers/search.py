@@ -81,7 +81,7 @@ def filter(args):
         if not matching_lists or len(matching_lists) <= 1:
             for arg in query.split(' '):
                 if len(arg) > 1:
-                    conditions = conditions & Task.title.contains(arg)
+                    conditions = conditions & (Task.title.contains(arg) | List.title.contains(arg))
 
             if conditions:
                 if not prefs.show_completed_tasks:

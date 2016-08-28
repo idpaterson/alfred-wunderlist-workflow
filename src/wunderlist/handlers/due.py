@@ -58,17 +58,17 @@ def filter(args):
     if datetime.now() - prefs.last_sync > timedelta(seconds=30) or is_running('sync'):
         sync()
 
-    conditions = None
+    conditions = True
 
     # Build task title query based on the args
     for arg in args[1:]:
         if len(arg) > 1:
-            conditions = conditions | Task.title.contains(arg)
+            conditions = conditions & (Task.title.contains(arg) | List.title.contains(arg))
 
     if conditions is None:
         conditions = True
 
-    tasks = Task.select().where(
+    tasks = Task.select().join(List).where(
         Task.completed_at.is_null() &
         (Task.due_date < date.today() + timedelta(days=1)) &
         Task.list.is_null(False) &

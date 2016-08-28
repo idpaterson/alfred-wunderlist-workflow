@@ -9,6 +9,7 @@ from wunderlist import icons
 from wunderlist.models.preferences import Preferences
 from wunderlist.models.reminder import Reminder
 from wunderlist.models.task import Task
+from wunderlist.models.list import List
 from wunderlist.sync import background_sync, background_sync_if_necessary, sync
 from wunderlist.util import workflow
 
@@ -90,17 +91,17 @@ def filter(args):
 
     wf.add_item(duration_info['label'], subtitle='Change the duration for upcoming tasks', autocomplete='-upcoming duration ', icon=icons.UPCOMING)
 
-    conditions = None
+    conditions = True
 
     # Build task title query based on the args
     for arg in args[1:]:
         if len(arg) > 1:
-            conditions = conditions | Task.title.contains(arg)
+            conditions = conditions & (Task.title.contains(arg) | List.title.contains(arg))
 
     if conditions is None:
         conditions = True
 
-    tasks = Task.select().where(
+    tasks = Task.select().join(List).where(
         Task.completed_at.is_null() &
         (Task.due_date < date.today() + timedelta(days=duration_info['days'] + 1)) &
         (Task.due_date > date.today() + timedelta(days=1)) &
