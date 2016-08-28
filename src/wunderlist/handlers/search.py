@@ -47,11 +47,16 @@ def filter(args):
     else:
         conditions = True
         lists = workflow().stored_data('lists')
-        matching_lists = lists
-        query = ' '.join(args[1:])
+        matching_lists = None
+        query = ' '.join(args[1:]).strip()
         list_query = None
 
-        if len(args) > 1:
+        # Show all lists on the main search screen
+        if not query:
+            matching_lists = lists
+        # Filter lists when colon is used
+        if ':' in query:
+            matching_lists = lists
             components = re.split(r':\s*', query, 1)
             list_query = components[0]
             if list_query:
