@@ -94,8 +94,8 @@ def filter(args):
 
                 tasks = Task.select().where(Task.list.is_null(False) & conditions)
 
-                # Default Wunderlist sort order
-                tasks = tasks.join(List).order_by(Task.order.asc(), List.order.asc())
+                # Default Wunderlist sort order reversed to show newest first
+                tasks = tasks.join(List).order_by(Task.order.desc(), List.order.asc())
 
                 # Avoid excessive results
                 tasks = tasks.limit(50)
