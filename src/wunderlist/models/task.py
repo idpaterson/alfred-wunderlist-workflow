@@ -189,7 +189,7 @@ class Task(BaseModel):
                 if reminder_date.date() == self.due_date:
                     reminder_date_phrase = 'On due date'
                 else:
-                    reminder_date_phrase = short_relative_formatted_date(self.due_date)
+                    reminder_date_phrase = short_relative_formatted_date(reminder_date)
 
                 subtitle.append('%s %s at %s' % (
                     _reminder,
