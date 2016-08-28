@@ -43,49 +43,16 @@ def filter(args):
     prefs = Preferences.current_prefs()
     command = args[1] if len(args) > 1 else None
 
+    # Show sort options
     if command == 'sort':
-        # Apply selected sort option
-        if len(args) > 2:
-            if args[2] == 'toggle-skipped':
-                prefs.hoist_skipped_tasks = not prefs.hoist_skipped_tasks
+        for i, order_info in enumerate(_due_orders):
+            wf.add_item(order_info['title'], order_info['subtitle'], arg='-due sort %d' % (i + 1), valid=True, icon=icons.RADIO_SELECTED if order_info['due_order'] == prefs.due_order else icons.RADIO)
 
-                from workflow.background import run_in_background
+        wf.add_item('Highlight skipped recurring tasks', 'Hoists recurring tasks that have been missed multiple times over to the top', arg='-due sort toggle-skipped', valid=True, icon=icons.CHECKBOX_SELECTED if prefs.hoist_skipped_tasks else icons.CHECKBOX)
 
-                # Remove the sort command syntax. This is not done as a commit
-                # action in the event that resetting the Alfred query does not
-                # work due to accessibility settings.
-                run_in_background('launch_alfred', ['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl-due sort'])
-            else:
-                try:
-                    index = int(args[2])
-                    order_info = _due_orders[index - 1]
-                    prefs.due_order = order_info['due_order']
+        wf.add_item('Back', autocomplete='-due ', icon=icons.BACK)
 
-                    from workflow.background import run_in_background
-
-                    # Remove the sort command syntax. This is not done as a commit
-                    # action in the event that resetting the Alfred query does not
-                    # work due to accessibility settings.
-                    run_in_background('launch_alfred', ['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl-due'])
-
-                    # If resetting the alfred query does not work, make sure that the
-                    # due tasks are not searched by the sort command
-                    args = []
-                    command = None
-                except IndexError:
-                    pass
-                except ValueError:
-                    pass
-        # Show sort options
-        else:
-            for i, order_info in enumerate(_due_orders):
-                wf.add_item(order_info['title'], order_info['subtitle'], autocomplete='-due sort %d' % (i + 1), icon=icons.RADIO_SELECTED if order_info['due_order'] == prefs.due_order else icons.RADIO)
-
-            wf.add_item('Highlight skipped recurring tasks', 'Hoists recurring tasks that have been missed multiple times over to the top', autocomplete='-due sort toggle-skipped', icon=icons.CHECKBOX_SELECTED if prefs.hoist_skipped_tasks else icons.CHECKBOX)
-
-            wf.add_item('Back', autocomplete='-due ', icon=icons.BACK)
-
-            return
+        return
 
     # Force a sync if not done recently or wait on the current sync
     if datetime.now() - prefs.last_sync > timedelta(seconds=30) or is_running('sync'):
@@ -148,3 +115,30 @@ def filter(args):
 
 def commit(args, modifier=None):
     action = args[1]
+    prefs = Preferences.current_prefs()
+    relaunch_alfred = None
+
+    if action == 'sort' and len(args) > 2:
+        command = args[2]
+
+        if command == 'toggle-skipped':
+            prefs.hoist_skipped_tasks = not prefs.hoist_skipped_tasks
+            relaunch_alfred = 'wl-due sort'
+        else:
+            try:
+                index = int(command)
+                order_info = _due_orders[index - 1]
+                prefs.due_order = order_info['due_order']
+                relaunch_alfred = 'wl-due '
+            except IndexError:
+                pass
+            except ValueError:
+                pass
+
+    if relaunch_alfred:
+        from workflow.background import run_in_background
+
+        # Remove the sort command syntax. This is not done as a commit
+        # action in the event that resetting the Alfred query does not
+        # work due to accessibility settings.
+        run_in_background('launch_alfred', ['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', relaunch_alfred])
