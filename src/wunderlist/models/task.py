@@ -138,7 +138,7 @@ class Task(BaseModel):
 
     @property
     def overdue_times(self):
-        if self.recurrence_type is None or self.completed is not None:
+        if self.recurrence_type is None or self.completed:
             return 0
 
         recurrence_days = _days_by_recurrence_type[self.recurrence_type]
