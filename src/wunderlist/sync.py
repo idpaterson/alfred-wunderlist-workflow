@@ -17,8 +17,13 @@ def sync(background=False):
     # the current pid in alfred-workflow's pid cache file
     if not background:
         if is_running('sync'):
+            wait_count = 0
             while is_running('sync'):
                 time.sleep(.25)
+                wait_count += 1
+
+                if wait_count == 2:
+                    notify('Please wait...', 'The workflow is making sure your tasks are up-to-date')
 
             return False
 
