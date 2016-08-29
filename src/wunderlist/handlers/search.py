@@ -72,6 +72,15 @@ def filter(args):
                 if matching_lists:
                     query = components[1] if len(components) > 1 else ''
 
+                # If there is a list exactly matching the query ignore
+                # anything else. This takes care of lists that are substrings
+                # of other lists
+                if len(matching_lists) > 1:
+                    for l in matching_lists:
+                        if l['title'].lower() == list_query.lower():
+                            matching_lists = [l]
+                            break
+
         if matching_lists:
             if not list_query:
                 wf.add_item('Browse by hashtag', autocomplete='-search #', icon=icons.HASHTAG)
