@@ -2,7 +2,7 @@
 
 from datetime import date, datetime, timedelta
 
-from peewee import OperationalError
+from peewee import JOIN, OperationalError
 from workflow.background import is_running
 
 from wunderlist import icons
@@ -86,7 +86,6 @@ def filter(args):
         if key == 'due_date':
             field = Task.due_date
         elif key == 'list.order':
-            tasks = tasks.join(List)
             field = List.order
         elif key == 'order':
             field = Task.order

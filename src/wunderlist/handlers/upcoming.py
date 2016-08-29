@@ -108,7 +108,7 @@ def filter(args):
         Task.list.is_null(False) &
         conditions
     )\
-        .join(Reminder, JOIN.LEFT_OUTER)\
+        .join(Reminder, JOIN.LEFT_OUTER, on=Reminder.task == Task.id)\
         .order_by(Task.due_date.asc(), Reminder.date.asc(), Task.order.asc())
 
     try:
