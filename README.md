@@ -1,11 +1,14 @@
 Wunderlist Workflow for Alfred
 ==========================
 
-Create tasks in [Wunderlist](http://wunderlist.com) more effortlessly than ever before with this [Alfred 2/3](http://www.alfredapp.com/) workflow (requires Powerpack license). 
+Create tasks in [Wunderlist](http://wunderlist.com) more effortlessly than ever before with this [Alfred](http://www.alfredapp.com/) workflow (requires Alfred 2 or 3 with a Powerpack license). 
 
 Beginner and advanced approaches to adding a monthly repeating task beginning the following week:
 
 ![Simple and advanced usage](https://cloud.githubusercontent.com/assets/507058/7975455/ff5acaea-0a3b-11e5-93f9-74b4b14039dc.gif)
+
+| [Setup](#setup) | [Add Tasks](#add-tasks) | [Due](#due-tasks) | [Upcoming](#upcoming-tasks) | [Search Tasks](#search-tasks) | [Command Shorthand](#command-shorthand) |
+| :-------------: | :---------------------: | :---------------: | :-------------------------: | :---------------------------: | :-------------------------------------: |
 
 Setup
 -----
@@ -14,7 +17,7 @@ Setup
 
 After downloading, simply double-click to install the workflow in Alfred. Use the `wl` command in Alfred to activate the workflow, or assign a hotkey in Alfred preferences. The workflow will guide you through securely logging in to Wunderlist and will even let you know when an important update is available.
 
-Features you'll love
+Add tasks
 --------
 
 The workflow provides an easy guided experience with tips along the way that will help you become a power user. 
@@ -98,9 +101,60 @@ You can set a custom default reminder time from the workflow preferences screen,
 
 \*\* The default time can be changed in the workflow preferences. If the specified date is today, your reminder date offset preference will be used instead.
 
+### Due tasks
+
+The `wl-due` command shows tasks that are due or overdue, similar to the Today list in Wunderlist. By default it hoists any recurring tasks that are *multiple times overdue* to the top, but you can change the sort order. Sadly, I have quite a few tasks that are multiple times overdue, so this features is mostly to keep me motivated but I hope others find it useful as well.
+
+
+
+This view is searchable, just type to filter the results by keyword.
+
+#### Sync before showing results
+
+The due and upcoming screens will sync (or wait for the already-running sync) before showing results to make sure that everything is up-to-date. A notification is displayed if there is something to sync so that you're not waiting around too long without any feedback.
+
+### Upcoming tasks
+
+View upcoming tasks at `wl-upcoming`. It's kind of like the Week smart list in Wunderlist with the option to choose the duration that you prefer to look ahead (1 week, 2 weeks, 1 month, 3 days, whatever...). Like any other screen you can get there by typing as little as the first letter of the command: `wlu`:
+
+![upcoming tasks](https://cloud.githubusercontent.com/assets/507058/17914990/9d5dbb88-6974-11e6-9fd4-592951703b09.png)
+
+Browse or type to search your upcoming tasks. This screen can show upcoming tasks for any number of days with a few sensible defaults. Maybe there is someone out there who needs to see exactly 11 days ahead.
+
+![upcoming duration](https://cloud.githubusercontent.com/assets/507058/17915036/2ce004b4-6975-11e6-8405-3793c005c21d.png)
+
+### Search and browse tasks
+
+The `wl-search` command allows you to search tasks by keyword or browse by list. To seach within a list, use the same *wl-search My List: some query* syntax as when entering a task.
+
+#### Default search view
+![search](https://cloud.githubusercontent.com/assets/507058/14915653/9e9716d6-0de2-11e6-8cc6-b098136752fd.png)
+
+#### View a list
+![view list](https://cloud.githubusercontent.com/assets/507058/13865584/3023b66c-ec83-11e5-936c-45950ed8bf4d.png)
+
+#### Search within a list
+![search list](https://cloud.githubusercontent.com/assets/507058/13865587/3bba2696-ec83-11e5-990f-890cb6eba9d1.png)
+
+#### Search across all lists
+
+Your search will match against tasks as well as list names.
+
+![search](https://cloud.githubusercontent.com/assets/507058/13865628/a6fe572e-ec83-11e5-9d4f-4362178787bc.png)
+
+#### Browse tasks by hashtag
+
+Type the hash symbol # to view and select a tag.
+
+![hashtags](https://cloud.githubusercontent.com/assets/507058/14915934/737bc60c-0de4-11e6-854d-fe1774d653e9.png)
+
 ### In sync
 
 The workflow stays in sync with Wunderlist, so your lists (and tasks, in a later release) will be up-to-date and searchable. You can use the menu to select a list after typing the task. Just created a list in the Wunderlist app? No worries, it will show up in the workflow.
+
+### Command shorthand
+
+Commands like `wl:list` and `wl:pref` have been changed to `wl-list` and `wl-pref` to allow <kbd>Alt</kbd>+<kbd>delete</kbd> to return you to the welcome screen (any non-word character is fine, I just chose `-` for its word breaking properties). Furthermore, these commands can be triggered with as little as the first letter. `wld` will get you to the `wl-due` screen and `wls` will get you to `wl-search`. For this reason, you may noticed that top-level commands are first-letter-distinct to avoid conflicts.
 
 ### Hints
 
@@ -110,13 +164,19 @@ If you notice any problems or want to see what changed in the latest version, ju
 
 ![Preferences](https://cloud.githubusercontent.com/assets/507058/18088801/a6d285c0-6e8a-11e6-8581-92ef0789dd34.png)
 
-
 Security
------------
+--------
 
 Your Wunderlist password is never made available to the workflow or stored in any way. Instead, when you log in through the Wunderlist portal you are asked to authorize the workflow to access your account. 
 
 You can log out at any time through the `wl-pref` preferences screen. Upon logging out, all caches, synced data, and workflow preferences are removed. To revert to the default workflow settings simply log out then log back in.
+
+Experimental updates
+--------------------
+
+Those who want to help test the newest features of the workflow can enable experimental updates in the `wl-pref` screen. When enabled, the workflow will prompt you to update to alpha and beta releases for the next major version. Note that these may be unstable and feedback is always appreciated if something goes wrong.
+
+If you are currently using an experimental version the workflow will always prompt you to update to the latest experimental update regardless of this setting. Since fixes are common and often very important during this early stage of development it would not be good to allow old beta versions to continue misbehaving.
 
 Limitations
 -----------
