@@ -1,7 +1,7 @@
 Wunderlist Workflow for Alfred
 ==========================
 
-Create tasks in [Wunderlist](http://wunderlist.com) more effortlessly than ever before with this [Alfred 2](http://www.alfredapp.com/) workflow (requires Powerpack license). 
+Create tasks in [Wunderlist](http://wunderlist.com) more effortlessly than ever before with this [Alfred 2/3](http://www.alfredapp.com/) workflow (requires Powerpack license). 
 
 Beginner and advanced approaches to adding a monthly repeating task beginning the following week:
 
@@ -19,9 +19,9 @@ Features you'll love
 
 The workflow provides an easy guided experience with tips along the way that will help you become a power user. 
 
-The welcome screen appears when you've typed `wl` (and nothing else). Special commands are in the form `wl:command` with no space; once you type a space after `wl ` you're in task entry mode (at least for now, this is a bit harsh).
+The welcome screen appears when you've typed `wl` (and nothing else). Special commands are in the form `wl-command` with no space; once you type a space after `wl ` you're in task entry mode. Partial commands are matched, so rather than typing `wl-upcoming` to get to the Upcoming tasks list you can type as little as `wlu`.
 
-![Welcome screen](https://cloud.githubusercontent.com/assets/507058/11870946/fffcff2e-a499-11e5-8528-5cfa0778dfed.png)
+![Welcome screen](https://cloud.githubusercontent.com/assets/507058/18088099/92f50464-6e86-11e6-9706-d9f4d903dc4d.png)
 
 
 ### Adding tasks with due dates and recurrence
@@ -104,11 +104,11 @@ The workflow stays in sync with Wunderlist, so your lists (and tasks, in a later
 
 ### Hints
 
-Read the text below menu option and you'll be on your way to power user status – most menu items include helpful tips about how to apply a setting without navigating the menu.
+Read the text below each menu option and you'll be on your way to power user status – most menu items include helpful tips about how to apply a setting without navigating the menu.
 
-If you notice any problems or want to see what changed in the latest version, jump to the *About* screen from the main menu or type `wl:about`. You will also find several preferences to customize the behavior of the workflow at `wl:pref` or the *Preferences* item on the welcome screen.
+If you notice any problems or want to see what changed in the latest version, jump to the *About* screen from the main menu or type `wl-about`. You will also find several preferences to customize the behavior of the workflow at `wl-pref` or the *Preferences* item on the welcome screen.
 
-![Preferences](https://cloud.githubusercontent.com/assets/507058/11939113/c132fd14-a7ed-11e5-8fd1-9e3727acee26.png)
+![Preferences](https://cloud.githubusercontent.com/assets/507058/18088801/a6d285c0-6e8a-11e6-8581-92ef0789dd34.png)
 
 
 Security
@@ -116,20 +116,20 @@ Security
 
 Your Wunderlist password is never made available to the workflow or stored in any way. Instead, when you log in through the Wunderlist portal you are asked to authorize the workflow to access your account. 
 
-You can log out at any time through the `wl:pref` preferences screen. Upon logging out, all caches, synced data, and workflow preferences are removed. To revert to the default workflow settings simply log out then log back in.
+You can log out at any time through the `wl-pref` preferences screen. Upon logging out, all caches, synced data, and workflow preferences are removed. To revert to the default workflow settings simply log out then log back in.
 
 Limitations
 -----------
 
 * No offline mode – the workflow must be able to connect the the API for each change you make; currently changes made while offline are not saved.
-* Languages and date formats – the workflow only officially supports US English at this time. parsedatetime provides US English, UK English, Spanish, German, and Dutch with varying coverage of keywords (e.g. tomorrow, Tuesday) in each language; your mileage may vary with these languages. It is possible to add support for any local date format or language by installing some extra software, but there are a number of outstanding issues with adapting to generic locales.
+* Languages and date formats – the workflow only officially supports US English at this time. parsedatetime provides US English, UK English, Dutch, German, Portuguese, Russian, and Spanish with varying coverage of keywords (e.g. tomorrow, Tuesday) in each language; your mileage may vary with these languages.
 
 Contributing
 ------------
 
 So you want to help make this workflow better? That's great! After cloning the repository, run `npm install && grunt` to build the workflow. Open the Wunderlist-symlinked.alfredworkflow file to install a copy in Alfred that will update whenever you rebuild the workflow. After making a change, simply run `grunt build` to update the workflow then use Alfred to test. Using this process, the workflow is kept up-to-date while you work.
 
-Always run through the semi-automated tests to ensure that your change does not cause issues elsewhere. When possible, add corresponding tests for your contributions.
+Always run through the tests to ensure that your change does not cause issues elsewhere. When possible, add corresponding tests for your contributions.
 
 Testing
 -------
@@ -149,4 +149,3 @@ Alternatives
 ------------
 
 * Wunderlist itself! The 6Wunderkinder team has been incorporating many of the features found in this workflow directly into the app so that you can enjoy the convenience of natural language due dates and reminders across all platforms.
-* [Wunderlist-3-Alfred](https://github.com/camgnostic/Wunderlist-3-Alfred) by [camgnostic](https://github.com/camgnostic)
