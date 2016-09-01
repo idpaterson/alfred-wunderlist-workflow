@@ -165,9 +165,9 @@ Overdue recurring tasks can be set due today to adjust the next occurrence by ho
 
 Any task can be opened in the Wunderlist desktop app for further editing. This is a quick way to view notes, subtasks, assignees, and other features that are not yet supported in the workflow.
 
-![view in Wunderlist](https://cloud.githubusercontent.com/assets/507058/18151009/64b6bd7a-6fb9-11e6-9ee7-1bb2cdd2fcf3.png)
-
 You can also open a new task in Wunderlist by holding down the <kbd>alt</kbd> key when creating the task.
+
+![view in Wunderlist](https://cloud.githubusercontent.com/assets/507058/18151510/b95ec238-6fbd-11e6-99d8-e5215574a8a2.png)
 
 Hints
 -----
