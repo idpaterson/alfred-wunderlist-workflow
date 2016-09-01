@@ -7,8 +7,10 @@ Beginner and advanced approaches to adding a monthly repeating task beginning th
 
 ![Simple and advanced usage](https://cloud.githubusercontent.com/assets/507058/7975455/ff5acaea-0a3b-11e5-93f9-74b4b14039dc.gif)
 
-| [Setup](#setup) | [Add Tasks](#add-tasks) | [Due](#due-tasks) | [Upcoming](#upcoming-tasks) | [Search Tasks](#search-tasks) | [Command Shorthand](#command-shorthand) |
-| :-------------: | :---------------------: | :---------------: | :-------------------------: | :---------------------------: | :-------------------------------------: |
+----------
+
+| Jump to: | [Setup](#setup) | [Add Tasks](#add-tasks) | [Search and Browse Tasks](#search-and-browse-tasks) | [Editing Tasks](#editing-tasks) | [Hints](#hints) |
+| :------: | :-------------: | :---------------------: | :-------------------------------------------------: | :-----------------------------: | :-------------: |
 
 Setup
 -----
@@ -22,7 +24,7 @@ Add tasks
 
 The workflow provides an easy guided experience with tips along the way that will help you become a power user. 
 
-The welcome screen appears when you've typed `wl` (and nothing else). Special commands are in the form `wl-command` with no space; once you type a space after `wl ` you're in task entry mode. Partial commands are matched, so rather than typing `wl-upcoming` to get to the Upcoming tasks list you can type as little as `wlu`.
+The welcome screen appears when you've typed `wl` (and nothing else). Special commands are in the form `wl-command` with no space; once you type a space after `wl ` you're in task entry mode. Partial commands are matched, so rather than typing `wl-upcoming` to get to the Upcoming tasks list you can type as little as `wl-up` or even `wlu`.
 
 ![Welcome screen](https://cloud.githubusercontent.com/assets/507058/18088099/92f50464-6e86-11e6-9706-d9f4d903dc4d.png)
 
@@ -39,7 +41,7 @@ Use the menus to configure your task until you become a power user capable of ty
 
 ### Adding tasks to a specific list
 
-To select a list, type it first followed by a colon or use the Change list menu item. No need to type the full list name, as long as you see the correct list in Alfred a few letters is usually sufficient.
+To select a list, type it first followed by a colon or use the Change list menu item. No need to type the full list name, as long as you see the correct list in Alfred a few letters is usually sufficient. You can also set a [default list](#default-list) or default to the most recently used list.
 
 ![List by substring matching](https://cloud.githubusercontent.com/assets/507058/11858365/e43c56d8-a42e-11e5-9ec6-4494579525a0.png)
 
@@ -101,29 +103,9 @@ You can set a custom default reminder time from the workflow preferences screen,
 
 \*\* The default time can be changed in the workflow preferences. If the specified date is today, your reminder date offset preference will be used instead.
 
-### Due tasks
 
-The `wl-due` command shows tasks that are due or overdue, similar to the Today list in Wunderlist. By default it hoists any recurring tasks that are *multiple times overdue* to the top, but you can change the sort order. Sadly, I have quite a few tasks that are multiple times overdue, so this features is mostly to keep me motivated but I hope others find it useful as well.
-
-
-
-This view is searchable, just type to filter the results by keyword.
-
-#### Sync before showing results
-
-The due and upcoming screens will sync (or wait for the already-running sync) before showing results to make sure that everything is up-to-date. A notification is displayed if there is something to sync so that you're not waiting around too long without any feedback.
-
-### Upcoming tasks
-
-View upcoming tasks at `wl-upcoming`. It's kind of like the Week smart list in Wunderlist with the option to choose the duration that you prefer to look ahead (1 week, 2 weeks, 1 month, 3 days, whatever...). Like any other screen you can get there by typing as little as the first letter of the command: `wlu`:
-
-![upcoming tasks](https://cloud.githubusercontent.com/assets/507058/17914990/9d5dbb88-6974-11e6-9fd4-592951703b09.png)
-
-Browse or type to search your upcoming tasks. This screen can show upcoming tasks for any number of days with a few sensible defaults. Maybe there is someone out there who needs to see exactly 11 days ahead.
-
-![upcoming duration](https://cloud.githubusercontent.com/assets/507058/17915036/2ce004b4-6975-11e6-8405-3793c005c21d.png)
-
-### Search and browse tasks
+Search and browse tasks
+-----------------------
 
 The `wl-search` command allows you to search tasks by keyword or browse by list. To seach within a list, use the same *wl-search My List: some query* syntax as when entering a task.
 
@@ -148,21 +130,71 @@ Type the hash symbol # to view and select a tag.
 
 ![hashtags](https://cloud.githubusercontent.com/assets/507058/14915934/737bc60c-0de4-11e6-854d-fe1774d653e9.png)
 
+### Upcoming tasks
+
+View upcoming tasks at `wl-upcoming`. It's kind of like the Week smart list in Wunderlist with the option to choose the duration that you prefer to look ahead (1 week, 2 weeks, 1 month, 3 days, whatever...). Like any other screen you can get there by typing as little as the first letter of the command: `wlu`:
+
+![upcoming tasks](https://cloud.githubusercontent.com/assets/507058/17914990/9d5dbb88-6974-11e6-9fd4-592951703b09.png)
+
+Browse or type to search your upcoming tasks. This screen can show upcoming tasks for any number of days with a few sensible defaults. Maybe there is someone out there who needs to see exactly 11 days ahead.
+
+![upcoming duration](https://cloud.githubusercontent.com/assets/507058/17915036/2ce004b4-6975-11e6-8405-3793c005c21d.png)
+
+### Due and overdue tasks
+
+The `wl-due` command shows tasks that are due or overdue, similar to the Today list in Wunderlist. By default it hoists any recurring tasks that are *multiple times overdue* to the top, but you can change the sort order. Sadly, I have quite a few tasks that are multiple times overdue, so this feature is mostly to keep me motivated but I hope others find it useful as well.
+
+![due and overdue tasks](https://cloud.githubusercontent.com/assets/507058/18151270/e843b1aa-6fbb-11e6-9973-d35442d755f9.png)
+
+This view is searchable, just type to filter the results by keyword.
+
 ### In sync
 
-The workflow stays in sync with Wunderlist, so your lists (and tasks, in a later release) will be up-to-date and searchable. You can use the menu to select a list after typing the task. Just created a list in the Wunderlist app? No worries, it will show up in the workflow.
+The workflow stays in sync with Wunderlist, so your lists and tasks will be up-to-date and searchable. The due and upcoming screens will sync (or wait for the already-running sync) *before showing results* to make sure that everything is up-to-date. A notification is displayed if there is something to sync so that you're not waiting around too long without any feedback.
+
+Editing tasks
+-------------
+
+Tasks can be completed or deleted directly from the workflow. Simply find a task through the search, due, or overdue screens. Task editing is currently limited to completing and deleting tasks.
+
+![edit a task](https://cloud.githubusercontent.com/assets/507058/18151002/4b8851b0-6fb9-11e6-9665-865ad99d2c91.png)
+
+Overdue recurring tasks can be set due today to adjust the next occurrence by holding the <kbd>alt</kbd> key while marking a task complete. For example, if you are supposed to water the plants every 3 days but forget and do it 2 days late, you don't need to water them again the following day.
+
+### View in Wunderlist
+
+Any task can be opened in the Wunderlist desktop app for further editing. This is a quick way to view notes, subtasks, assignees, and other features that are not yet supported in the workflow.
+
+![view in Wunderlist](https://cloud.githubusercontent.com/assets/507058/18151009/64b6bd7a-6fb9-11e6-9ee7-1bb2cdd2fcf3.png)
+
+You can also open a new task in Wunderlist by holding down the <kbd>alt</kbd> key when creating the task.
+
+Hints
+-----
+
+Read the text below each menu option and you'll be on your way to power user status – most menu items include helpful tips about how to apply a setting without navigating the menu.
 
 ### Command shorthand
 
-Commands like `wl:list` and `wl:pref` have been changed to `wl-list` and `wl-pref` to allow <kbd>Alt</kbd>+<kbd>delete</kbd> to return you to the welcome screen (any non-word character is fine, I just chose `-` for its word breaking properties). Furthermore, these commands can be triggered with as little as the first letter. `wld` will get you to the `wl-due` screen and `wls` will get you to `wl-search`. For this reason, you may noticed that top-level commands are first-letter-distinct to avoid conflicts.
+Commands like `wl:list` and `wl:pref` have been changed to `wl-list` and `wl-pref` to allow <kbd>alt</kbd>+<kbd>delete</kbd> to return you to the welcome screen (any non-word character is fine, I just chose `-` for its word breaking properties). Furthermore, these commands can be triggered with as little as the first letter. `wld` will get you to the `wl-due` screen and `wls` will get you to `wl-search`. For this reason, you may noticed that top-level commands are first-letter-distinct to avoid conflicts.
 
-### Hints
+### Default list
 
-Read the text below each menu option and you'll be on your way to power user status – most menu items include helpful tips about how to apply a setting without navigating the menu.
+There is an option in `wl-pref` to set a list other than Inbox as the default when entering tasks. This will save keystrokes when entering a large number of tasks into a list or when a custom list is preferred over Inbox. You can also elect to use the previously-used list to facilitate entry of multiple tasks in the same list.
+
+![default list](https://cloud.githubusercontent.com/assets/507058/18149679/ace487e4-6faf-11e6-98df-103381833788.png)
+
+### Changelog
 
 If you notice any problems or want to see what changed in the latest version, jump to the *About* screen from the main menu or type `wl-about`. You will also find several preferences to customize the behavior of the workflow at `wl-pref` or the *Preferences* item on the welcome screen.
 
 ![Preferences](https://cloud.githubusercontent.com/assets/507058/18088801/a6d285c0-6e8a-11e6-8581-92ef0789dd34.png)
+
+### Experimental updates
+
+Those who want to help test the newest features of the workflow can enable experimental updates in the `wl-pref` screen. When enabled, the workflow will prompt you to update to alpha and beta releases for the next major version. Note that these may be unstable and feedback is always appreciated if something goes wrong.
+
+If you are currently using an experimental version the workflow will always prompt you to update to the latest experimental update regardless of this setting. Since fixes are common and often very important during this early stage of development it would not be good to allow old beta versions to continue misbehaving.
 
 Security
 --------
@@ -170,13 +202,6 @@ Security
 Your Wunderlist password is never made available to the workflow or stored in any way. Instead, when you log in through the Wunderlist portal you are asked to authorize the workflow to access your account. 
 
 You can log out at any time through the `wl-pref` preferences screen. Upon logging out, all caches, synced data, and workflow preferences are removed. To revert to the default workflow settings simply log out then log back in.
-
-Experimental updates
---------------------
-
-Those who want to help test the newest features of the workflow can enable experimental updates in the `wl-pref` screen. When enabled, the workflow will prompt you to update to alpha and beta releases for the next major version. Note that these may be unstable and feedback is always appreciated if something goes wrong.
-
-If you are currently using an experimental version the workflow will always prompt you to update to the latest experimental update regardless of this setting. Since fixes are common and often very important during this early stage of development it would not be good to allow old beta versions to continue misbehaving.
 
 Limitations
 -----------
