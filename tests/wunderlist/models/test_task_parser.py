@@ -24,8 +24,9 @@ _default_reminder_today_offset = time(1, 0, 0)
 _noon = time(12, 0, 0)
 _12_13_14 = date(2014, 12, 13)
 _today = date.today()
-_tomorrow = date.today() + timedelta(days=1)
-_next_week = date.today() + timedelta(days=7)
+_tomorrow = _today + timedelta(days=1)
+_next_week = _today + timedelta(days=7)
+_monday = _today + timedelta(days=7 - _today.weekday())
 due_date_formats = {
 	'12/13/14': _12_13_14,
 	'12/13/2014': _12_13_14,
@@ -35,6 +36,7 @@ due_date_formats = {
 	'tomorrow': _tomorrow,
 	'1d': _tomorrow,
 	'next week': _next_week,
+	'Monday': _monday,
 	'1w': _next_week,
 	'in 1 week': _next_week,
 	'in 7d': _next_week
@@ -137,6 +139,27 @@ def mock_enabled_automatic_reminders(mocker):
 	mocker.patch('wunderlist.models.preferences.Preferences.automatic_reminders', new=True)
 
 @pytest.fixture(autouse=True)
+def mock_default_list_inbox(mocker):
+	"""
+	Returns None for default_list_id rather than the user's preference
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.default_list_id', new=None)
+
+@pytest.fixture()
+def mock_default_list_single_word_list(mocker):
+	"""
+	Returns 1 for default_list_id rather than the user's preference
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.default_list_id', new=1)
+
+@pytest.fixture()
+def mock_default_list_invalid_list(mocker):
+	"""
+	Returns 8 for default_list_id rather than the user's preference
+	"""
+	mocker.patch('wunderlist.models.preferences.Preferences.default_list_id', new=8)
+
+@pytest.fixture(autouse=True)
 def set_locale():
 	"""
 	Ensures an en-US locale
@@ -149,7 +172,7 @@ def initials(phrase):
 	"""
 	return re.sub(r'(?:^| +)(\S)\S*', r'\1', phrase)
 
-def assert_task(task, phrase=None, title=None, list_id=None, list_title=None, due_date=None, recurrence_type=None, recurrence_count=None, reminder_date=None, assignee_id=None, starred=False, completed=False, has_list_prompt=False, has_due_date_prompt=False, has_recurrence_prompt=False, has_reminder_prompt=False):
+def assert_task(task, phrase=None, title=None, list_id=None, list_title=None, due_date=None, recurrence_type=None, recurrence_count=None, reminder_date=None, assignee_id=None, starred=False, completed=False, has_list_prompt=False, has_due_date_prompt=False, has_recurrence_prompt=False, has_reminder_prompt=False, has_hashtag_prompt=False):
 	assert task.phrase == phrase
 	assert task.title == title
 
@@ -170,6 +193,7 @@ def assert_task(task, phrase=None, title=None, list_id=None, list_title=None, du
 	assert task.has_due_date_prompt == has_due_date_prompt
 	assert task.has_recurrence_prompt == has_recurrence_prompt
 	assert task.has_reminder_prompt == has_reminder_prompt
+	assert task.has_hashtag_prompt == has_hashtag_prompt
 
 #
 # Basics
@@ -198,6 +222,24 @@ class TestBasics():
 		assert_task(task, phrase=phrase, title=title)
 
 	def test_inbox_is_default(self):
+		target_list = _inbox
+		title = 'a sample task'
+		phrase = title
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
+
+	@pytest.mark.usefixtures("mock_default_list_single_word_list", "mock_lists")
+	def test_default_list_preference_is_default(self):
+		target_list = _single_word_list
+		title = 'a sample task'
+		phrase = title
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list))
+
+	@pytest.mark.usefixtures("mock_default_list_invalid_list", "mock_lists")
+	def test_inbox_is_default_for_invalid_list_preference(self):
 		target_list = _inbox
 		title = 'a sample task'
 		phrase = title
@@ -249,7 +291,7 @@ class TestReminderDateCombine():
 		assert reminder_date.microsecond == 0
 		assert reminder_date.second == 0
 		assert reminder_date.minute % 5 == 0
-		assert reminder_date.hour == (now + timedelta(hours=1)).hour
+		assert reminder_date.hour == (now + timedelta(hours=1, minutes=(5 - now.minute % 5) % 5)).hour
 
 		# Rounded up to the nearest 5 minute mark
 		assert reminder_date.minute == (now + timedelta(minutes=(5 - now.minute % 5) % 5)).minute
@@ -264,7 +306,7 @@ class TestReminderDateCombine():
 		assert reminder_date.microsecond == 0
 		assert reminder_date.second == 0
 		assert reminder_date.minute % 5 == 0
-		assert reminder_date.hour == (now + timedelta(hours=2)).hour
+		assert reminder_date.hour == (now + timedelta(hours=2, minutes=(5 - now.minute % 5) % 5)).hour
 
 		# Rounded up to the nearest 5 minute mark
 		assert reminder_date.minute == (now + timedelta(minutes=(5 - now.minute % 5) % 5)).minute
@@ -411,6 +453,28 @@ class TestLists():
 		task = TaskParser(phrase)
 
 		assert_task(task, phrase=title, title=title, has_list_prompt=False)
+
+#
+# Hashtags
+# 
+
+class TestHashtags():
+
+	def test_hashtag_prompt(self):
+		title = 'a sample task #'
+		phrase = title
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, has_hashtag_prompt=True)
+
+	@pytest.mark.usefixtures("mock_lists")
+	def test_hashtag_prompt_following_list(self):
+		target_list = _single_word_list
+		title = '#'
+		phrase = '%s:%s' % (target_list, title)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, list_title=target_list, list_id=_lists.index(target_list), has_hashtag_prompt=True)
 	
 #
 # Due date
@@ -708,13 +772,25 @@ class TestRecurrence():
 	def test_recurrence_with_explicit_weekday(self):
 		title = 'a sample task'
 		recurrence_count = 1
-		due_date = _today + timedelta(days=7 - _today.weekday())
+		due_date = _monday
 		recurrence_type = 'week'
 		recurrence_phrase = 'every Monday'
 		phrase = '%s %s' % (title, recurrence_phrase)
 		task = TaskParser(phrase)
 
 		assert_task(task, phrase=phrase, title=title, recurrence_type=recurrence_type, recurrence_count=recurrence_count, due_date=due_date)
+
+	def test_recurrence_with_explicit_weekday_and_reminder(self):
+		title = 'a sample task'
+		recurrence_count = 1
+		due_date = _monday
+		reminder_date = datetime.combine(_monday, _noon)
+		recurrence_type = 'week'
+		recurrence_phrase = 'every Monday at noon'
+		phrase = '%s %s' % (title, recurrence_phrase)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, recurrence_type=recurrence_type, recurrence_count=recurrence_count, due_date=due_date, reminder_date=reminder_date)
 
 	def test_recurrence_prompt(self):
 		title = 'a sample task'
@@ -968,4 +1044,31 @@ class TestPhrases():
 		new_phrase = self.task.phrase_with(recurrence=True)
 
 		assert new_phrase == '%s every ' % (self.title)
+
+	def test_add_hashtags(self):
+		hashtag = 'Example'
+		phrase = self.title
+		task = TaskParser(phrase)
+
+		new_phrase = self.task.phrase_with(hashtag=hashtag)
+
+		assert new_phrase == '%s #%s' % (self.title, hashtag)
+
+	def test_change_hashtags(self):
+		hashtag = 'Example'
+		phrase = '%s #' % self.title
+		task = TaskParser(phrase)
+
+		new_phrase = self.task.phrase_with(hashtag=hashtag)
+
+		assert new_phrase == '%s #%s' % (self.title, hashtag)
+
+	def test_remove_hashtag_prompt(self):
+		hashtag = 'Example'
+		phrase = '%s #%s' % (self.title, hashtag)
+		task = TaskParser(phrase)
+
+		new_phrase = self.task.phrase_with(hashtag=None)
+
+		assert new_phrase == '%s' % (self.title)
 

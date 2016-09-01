@@ -2,7 +2,6 @@
 
 module.exports = {
 	node_modules: 'node_modules',
-	bower: '<%= bower.directory %>',
 	lib: '<%= paths.lib_dirname %>',
 
 	// Directory names

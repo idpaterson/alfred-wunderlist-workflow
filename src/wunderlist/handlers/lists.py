@@ -1,27 +1,28 @@
-from wunderlist import util, icons
+from wunderlist import icons, util
+
 
 def _list_name(args):
-	return ' '.join(args[1:]).strip()
+    return ' '.join(args[1:]).strip()
 
 def filter(args):
-	list_name = _list_name(args)
-	subtitle = list_name if list_name else 'Type the name of the list'
+    list_name = _list_name(args)
+    subtitle = list_name if list_name else 'Type the name of the list'
 
-	util.workflow().add_item('New list...', subtitle, arg='--stored-query', valid=list_name != '', icon=icons.LIST_NEW)
+    util.workflow().add_item('New list...', subtitle, arg='--stored-query', valid=list_name != '', icon=icons.LIST_NEW)
 
-	util.workflow().add_item(
-		'Main menu',
-		autocomplete='', icon=icons.BACK
-	)
+    util.workflow().add_item(
+        'Main menu',
+        autocomplete='', icon=icons.BACK
+    )
 
-def commit(args):
-	from wunderlist.api import lists
-	from wunderlist.sync import backgroundSync
+def commit(args, modifier=None):
+    from wunderlist.api import lists
+    from wunderlist.sync import background_sync
 
-	list_name = _list_name(args)
+    list_name = _list_name(args)
 
-	lists.create_list(list_name)
+    lists.create_list(list_name)
 
-	print 'The new list was created'
+    print 'The new list was created'
 
-	backgroundSync()
+    background_sync()

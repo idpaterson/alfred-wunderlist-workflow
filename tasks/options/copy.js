@@ -10,7 +10,7 @@ module.exports = {
 				cwd: '<%= paths.app %>',
 				dest: '<%= paths.dist_app %>',
 				src: [
-					'**/*.{py,scpt,plist}'
+					'**/*.{py,scpt,plist,ini}'
 				]
 			},
 			{
@@ -20,6 +20,14 @@ module.exports = {
 				src: [
 					'dateutil/**/*.py',
 					'!dateutil/tests/**/*'
+				]
+			},
+			{
+				expand: true,
+				cwd: '<%= paths.lib %>/futures',
+				dest: '<%= paths.dist_lib %>',
+				src: [
+					'concurrent/**/*'
 				]
 			},
 			{
@@ -35,7 +43,7 @@ module.exports = {
 				cwd: '<%= paths.lib %>/alfred-workflow/',
 				dest: '<%= paths.dist_lib %>',
 				src: [
-					'workflow/**/*.py',
+					'workflow/**/*.{py,tgz}',
 					'workflow/version'
 				]
 			},
@@ -54,6 +62,14 @@ module.exports = {
 				dest: '<%= paths.dist_lib %>',
 				src: [
 					'requests/**/*.{py,pem}'
+				]
+			},
+			{
+				expand: true,
+				cwd: '<%= paths.lib %>/six',
+				dest: '<%= paths.dist_lib %>',
+				src: [
+					'six.py'
 				]
 			},
 			// TODO: remove bundled HTML files once ghpages documentation and

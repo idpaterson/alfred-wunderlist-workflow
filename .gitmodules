@@ -3,7 +3,7 @@
 	url = https://github.com/bear/parsedatetime.git
 [submodule "lib/alfred-workflow"]
 	path = lib/alfred-workflow
-	url=https://github.com/idpaterson/alfred-workflow.git
+	url=https://github.com/deanishe/alfred-workflow.git
 [submodule "lib/peewee"]
 	path = lib/peewee
 	url = https://github.com/coleifer/peewee.git
@@ -13,3 +13,9 @@
 [submodule "lib/dateutil"]
 	path = lib/dateutil
 	url = https://github.com/dateutil/dateutil.git
+[submodule "lib/futures"]
+	path = lib/futures
+	url = https://github.com/agronholm/pythonfutures.git
+[submodule "lib/six"]
+	path = lib/six
+url=https://github.com/OverlordQ/six.git

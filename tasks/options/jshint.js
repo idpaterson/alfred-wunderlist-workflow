@@ -12,6 +12,5 @@ module.exports = {
 		'Gruntfile.js',
 		'<%= paths.app %>/**/*.js',
 		'<%= paths.grunt_tasks %>/**/*.js',
-		'!<%= paths.bower %>/**/*.js'
 	]
 };

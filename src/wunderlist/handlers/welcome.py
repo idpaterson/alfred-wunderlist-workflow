@@ -1,32 +1,51 @@
 from wunderlist import icons
 from wunderlist.util import workflow
-from wunderlist.sync import backgroundSync
+
 
 def filter(args):
-	backgroundSync()
+    workflow().add_item(
+        'New task...',
+        'Begin typing to add a new task',
+        autocomplete=' ',
+        icon=icons.TASK_COMPLETED
+    )
 
-	workflow().add_item(
-		'New task...',
-		'Begin typing to add a new task',
-		autocomplete=' ',
-		icon=icons.TASK_COMPLETED
-	)
+    workflow().add_item(
+        'Due today',
+        'Due and overdue tasks',
+        autocomplete='-due ',
+        icon=icons.TODAY
+    )
 
-	workflow().add_item(
-		'New list',
-		autocomplete=':list ',
-		icon=icons.LIST_NEW
-	)
+    workflow().add_item(
+        'Upcoming',
+        'Tasks due soon',
+        autocomplete='-upcoming ',
+        icon=icons.UPCOMING
+    )
 
-	workflow().add_item(
-		'Preferences',
-		autocomplete=':pref ',
-		icon=icons.PREFERENCES
-	)
+    workflow().add_item(
+        'Find and update tasks',
+        'Search or browse by list',
+        autocomplete='-search ',
+        icon=icons.SEARCH
+    )
 
-	workflow().add_item(
-		'About',
-		'Learn about the workflow and get support',
-		autocomplete=':about ',
-		icon=icons.INFO
-	)
+    workflow().add_item(
+        'New list',
+        autocomplete='-list ',
+        icon=icons.LIST_NEW
+    )
+
+    workflow().add_item(
+        'Preferences',
+        autocomplete='-pref ',
+        icon=icons.PREFERENCES
+    )
+
+    workflow().add_item(
+        'About',
+        'Learn about the workflow and get support',
+        autocomplete='-about ',
+        icon=icons.INFO
+    )
