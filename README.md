@@ -186,9 +186,9 @@ There is an option in `wl-pref` to set a list other than Inbox as the default wh
 
 ### Changelog
 
-If you notice any problems or want to see what changed in the latest version, jump to the *About* screen from the main menu or type `wl-about`. You will also find several preferences to customize the behavior of the workflow at `wl-pref` or the *Preferences* item on the welcome screen.
+If you notice any problems or want to see what changed in the latest version, jump to the *About* screen from the main menu or type `wl-about`. 
 
-![Preferences](https://cloud.githubusercontent.com/assets/507058/18088801/a6d285c0-6e8a-11e6-8581-92ef0789dd34.png)
+![About screen](https://cloud.githubusercontent.com/assets/507058/18151547/129e48f0-6fbe-11e6-892e-ba6d8a8461da.png)
 
 ### Experimental updates
 
