@@ -141,7 +141,7 @@ class Task(BaseModel):
         if self.recurrence_type is None or self.completed:
             return 0
 
-        recurrence_days = _days_by_recurrence_type[self.recurrence_type]
+        recurrence_days = _days_by_recurrence_type[self.recurrence_type] * self.recurrence_count
         overdue_time = date.today() - self.due_date
         return int(overdue_time.days / recurrence_days)
 
