@@ -98,6 +98,15 @@ def short_relative_formatted_date(dt):
 
     return dt.strftime(date_format)
 
+def relaunch_alfred(command='wl'):
+    import subprocess
+
+    alfred_major_version = workflow().alfred_version.tuple[0]
+
+    subprocess.call([
+        '/usr/bin/env', 'osascript', '-l', 'JavaScript',
+        'bin/launch_alfred.scpt', command, str(alfred_major_version)
+    ])
 
 def utc_to_local(utc_dt):
     import calendar

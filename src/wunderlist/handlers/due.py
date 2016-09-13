@@ -10,7 +10,7 @@ from wunderlist.models.list import List
 from wunderlist.models.preferences import Preferences
 from wunderlist.models.task import Task
 from wunderlist.sync import background_sync, background_sync_if_necessary, sync
-from wunderlist.util import workflow
+from wunderlist.util import relaunch_alfred, workflow
 
 _hashtag_prompt_pattern = r'#\S*$'
 
@@ -115,29 +115,24 @@ def filter(args):
 def commit(args, modifier=None):
     action = args[1]
     prefs = Preferences.current_prefs()
-    relaunch_alfred = None
+    relaunch_command = None
 
     if action == 'sort' and len(args) > 2:
         command = args[2]
 
         if command == 'toggle-skipped':
             prefs.hoist_skipped_tasks = not prefs.hoist_skipped_tasks
-            relaunch_alfred = 'wl-due sort'
+            relaunch_command = 'wl-due sort'
         else:
             try:
                 index = int(command)
                 order_info = _due_orders[index - 1]
                 prefs.due_order = order_info['due_order']
-                relaunch_alfred = 'wl-due '
+                relaunch_command = 'wl-due '
             except IndexError:
                 pass
             except ValueError:
                 pass
 
-    if relaunch_alfred:
-        from workflow.background import run_in_background
-
-        # Remove the sort command syntax. This is not done as a commit
-        # action in the event that resetting the Alfred query does not
-        # work due to accessibility settings.
-        run_in_background('launch_alfred', ['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', relaunch_alfred])
+    if relaunch_command:
+        relaunch_alfred(relaunch_command)

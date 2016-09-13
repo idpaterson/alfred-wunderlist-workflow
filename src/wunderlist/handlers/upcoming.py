@@ -11,7 +11,7 @@ from wunderlist.models.reminder import Reminder
 from wunderlist.models.task import Task
 from wunderlist.models.list import List
 from wunderlist.sync import background_sync, background_sync_if_necessary, sync
-from wunderlist.util import workflow
+from wunderlist.util import relaunch_alfred, workflow
 
 _hashtag_prompt_pattern = r'#\S*$'
 
@@ -123,14 +123,13 @@ def filter(args):
     background_sync_if_necessary(seconds=2)
 
 def commit(args, modifier=None):
-    relaunch_alfred = False
+    relaunch_command = None
     prefs = Preferences.current_prefs()
     action = args[1]
 
     if action == 'duration':
-        relaunch_alfred = True
+        relaunch_command = 'wl-upcoming '
         prefs.upcoming_duration = int(args[2])
 
-    if relaunch_alfred:
-        import subprocess
-        subprocess.call(['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl-upcoming '])
+    if relaunch_command:
+        relaunch_alfred(relaunch_command)
