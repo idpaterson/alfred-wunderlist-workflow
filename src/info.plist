@@ -4,6 +4,8 @@
 <dict>
 	<key>bundleid</key>
 	<string>com.ipaterson.alfred.wunderlist</string>
+	<key>category</key>
+	<string>Productivity</string>
 	<key>connections</key>
 	<dict>
 		<key>06482847-7F21-4C57-88BB-B642E0182781</key>
@@ -149,7 +151,7 @@
 	<key>createdby</key>
 	<string>Ian Paterson</string>
 	<key>description</key>
-	<string>Create tasks and lists in Wunderlist 2</string>
+	<string>Create tasks and lists in Wunderlist</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
@@ -526,6 +528,6 @@ security delete-generic-password -s com.ipaterson.alfred.wunderlist -a oauth_tok
 	<key>version</key>
 	<string><%= pkg.version %></string>
 	<key>webaddress</key>
-	<string>https://github.com/idpaterson</string>
+	<string>https://github.com/idpaterson/alfred-wunderlist-workflow</string>
 </dict>
 </plist>
