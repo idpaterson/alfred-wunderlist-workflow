@@ -23,7 +23,7 @@ def filter(args):
     if not query:
         wf.add_item('Begin typing to search tasks', '', icon=icons.SEARCH)
 
-    hashtag_match = re.search(_hashtag_prompt_pattern, query)
+    hashtag_match = re.search(_hashtag_prompt_pattern, query, flags=re.UNICODE)
     if hashtag_match:
         from wunderlist.models.hashtag import Hashtag
 

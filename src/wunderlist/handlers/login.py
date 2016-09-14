@@ -10,7 +10,7 @@ def filter(args):
     getting_help = False
 
     if len(args) > 0:
-        action = re.sub(r'^\W+', '', args[0])
+        action = re.sub(r'^\W+', '', args[0], flags=re.UNICODE)
         getting_help = action and 'help'.find(action) == 0
 
     if not getting_help:
