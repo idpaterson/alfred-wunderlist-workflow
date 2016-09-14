@@ -454,7 +454,7 @@ security delete-generic-password -s com.ipaterson.alfred.wunderlist -a oauth_tok
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>Readme</string>
+	<string><%= readme %></string>
 	<key>uidata</key>
 	<dict>
 		<key>06482847-7F21-4C57-88BB-B642E0182781</key>
@@ -523,6 +523,8 @@ security delete-generic-password -s com.ipaterson.alfred.wunderlist -a oauth_tok
 			<real>230</real>
 		</dict>
 	</dict>
+	<key>version</key>
+	<string><%= pkg.version %></string>
 	<key>webaddress</key>
 	<string>https://github.com/idpaterson</string>
 </dict>

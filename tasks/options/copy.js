@@ -2,7 +2,28 @@
 
 'use strict';
 
+var grunt = require('grunt');
+
+function processGruntTemplates(content) {
+	return grunt.template.process(content);
+}
+
 module.exports = {
+	templated: {
+		options: {
+			process: processGruntTemplates
+		},
+		files: [
+			{
+				expand: true,
+				cwd: '<%= paths.app %>',
+				dest: '<%= paths.dist_app %>',
+				src: [
+					'**/*.plist'
+				]
+			}
+		]
+	},
 	dist: {
 		files: [
 			{
@@ -10,7 +31,7 @@ module.exports = {
 				cwd: '<%= paths.app %>',
 				dest: '<%= paths.dist_app %>',
 				src: [
-					'**/*.{py,scpt,plist,ini}'
+					'**/*.{py,scpt,ini}'
 				]
 			},
 			{
