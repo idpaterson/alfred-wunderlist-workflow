@@ -467,6 +467,20 @@ class TestHashtags():
 
 		assert_task(task, phrase=phrase, title=title, has_hashtag_prompt=True)
 
+	def test_hashtag_prompt_in_word_is_ignored(self):
+		title = 'a sample task#'
+		phrase = title
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title)
+
+	def test_hashtag_prompt_in_word_following_unicode_character_is_ignored(self):
+		title = 'a sample taskü#'
+		phrase = title
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title)
+
 	@pytest.mark.usefixtures("mock_lists")
 	def test_hashtag_prompt_following_list(self):
 		target_list = _single_word_list
@@ -643,7 +657,14 @@ class TestDueDate():
 
 		assert_task(task, phrase=phrase, title=title)
 
-	def test_due_date_prompt(self):
+	def test_due_date_prompt_ignored_after_unicode_character(self):
+		title = 'a sample tasküdue'
+		phrase = title
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title)
+
+	def test_due_date_prompt_following(self):
 		title = 'a sample task'
 		due_phrase = 'due'
 		phrase = '%s %s' % (title, due_phrase)
@@ -800,6 +821,13 @@ class TestRecurrence():
 
 		assert_task(task, phrase=phrase, title=title, has_recurrence_prompt=True)
 
+	def test_recurrence_prompt_ignored_after_unicode_character(self):
+		title = 'a sample tasküevery'
+		phrase = title
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title)
+
 
 #
 # Reminders
@@ -824,6 +852,17 @@ class TestReminders():
 		task = TaskParser(phrase)
 
 		assert_task(task, phrase=phrase, title=title, reminder_date=reminder_date, has_reminder_prompt=True)
+
+	def test_reminder_prompt_ignored_after_unicode_character(self):
+		"""
+		This was matching as the "r" command due to the lack of unicode word
+		boundary support in regex
+		"""
+		title = 'a sample für task'
+		phrase = title
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title)
 
 	def test_reminder_implicitly_relative_to_due_date(self):
 		title = 'a sample task'

@@ -36,4 +36,4 @@ class Hashtag(BaseModel):
 
     @classmethod
     def hashtags_in_task(cls, task):
-        return set(re.findall(_hashtag_pattern, ' ' + task.title))
+        return set(re.findall(_hashtag_pattern, ' ' + task.title, flags=re.UNICODE))

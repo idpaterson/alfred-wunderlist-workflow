@@ -25,11 +25,11 @@ def route(args):
     elif args:
         command_string = args[0]
 
-    command_string = re.sub(r'^[^\w\s]+', '', command_string)
+    command_string = re.sub(r'^[^\w\s]+', '', command_string, flags=re.UNICODE)
     command = re.split(r' +', command_string)
 
     if command:
-        action = re.sub(r'^\W+', '', command[0]) or 'none'
+        action = re.sub(r'^\W+', '', command[0], flags=re.UNICODE) or 'none'
 
     if 'about'.find(action) == 0:
         from wunderlist.handlers import about

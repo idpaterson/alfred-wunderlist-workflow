@@ -86,23 +86,23 @@ class TaskParser(object):
         prefs = Preferences.current_prefs()
         ignore_due_date = False
 
-        match = re.search(HASHTAG_PROMPT_PATTERN, phrase)
+        match = re.search(HASHTAG_PROMPT_PATTERN, phrase, flags=re.UNICODE)
         if match:
             self.hashtag_prompt = match.group(1)
             self.has_hashtag_prompt = True
 
-        match = re.search(STAR_PATTERN, phrase)
+        match = re.search(STAR_PATTERN, phrase, flags=re.UNICODE)
         if match:
             self.starred = True
             self._starred_phrase = match.group()
             phrase = phrase[:match.start()] + phrase[match.end():]
 
-        match = re.search(NOT_DUE_PATTERN, phrase)
+        match = re.search(NOT_DUE_PATTERN, phrase, flags=re.UNICODE)
         if match:
             ignore_due_date = True
             phrase = phrase[:match.start()] + phrase[match.end():]
 
-        match = re.search(LIST_TITLE_PATTERN, phrase, re.IGNORECASE)
+        match = re.search(LIST_TITLE_PATTERN, phrase, flags=re.UNICODE | re.IGNORECASE)
         if lists and match:
             if match.group(1):
                 matching_lists = wf.filter(
@@ -127,7 +127,7 @@ class TaskParser(object):
 
         # Parse and remove the recurrence phrase first so that any dates do
         # not interfere with the due date
-        match = re.search(RECURRENCE_PATTERN, phrase, re.IGNORECASE)
+        match = re.search(RECURRENCE_PATTERN, phrase, flags=re.UNICODE | re.IGNORECASE)
         if match:
             type_phrase = match.group(2) if match.group(2) else match.group(3)
             if type_phrase:
@@ -136,7 +136,7 @@ class TaskParser(object):
                 self.recurrence_type = RECURRENCE_TYPES[type_phrase[0].lower()]
                 self.recurrence_count = int(match.group(1) or 1)
             else:
-                match = re.search(RECURRENCE_BY_DATE_PATTERN, phrase, re.IGNORECASE)
+                match = re.search(RECURRENCE_BY_DATE_PATTERN, phrase, flags=re.UNICODE | re.IGNORECASE)
                 if match:
                     recurrence_phrase = match.group()
                     dates = cal.nlp(match.group(1), version=2)
@@ -172,7 +172,7 @@ class TaskParser(object):
                             date_pattern = r'.*?' + date_pattern
 
                             # Prepare to set the recurrence phrase below
-                            match = re.search(date_pattern, recurrence_phrase, re.IGNORECASE)
+                            match = re.search(date_pattern, recurrence_phrase, flags=re.UNICODE | re.IGNORECASE)
 
             # This is just the "every" keyword with no date following
             if not self.recurrence_type:
@@ -183,7 +183,7 @@ class TaskParser(object):
 
 
         reminder_info = None
-        match = re.search(REMINDER_PATTERN, phrase, re.IGNORECASE)
+        match = re.search(REMINDER_PATTERN, phrase, flags=re.UNICODE | re.IGNORECASE)
         if match:
             datetimes = cal.nlp(match.group(2), version=2)
 
@@ -211,7 +211,7 @@ class TaskParser(object):
         due_keyword = None
         potential_date_phrase = None
         if not ignore_due_date:
-            match = re.search(DUE_PATTERN, phrase, re.IGNORECASE)
+            match = re.search(DUE_PATTERN, phrase, flags=re.UNICODE | re.IGNORECASE)
             # Search for the due date only following the `due` keyword
             if match:
                 due_keyword = match.group(1)
@@ -242,7 +242,7 @@ class TaskParser(object):
                     if due_keyword:
                         date_pattern = re.escape(due_keyword) + r'.*?' + date_pattern
 
-                    due_date_phrase_match = re.search(date_pattern, phrase, re.IGNORECASE)
+                    due_date_phrase_match = re.search(date_pattern, phrase, flags=re.UNICODE | re.IGNORECASE)
 
                     if due_date_phrase_match:
                         self._due_date_phrase = due_date_phrase_match.group()
@@ -297,7 +297,7 @@ class TaskParser(object):
         # Look for a list title at the end of the remaining phrase, like
         # "in list Office"
         if not self.list_title:
-            matches = re.finditer(INFIX_LIST_KEYWORD_PATTERN, phrase, re.IGNORECASE)
+            matches = re.finditer(INFIX_LIST_KEYWORD_PATTERN, phrase, flags=re.UNICODE | re.IGNORECASE)
             for match in matches:
                 subphrase = phrase[match.end():]
 

@@ -1,7 +1,7 @@
 from workflow import PasswordNotFound
 
 from wunderlist import config
-from wunderlist.util import workflow
+from wunderlist.util import relaunch_alfred, workflow
 
 
 def authorize():
@@ -134,10 +134,7 @@ def await_token():
 
             SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
-            # Reopen the workflow
-            import subprocess
-            subprocess.call(['/usr/bin/env', 'osascript',
-                             'bin/launch_alfred.scpt', 'wl'])
+            relaunch_alfred()
 
     server = SocketServer.TCPServer(
         ("", config.OAUTH_PORT), OAuthTokenResponseHandler)

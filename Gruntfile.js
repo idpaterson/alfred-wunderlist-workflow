@@ -13,9 +13,15 @@ function loadConfig(path) {
 	var object = {};
 	var key;
 
-	grunt.file.expand({ cwd: path + '/' }, '*.js').forEach(function(filename) {
-		key = filename.replace(/\.js$/,'');
-		object[key] = require(path + '/' + filename);
+	grunt.file.expand({ cwd: path + '/' }, '*.{js,txt}').forEach(function(filename) {
+		key = filename.replace(/\.[^.]+$/,'');
+
+		if (filename.indexOf('.txt') >= 0) {
+			object[key] = grunt.file.read(path + '/' + filename);
+		}
+		else {
+			object[key] = require(path + '/' + filename);
+		}
 	});
 
 	return object;

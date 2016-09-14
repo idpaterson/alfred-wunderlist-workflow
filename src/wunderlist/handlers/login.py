@@ -3,14 +3,14 @@
 import re
 
 from wunderlist import auth, icons
-from wunderlist.util import workflow
+from wunderlist.util import relaunch_alfred, workflow
 
 
 def filter(args):
     getting_help = False
 
     if len(args) > 0:
-        action = re.sub(r'^\W+', '', args[0])
+        action = re.sub(r'^\W+', '', args[0], flags=re.UNICODE)
         getting_help = action and 'help'.find(action) == 0
 
     if not getting_help:
@@ -59,9 +59,7 @@ def commit(args, modifier=None):
         auth_status = auth.handle_authorization_url('http://' + manual_verification_url.group())
 
         if auth_status is True:
-            # Reopen the workflow
-            import subprocess
-            subprocess.call(['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl'])
+            relaunch_alfred()
         elif not auth_status:
             print 'Invalid or expired URL, please try again'
     elif not command:

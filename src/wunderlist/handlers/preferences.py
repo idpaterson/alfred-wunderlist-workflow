@@ -7,7 +7,7 @@ from peewee import OperationalError
 from wunderlist import icons
 from wunderlist.models.preferences import Preferences, DEFAULT_LIST_MOST_RECENT
 from wunderlist.models.user import User
-from wunderlist.util import format_time, parsedatetime_calendar, workflow
+from wunderlist.util import format_time, parsedatetime_calendar, relaunch_alfred, workflow
 
 
 def _parse_time(phrase):
@@ -225,18 +225,17 @@ def filter(args):
 
 def commit(args, modifier=None):
     prefs = Preferences.current_prefs()
-    relaunch_alfred = False
-    alfred_command = '-pref'
+    relaunch_command = '-pref'
 
     if '--alfred' in args:
-        alfred_command = ' '.join(args[args.index('--alfred') + 1:])
+        relaunch_command = ' '.join(args[args.index('--alfred') + 1:])
 
     if 'sync' in args:
         from wunderlist.sync import sync
         sync('background' in args)
-    elif 'show_completed_tasks' in args:
-        relaunch_alfred = True
 
+        relaunch_command = None
+    elif 'show_completed_tasks' in args:
         prefs.show_completed_tasks = not prefs.show_completed_tasks
 
         if prefs.show_completed_tasks:
@@ -244,7 +243,6 @@ def commit(args, modifier=None):
         else:
             print 'Completed tasks will not be visible in the workflow'
     elif 'default_list' in args:
-        relaunch_alfred = True
         default_list_id = None
         lists = workflow().stored_data('lists')
 
@@ -259,8 +257,6 @@ def commit(args, modifier=None):
         else:
             print 'Tasks will be added to the Inbox by default'
     elif 'explicit_keywords' in args:
-        relaunch_alfred = True
-
         prefs.explicit_keywords = not prefs.explicit_keywords
 
         if prefs.explicit_keywords:
@@ -268,7 +264,6 @@ def commit(args, modifier=None):
         else:
             print 'Implicit due dates enabled (e.g. "Recycling tomorrow")'
     elif 'reminder' in args:
-        relaunch_alfred = True
         reminder_time = _parse_time(' '.join(args))
 
         if reminder_time is not None:
@@ -276,7 +271,6 @@ def commit(args, modifier=None):
 
             print 'Reminders will now default to %s' % format_time(reminder_time, 'short')
     elif 'reminder_today' in args:
-        relaunch_alfred = True
         reminder_today_offset = None
 
         if not 'disabled' in args:
@@ -286,8 +280,6 @@ def commit(args, modifier=None):
 
         print 'The offset for current-day reminders is now %s' % _format_time_offset(reminder_today_offset)
     elif 'automatic_reminders' in args:
-        relaunch_alfred = True
-
         prefs.automatic_reminders = not prefs.automatic_reminders
 
         if prefs.automatic_reminders:
@@ -295,12 +287,10 @@ def commit(args, modifier=None):
         else:
             print 'A reminder will not be added automatically'
     elif 'retheme' in args:
-        relaunch_alfred = True
         prefs.icon_theme = 'light' if icons.icon_theme() == 'dark' else 'dark'
 
         print 'The workflow is now using the %s icon theme' % (prefs.icon_theme)
     elif 'prerelease_channel' in args:
-        relaunch_alfred = True
 
         prefs.prerelease_channel = not prefs.prerelease_channel
 
@@ -311,6 +301,6 @@ def commit(args, modifier=None):
             print 'The workflow will prompt you to update to experimental pre-releases'
         else:
             print 'The workflow will only prompt you to update to final releases'
-    if relaunch_alfred:
-        import subprocess
-        subprocess.call(['/usr/bin/env', 'osascript', 'bin/launch_alfred.scpt', 'wl%s' % alfred_command])
+
+    if relaunch_command:
+        relaunch_alfred(relaunch_command)
