@@ -33,7 +33,8 @@ class Root(BaseModel):
         except Root.DoesNotExist:
             pass
 
-        if not background and instance.revision != root_data['revision']:
+        if not background and (not instance or
+                               instance.revision != root_data['revision']):
             notify('Please wait...', 'The workflow is making sure your tasks are up-to-date')
 
         return cls._perform_updates([instance], [root_data])

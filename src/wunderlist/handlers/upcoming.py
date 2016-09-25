@@ -86,7 +86,9 @@ def filter(args):
         return
 
     # Force a sync if not done recently or join if already running
-    if datetime.now() - prefs.last_sync > timedelta(seconds=30) or is_running('sync'):
+    if not prefs.last_sync or \
+       datetime.now() - prefs.last_sync > timedelta(seconds=30) or \
+       is_running('sync'):
         sync()
 
     wf.add_item(duration_info['label'], subtitle='Change the duration for upcoming tasks', autocomplete='-upcoming duration ', icon=icons.UPCOMING)

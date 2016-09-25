@@ -55,7 +55,9 @@ def filter(args):
         return
 
     # Force a sync if not done recently or wait on the current sync
-    if datetime.now() - prefs.last_sync > timedelta(seconds=30) or is_running('sync'):
+    if not prefs.last_sync or \
+       datetime.now() - prefs.last_sync > timedelta(seconds=30) or \
+       is_running('sync'):
         sync()
 
     conditions = True
