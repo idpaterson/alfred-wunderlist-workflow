@@ -21,6 +21,13 @@ def _request_headers():
         }
     return None
 
+def _report_errors(fn):
+    def report_errors(*args, **kwargs):
+        response = fn(*args, **kwargs)
+        if response.status_code > 500:
+            response.raise_for_status()
+    return report_errors
+
 def get(path, params=None):
     headers = _request_headers()
     return requests.get(
@@ -29,6 +36,7 @@ def get(path, params=None):
         params=params
     )
 
+@_report_errors
 def post(path, data=None):
     headers = _request_headers()
     return requests.post(
@@ -37,6 +45,7 @@ def post(path, data=None):
         data=json.dumps(data)
     )
 
+@_report_errors
 def put(path, data=None):
     headers = _request_headers()
     return requests.put(
@@ -45,6 +54,7 @@ def put(path, data=None):
         data=json.dumps(data)
     )
 
+@_report_errors
 def patch(path, data=None):
     headers = _request_headers()
     return requests.patch(
@@ -53,6 +63,7 @@ def patch(path, data=None):
         data=json.dumps(data)
     )
 
+@_report_errors
 def delete(path, data=None):
     headers = _request_headers()
     return requests.delete(

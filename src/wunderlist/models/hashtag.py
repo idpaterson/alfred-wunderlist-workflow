@@ -4,10 +4,10 @@ from peewee import CharField, IntegerField
 
 from wunderlist.models.base import BaseModel
 
-_hashtag_pattern = r'(?<=\s)#\S+'
+_hashtag_pattern = re.compile(r'(?<=\s)#\S+', re.UNICODE)
 
 # Remove any non-word characters at the end of the hashtag
-_hashtag_trim_pattern = r'\W+$'
+_hashtag_trim_pattern = re.compile(r'\W+$', re.UNICODE)
 
 class Hashtag(BaseModel):
     id = CharField(primary_key=True)
@@ -23,7 +23,7 @@ class Hashtag(BaseModel):
 
         for task in tasks_with_hashtags:
             for hashtag in cls.hashtags_in_task(task):
-                tag = re.sub(_hashtag_trim_pattern, r'', hashtag, flags=re.UNICODE)
+                tag = re.sub(_hashtag_trim_pattern, r'', hashtag)
                 hashtags[tag.lower()] = tag
 
         if len(hashtags) > 0:
@@ -36,4 +36,4 @@ class Hashtag(BaseModel):
 
     @classmethod
     def hashtags_in_task(cls, task):
-        return set(re.findall(_hashtag_pattern, ' ' + task.title, flags=re.UNICODE))
+        return set(re.findall(_hashtag_pattern, ' ' + task.title))

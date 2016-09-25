@@ -6,6 +6,9 @@ from wunderlist.auth import is_authorized
 from wunderlist.sync import background_sync_if_necessary
 from wunderlist.util import workflow
 
+COMMAND_PATTERN = re.compile(r'^[^\w\s]+', re.UNICODE)
+ACTION_PATTERN = re.compile(r'^\W+', re.UNICODE)
+
 
 def route(args):
     handler = None
@@ -25,11 +28,11 @@ def route(args):
     elif args:
         command_string = args[0]
 
-    command_string = re.sub(r'^[^\w\s]+', '', command_string, flags=re.UNICODE)
+    command_string = re.sub(COMMAND_PATTERN, '', command_string)
     command = re.split(r' +', command_string)
 
     if command:
-        action = re.sub(r'^\W+', '', command[0], flags=re.UNICODE) or 'none'
+        action = re.sub(ACTION_PATTERN, '', command[0]) or 'none'
 
     if 'about'.find(action) == 0:
         from wunderlist.handlers import about
@@ -86,4 +89,4 @@ def route(args):
 
             workflow().send_feedback()
 
-    background_sync_if_necessary()
+    #background_sync_if_necessary()

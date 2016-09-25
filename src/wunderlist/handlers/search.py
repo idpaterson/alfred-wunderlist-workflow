@@ -12,7 +12,7 @@ from wunderlist.models.task import Task
 from wunderlist.sync import background_sync
 from wunderlist.util import workflow
 
-_hashtag_prompt_pattern = r'#\S*$'
+_hashtag_prompt_pattern = re.compile(r'#\S*$', re.UNICODE)
 
 def filter(args):
     query = ' '.join(args[1:])
@@ -23,7 +23,7 @@ def filter(args):
     if not query:
         wf.add_item('Begin typing to search tasks', '', icon=icons.SEARCH)
 
-    hashtag_match = re.search(_hashtag_prompt_pattern, query, flags=re.UNICODE)
+    hashtag_match = re.search(_hashtag_prompt_pattern, query)
     if hashtag_match:
         from wunderlist.models.hashtag import Hashtag
 
