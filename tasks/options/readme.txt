@@ -1,10 +1,7 @@
 New in version <%= pkg.version %>:
-  * Fixed handling of accented characters followed by a keyword 
-    - für parsed as fü r which triggered the "r" reminder keyword
-  * Fixed relaunching of Alfred 3 after changing a preference
-    - For example, toggling completed tasks reopens Alfred with the same search
-    - Alfred 2 was not affected
-* Added this readme so that you can see what is changed in each update!
+  * #138 - Fixed script errors in Python 2.6
+      - Problem introduced in 0.6.1
+  * Fixed error on initial sync if that sync was triggered from due or upcoming
 
 More details:
 https://github.com/idpaterson/alfred-wunderlist-workflow/releases/tag/<%= pkg.version %>
