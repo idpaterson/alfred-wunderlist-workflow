@@ -18,4 +18,4 @@ def main(wf):
 
 if __name__ == '__main__':
     wf = workflow()
-    sys.exit(wf.run(main))
+    sys.exit(wf.run(main, plaintext_exceptions='--commit' in wf.args))
