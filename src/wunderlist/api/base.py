@@ -26,6 +26,7 @@ def _report_errors(fn):
         response = fn(*args, **kwargs)
         if response.status_code > 500:
             response.raise_for_status()
+        return response
     return report_errors
 
 def get(path, params=None):
