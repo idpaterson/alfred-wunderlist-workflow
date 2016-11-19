@@ -303,4 +303,4 @@ def commit(args, modifier=None):
             print 'The workflow will only prompt you to update to final releases'
 
     if relaunch_command:
-        relaunch_alfred(relaunch_command)
+        relaunch_alfred('wl%s' % relaunch_command)
