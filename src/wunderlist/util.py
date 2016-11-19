@@ -48,8 +48,16 @@ def parsedatetime_calendar():
 
 
 def parsedatetime_constants():
-    import locale
     from parsedatetime import Constants
+    from wunderlist.models.preferences import Preferences
+
+    loc = Preferences.current_prefs().date_locale or user_locale()
+
+    return Constants(loc)
+
+
+def user_locale():
+    import locale
 
     loc = locale.getlocale(locale.LC_TIME)[0]
 
@@ -61,8 +69,7 @@ def parsedatetime_constants():
         except IndexError:
             loc = 'en_US'
 
-    return Constants(loc)
-
+    return loc
 
 def format_time(time, format):
     c = parsedatetime_constants()

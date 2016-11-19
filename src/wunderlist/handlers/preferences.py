@@ -7,7 +7,7 @@ from peewee import OperationalError
 from wunderlist import icons
 from wunderlist.models.preferences import Preferences, DEFAULT_LIST_MOST_RECENT
 from wunderlist.models.user import User
-from wunderlist.util import format_time, parsedatetime_calendar, relaunch_alfred, workflow
+from wunderlist.util import format_time, parsedatetime_calendar, relaunch_alfred, user_locale, workflow
 
 
 def _parse_time(phrase):
@@ -139,6 +139,7 @@ def filter(args):
     else:
         current_user = None
         lists = workflow().stored_data('lists')
+        loc = user_locale()
         default_list_name = 'Inbox'
 
         try:
@@ -191,6 +192,13 @@ def filter(args):
             u'Sets a default reminder for tasks with a due date.',
             arg='-pref automatic_reminders', valid=True, icon=icons.TASK_COMPLETED if prefs.automatic_reminders else icons.TASK
         )
+
+        if loc != 'en_US' or prefs.date_locale:
+            workflow().add_item(
+                'Force US English for dates',
+                'Rather than the current locale (%s)' % loc,
+                arg='-pref force_en_US', valid=True, icon=icons.TASK_COMPLETED if prefs.date_locale == 'en_US' else icons.TASK
+            )
 
         workflow().add_item(
             'Require explicit due keyword',
@@ -301,6 +309,13 @@ def commit(args, modifier=None):
             print 'The workflow will prompt you to update to experimental pre-releases'
         else:
             print 'The workflow will only prompt you to update to final releases'
+    elif 'force_en_US' in args:
+        if prefs.date_locale:
+            prefs.date_locale = None
+            print 'The workflow will expect your local language and date format'
+        else:
+            prefs.date_locale = 'en_US'
+            print 'The workflow will expect dates in US English'
 
     if relaunch_command:
         relaunch_alfred('wl%s' % relaunch_command)
