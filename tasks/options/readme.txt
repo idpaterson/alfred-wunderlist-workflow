@@ -1,7 +1,5 @@
 New in version <%= pkg.version %>:
-  * #138 - Fixed script errors in Python 2.6
-      - Problem introduced in 0.6.1
-  * Fixed error on initial sync if that sync was triggered from due or upcoming
+  * #147 - Fixes 100% CPU usage background task on macOS 10.12.4
 
 More details:
 https://github.com/idpaterson/alfred-wunderlist-workflow/releases/tag/<%= pkg.version %>
