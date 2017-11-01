@@ -13,6 +13,7 @@ from wunderlist.util import format_time, short_relative_formatted_date, workflow
 _star = u'★'
 _recurrence = u'↻'
 _reminder = u'⏰'
+_note = u'✏️'
 
 def _task(args):
     return TaskParser(' '.join(args))
@@ -48,6 +49,9 @@ def task_subtitle(task):
             format_time(task.reminder_date.time(), 'short')))
 
     subtitle.append(task.title)
+
+    if task.note:
+        subtitle.append('%s %s' % (_note, task.note))
 
     return '   '.join(subtitle)
 
@@ -160,7 +164,8 @@ def commit(args, modifier=None):
                                   due_date=task.due_date,
                                   reminder_date=task.reminder_date,
                                   starred=task.starred,
-                                  completed=task.completed)
+                                  completed=task.completed,
+                                  note=task.note)
 
     # Output must be a UTF-8 encoded string
     print ('The task was added to ' + task.list_title).encode('utf-8')
