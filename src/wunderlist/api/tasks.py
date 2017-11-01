@@ -60,7 +60,7 @@ def task(id):
 
     return info
 
-def create_task(list_id, title, assignee_id=None, recurrence_type=None, recurrence_count=None, due_date=None, reminder_date=None, starred=False, completed=False):
+def create_task(list_id, title, assignee_id=None, recurrence_type=None, recurrence_count=None, due_date=None, reminder_date=None, starred=False, completed=False, note=None):
     params = {
         'list_id': int(list_id),
         'title': title,
@@ -85,6 +85,11 @@ def create_task(list_id, title, assignee_id=None, recurrence_type=None, recurren
         from wunderlist.api import reminders
 
         reminders.create_reminder(info['id'], reminder_date)
+
+    if note:
+        from wunderlist.api import notes
+
+        notes.create_note(info['id'], note)
 
     return info
 
