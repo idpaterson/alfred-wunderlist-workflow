@@ -5,7 +5,7 @@ from wunderlist.util import workflow
 DEFAULT_LIST_MOST_RECENT = -1
 
 AUTOMATIC_REMINDERS_KEY = 'automatic_reminders'
-DEFAULT_LIST_ID = 'default_list_id'
+DEFAULT_LIST_ID_KEY = 'default_list_id'
 DUE_ORDER_KEY = 'due_order'
 EXPLICIT_KEYWORDS_KEY = 'explicit_keywords'
 HOIST_SKIPPED_TASKS_KEY = 'hoist_skipped_tasks'
@@ -17,6 +17,7 @@ REMINDER_TIME_KEY = 'reminder_time'
 REMINDER_TODAY_OFFSET_KEY = 'reminder_today_offset'
 SHOW_COMPLETED_TASKS_KEY = 'show_completed_tasks'
 UPCOMING_DURATION_KEY = 'upcoming_duration'
+DATE_LOCALE_KEY = 'date_locale'
 
 class Preferences(object):
 
@@ -62,10 +63,14 @@ class Preferences(object):
             workflow().store_data('prefs', self._data)
 
     def _set(self, key, value):
-        if self._data.get('key') != value:
+        if value is None and key in self._data:
+            del self._data[key]
+        elif self._data.get(key) != value:
             self._data[key] = value
+        else:
+            return
 
-            workflow().store_data('prefs', self._data)
+        workflow().store_data('prefs', self._data)
 
     def _get(self, key, default=None, type=str):
         value = self._data.get(key)
@@ -179,8 +184,16 @@ class Preferences(object):
 
     @property
     def default_list_id(self):
-        return self._get(DEFAULT_LIST_ID, None)
+        return self._get(DEFAULT_LIST_ID_KEY, None)
 
     @default_list_id.setter
     def default_list_id(self, default_list_id):
-        self._set(DEFAULT_LIST_ID, default_list_id)
+        self._set(DEFAULT_LIST_ID_KEY, default_list_id)
+
+    @property
+    def date_locale(self):
+        return self._get(DATE_LOCALE_KEY, None)
+
+    @date_locale.setter
+    def date_locale(self, date_locale):
+        self._set(DATE_LOCALE_KEY, date_locale)
