@@ -1,15 +1,12 @@
 New in version <%= pkg.version %>:
-  * #147 - Fixes 100% CPU usage background task on macOS 10.12.4
+  * #150 - Task note 
 
 More details:
 https://github.com/idpaterson/alfred-wunderlist-workflow/releases/tag/<%= pkg.version %>
 
 
-The 0.6 series includes the following major changes:
-  * Added upcoming and due screens
-  * Search and browse tasks
-  * New command format allowing partial commands like wls instead of wl-search
-  * Complete, delete, and view tasks in Wunderlist desktop app
+The 0.7 series includes the following major changes:
+  * Add a note while creating a task with, e.g. task title // note text (thanks, @bogdal)
 
 More details:
-https://github.com/idpaterson/alfred-wunderlist-workflow/releases/tag/0.6.0
+https://github.com/idpaterson/alfred-wunderlist-workflow/releases/tag/0.7.0
