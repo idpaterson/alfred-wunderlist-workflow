@@ -42,6 +42,9 @@ WHITESPACE_CLEANUP_PATTERN = re.compile(r'\t|\s{2,}', re.UNICODE)
 # Split words ignoring leading and trailing punctuation
 WORD_SEPARATOR_PATTERN = re.compile(r'\W*\s+\W*', re.UNICODE)
 
+# Anything following the '//' delimiter
+SLASHES_PATTERN = re.compile(r'(?:^|[\s:])(//)(.*)$', re.DOTALL)
+
 # Maps first letter to the API recurrence type
 RECURRENCE_TYPES = {
     'd': 'day',
@@ -66,6 +69,7 @@ class TaskParser(object):
     assignee_id = None
     starred = False
     completed = False
+    note = None
 
     has_list_prompt = False
     has_due_date_prompt = False
@@ -78,6 +82,7 @@ class TaskParser(object):
     _recurrence_phrase = None
     _reminder_phrase = None
     _starred_phrase = None
+    _note_phrase = None
 
     def __init__(self, phrase):
         self.phrase = phrase.strip()
@@ -96,6 +101,13 @@ class TaskParser(object):
         if match:
             self.hashtag_prompt = match.group(1)
             self.has_hashtag_prompt = True
+
+        match = re.search(SLASHES_PATTERN, phrase)
+        if match:
+            self._note_phrase = match.group(1) + match.group(2)
+            self.note = re.sub(
+                WHITESPACE_CLEANUP_PATTERN, ' ', match.group(2)).strip()
+            phrase = phrase[:match.start()] + phrase[match.end():]
 
         match = re.search(STAR_PATTERN, phrase)
         if match:
@@ -477,6 +489,10 @@ class TaskParser(object):
         # Removes the star
         else:
             pass
+
+        # Adds a note
+        if self.note:
+            components.append(self._note_phrase)
 
         # Remove any empty string components, often a blank title
         components = [component for component in components if component]

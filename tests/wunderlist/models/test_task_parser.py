@@ -172,7 +172,7 @@ def initials(phrase):
 	"""
 	return re.sub(r'(?:^| +)(\S)\S*', r'\1', phrase)
 
-def assert_task(task, phrase=None, title=None, list_id=None, list_title=None, due_date=None, recurrence_type=None, recurrence_count=None, reminder_date=None, assignee_id=None, starred=False, completed=False, has_list_prompt=False, has_due_date_prompt=False, has_recurrence_prompt=False, has_reminder_prompt=False, has_hashtag_prompt=False):
+def assert_task(task, phrase=None, title=None, list_id=None, list_title=None, due_date=None, recurrence_type=None, recurrence_count=None, reminder_date=None, assignee_id=None, starred=False, completed=False, has_list_prompt=False, has_due_date_prompt=False, has_recurrence_prompt=False, has_reminder_prompt=False, has_hashtag_prompt=False, note=None):
 	assert task.phrase == phrase
 	assert task.title == title
 
@@ -194,6 +194,7 @@ def assert_task(task, phrase=None, title=None, list_id=None, list_title=None, du
 	assert task.has_recurrence_prompt == has_recurrence_prompt
 	assert task.has_reminder_prompt == has_reminder_prompt
 	assert task.has_hashtag_prompt == has_hashtag_prompt
+	assert task.note == note
 
 #
 # Basics
@@ -988,6 +989,55 @@ class TestStarred():
 		task = TaskParser(phrase)
 
 		assert_task(task, phrase=phrase, title=title, starred=False)
+
+#
+# Note
+#
+
+class TestNote():
+
+	note_delimiter = '//'
+
+	def test_note(self):
+		title = 'a sample task'
+		note = 'my note'
+		phrase = '%s %s%s' % (title, self.note_delimiter, note)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, note=note)
+
+	def test_note_with_whitespace(self):
+		title = 'a sample task'
+		note = 'my note'
+		phrase = '%s %s %s' % (title, self.note_delimiter, note)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, note=note)
+
+	def test_multiline_note(self):
+		title = 'a sample task'
+		source_note = 'my\ntest\tnote'
+		note = 'my test note'
+		phrase = '%s %s %s' % (title, self.note_delimiter, note)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, note=note)
+
+	def test_note_with_star(self):
+		title = 'a sample task'
+		note = 'my note'
+		phrase = '%s* %s%s' % (title, self.note_delimiter, note)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, starred=True, note=note)
+
+	def test_note_with_star_whitespace(self):
+		title = 'a sample task'
+		note = 'my note'
+		phrase = '%s * %s%s' % (title, self.note_delimiter, note)
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=title, starred=True, note=note)
 
 #
 # phrase_with()
