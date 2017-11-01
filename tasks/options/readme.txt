@@ -1,5 +1,5 @@
 New in version <%= pkg.version %>:
-  * #150 - Task note 
+  * Pull Request #150 - Task note, courtesy of @bogdal
 
 More details:
 https://github.com/idpaterson/alfred-wunderlist-workflow/releases/tag/<%= pkg.version %>
