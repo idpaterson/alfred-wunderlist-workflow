@@ -43,7 +43,7 @@ WHITESPACE_CLEANUP_PATTERN = re.compile(r'\t|\s{2,}', re.UNICODE)
 WORD_SEPARATOR_PATTERN = re.compile(r'\W*\s+\W*', re.UNICODE)
 
 # Anything following the '//' delimiter
-SLASHES_PATTERN = re.compile(r'(?:^|[\s:])(//)(.*)$', re.DOTALL)
+SLASHES_PATTERN = re.compile(r'( //)(.*)$', re.DOTALL)
 
 # Maps first letter to the API recurrence type
 RECURRENCE_TYPES = {

@@ -1039,6 +1039,12 @@ class TestNote():
 
 		assert_task(task, phrase=phrase, title=title, starred=True, note=note)
 
+	def test_ignore_note_without_dedicated_delimiter(self):
+		phrase = 'read blog https://example.com/'
+		task = TaskParser(phrase)
+
+		assert_task(task, phrase=phrase, title=phrase, note=None)
+
 #
 # phrase_with()
 #
